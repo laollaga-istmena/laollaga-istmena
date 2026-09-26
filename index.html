@@ -56,8 +56,8 @@
         <div id="paginacion" class="flex justify-center items-center gap-4 mt-16 hidden"></div>
     </main>
 
-    <!-- Botón Flotante: Carro de Selección -->
-    <button id="btn-carrito" onclick="abrirCarrito()" class="fixed bottom-6 right-6 bg-[#b91c1c] text-white p-4 rounded-full shadow-2xl z-40 hidden hover:scale-110 transition-transform border-2 border-white/20">
+    <!-- Botón Flotante: Carro de Selección SIEMPRE VISIBLE -->
+    <button id="btn-carrito" onclick="abrirCarrito()" class="fixed bottom-6 right-6 bg-[#b91c1c] text-white p-4 rounded-full shadow-2xl z-40 hover:scale-110 transition-transform border-2 border-[#d4af37] fade-in">
         <i class="fas fa-shopping-bag text-xl"></i>
         <span id="contador-carrito" class="absolute -top-2 -right-2 bg-black text-[#d4af37] text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center border border-[#d4af37]">0</span>
     </button>
@@ -73,6 +73,10 @@
                 <!-- Items inyectados aquí -->
             </div>
             <div class="p-6 bg-white border-t border-gray-200">
+                <div class="flex justify-between items-end mb-5">
+                    <span class="text-xs uppercase tracking-widest text-gray-500 font-bold">Total Estimado</span>
+                    <span id="total-carrito" class="text-3xl font-light text-[#d4af37]">$0 <span class="text-xs text-gray-400 font-sans">MXN</span></span>
+                </div>
                 <button onclick="enviarPedidoWhatsApp()" class="w-full bg-black hover:bg-[#b91c1c] text-white font-bold py-4 rounded-sm uppercase text-sm tracking-widest shadow-xl transition-colors">
                     <i class="fab fa-whatsapp text-lg mr-2"></i> Solicitar Apartado
                 </button>
@@ -103,7 +107,7 @@
         let paginaActual = 1;
         const itemsPorPagina = 6;
         let terminoBusqueda = '';
-        let carrito = []; // Estado de las prendas seleccionadas
+        let carrito = []; 
 
         async function cargarCatalogo() {
             const contenedor = document.getElementById('catalogo');
@@ -230,11 +234,9 @@
             if(paginaActual > 1 && terminoBusqueda === '') document.getElementById('tabs-container').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // MOTOR NARRATIVO: Genera la frase cultural de arraigo
         function obtenerFraseCultural(categoria, nombre) {
             const cat = (categoria || '').toLowerCase();
             const nom = (nombre || '').toLowerCase();
-            
             if(cat.includes('huipil') || nom.includes('huipil')) {
                 return "El abrazo cálido del Istmo tejido en cada trazo de cadenilla, herencia viva de nuestras raíces zapotecas.";
             } else if (cat.includes('guía') || nom.includes('floral')) {
@@ -247,7 +249,6 @@
         window.abrirDetalle = function(codigo) {
             const p = todosLosProductos.find(x => x.codigo_interno === codigo);
             const imgPath = p.imagen_url ? `https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${p.imagen_url}` : 'https://via.placeholder.com/600x800.png?text=Fotograf%C3%ADa+en+proceso';
-            
             const fraseEmotiva = obtenerFraseCultural(p.categoria, p.nombre_comercial);
             const enCarrito = carrito.some(item => item.codigo_interno === p.codigo_interno);
             
@@ -259,24 +260,16 @@
                     <img id="img-zoomable" src="${imgPath}" class="zoom-normal w-full h-full object-contain max-h-[70vh] md:max-h-[90vh] cursor-zoom-in" onclick="toggleZoom(this)">
                 </div>
                 <div class="w-full md:w-2/5 p-6 md:p-14 flex flex-col justify-center bg-[#fcfbf9] overflow-y-auto max-h-screen fade-in border-l border-gray-200 shadow-[-10px_0_30px_rgba(0,0,0,0.05)]">
-                    
                     <div class="flex justify-between items-center mb-4">
                         <span class="text-[10px] text-gray-400 font-mono tracking-[0.2em] uppercase border border-gray-300 px-2 py-1 rounded">${p.codigo_interno}</span>
                         <button onclick="copiarCodigo('${p.codigo_interno}')" class="text-[10px] uppercase tracking-wider text-gray-500 hover:text-black bg-gray-100 px-3 py-1.5 rounded transition-colors">
                             <i class="fas fa-copy mr-1"></i> Copiar
                         </button>
                     </div>
-
                     <h2 class="text-3xl md:text-5xl font-serif font-bold text-gray-900 leading-tight mb-2">${p.nombre_comercial}</h2>
-                    
-                    <!-- Inyección de la Esencia del Istmo -->
-                    <p class="text-sm font-serif italic text-gray-500 mb-6 leading-relaxed border-l-2 border-[#d4af37] pl-3 py-1 bg-gradient-to-r from-yellow-50 to-transparent">
-                        "${fraseEmotiva}"
-                    </p>
-
+                    <p class="text-sm font-serif italic text-gray-500 mb-6 leading-relaxed border-l-2 border-[#d4af37] pl-3 py-1 bg-gradient-to-r from-yellow-50 to-transparent">"${fraseEmotiva}"</p>
                     <p class="text-3xl font-light text-[#d4af37] mb-8">$${p.precio} <span class="text-xs text-gray-400 font-sans">MXN</span></p>
 
-                    <!-- Sello de Autenticidad Artesanal -->
                     <div class="bg-gradient-to-r from-[#1a1a1a] to-black rounded-lg p-4 mb-8 flex items-center gap-4 shadow-lg border border-yellow-900/50">
                         <div class="text-[#d4af37] bg-yellow-900/30 p-3 rounded-full flex-shrink-0"><i class="fas fa-certificate text-xl"></i></div>
                         <div>
@@ -313,13 +306,8 @@
             document.body.style.overflow = 'hidden'; 
         }
 
-        window.toggleZoom = function(imgElement) {
-            imgElement.classList.toggle('zoom-activo');
-        }
-
-        window.copiarCodigo = function(codigo) {
-            navigator.clipboard.writeText(codigo).then(() => alert('Código ' + codigo + ' copiado.'));
-        }
+        window.toggleZoom = function(imgElement) { imgElement.classList.toggle('zoom-activo'); }
+        window.copiarCodigo = function(codigo) { navigator.clipboard.writeText(codigo).then(() => alert('Código ' + codigo + ' copiado.')); }
 
         window.cerrarDetalle = function() {
             const modal = document.getElementById('modal-producto');
@@ -330,7 +318,6 @@
             }, 300);
         }
 
-        // LÓGICA DEL CARRITO (Mi Selección)
         window.toggleCarrito = function(codigo) {
             const p = todosLosProductos.find(x => x.codigo_interno === codigo);
             const index = carrito.findIndex(item => item.codigo_interno === codigo);
@@ -355,33 +342,34 @@
         }
 
         function actualizarUI_Carrito() {
-            const btnFlotante = document.getElementById('btn-carrito');
-            const contador = document.getElementById('contador-carrito');
-            
-            contador.innerText = carrito.length;
-            if(carrito.length > 0) {
-                btnFlotante.classList.remove('hidden');
-                btnFlotante.classList.add('fade-in');
-            } else {
-                btnFlotante.classList.add('hidden');
-                cerrarCarrito();
-            }
+            document.getElementById('contador-carrito').innerText = carrito.length;
         }
 
         window.abrirCarrito = function() {
             const modal = document.getElementById('modal-carrito');
             const lista = document.getElementById('lista-carrito');
+            const totalElement = document.getElementById('total-carrito');
             
-            lista.innerHTML = carrito.map(p => `
-                <div class="flex items-center justify-between border-b border-gray-100 pb-3">
-                    <div>
-                        <p class="text-[10px] text-gray-500 font-mono">${p.codigo_interno}</p>
-                        <p class="font-bold text-sm font-serif">${p.nombre_comercial}</p>
-                        <p class="text-[#d4af37] text-xs font-bold">$${p.precio} MXN</p>
+            let total = 0;
+            
+            if (carrito.length === 0) {
+                lista.innerHTML = `<div class="text-center text-gray-400 py-12 font-serif italic">Tu selección está vacía.<br><span class="text-xs font-sans not-italic block mt-2">Añade prendas exclusivas desde el catálogo.</span></div>`;
+                totalElement.innerHTML = `$0 <span class="text-xs text-gray-400 font-sans">MXN</span>`;
+            } else {
+                lista.innerHTML = carrito.map(p => {
+                    total += parseFloat(p.precio) || 0;
+                    return `
+                    <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+                        <div>
+                            <p class="text-[10px] text-gray-500 font-mono">${p.codigo_interno}</p>
+                            <p class="font-bold text-sm font-serif">${p.nombre_comercial}</p>
+                            <p class="text-[#d4af37] text-xs font-bold">$${p.precio} MXN</p>
+                        </div>
+                        <button onclick="toggleCarrito('${p.codigo_interno}'); abrirCarrito();" class="text-red-500 hover:text-red-700 p-2"><i class="fas fa-trash"></i></button>
                     </div>
-                    <button onclick="toggleCarrito('${p.codigo_interno}'); abrirCarrito();" class="text-red-500 hover:text-red-700 p-2"><i class="fas fa-trash"></i></button>
-                </div>
-            `).join('');
+                `}).join('');
+                totalElement.innerHTML = `$${total.toLocaleString('es-MX')} <span class="text-xs text-gray-400 font-sans">MXN</span>`;
+            }
 
             modal.classList.remove('hidden');
             modal.classList.add('flex');
@@ -402,6 +390,11 @@
         }
 
         window.enviarPedidoWhatsApp = function() {
+            if (carrito.length === 0) {
+                alert("Tu selección está vacía. Añade piezas al catálogo para solicitar un apartado.");
+                return;
+            }
+
             let texto = "✨ Hola Laollaga Istmeña, quiero solicitar el apartado de las siguientes piezas de arte textil:\n\n";
             let total = 0;
             
