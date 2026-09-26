@@ -14,7 +14,6 @@
     </header>
 
     <main class="max-w-5xl mx-auto p-4 mt-4">
-        <!-- Formulario Alta de Productos -->
         <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-black mb-8">
             <h2 class="text-xl font-bold mb-4 uppercase">Registrar Nuevo Producto</h2>
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -36,72 +35,85 @@
     </main>
 
     <script>
-        const supabase = window.supabase.createClient('https://dmpovogobkqxiuqiqdku.supabase.co', 'sb_publishable_vxjNB2Og59jiF0wazOFJBw_-Cj1-q1I');
-
         async function cargarAdmin() {
-            const { data, error } = await supabase.from('productos').select('*').order('codigo_interno', { ascending: true });
-            if (error) return document.getElementById('panel').innerHTML = 'Error de conexión.';
-
-            let html = '';
-            data.forEach(p => {
-                const esDisp = p.estado === 'Disponible';
-                const borde = esDisp ? 'border-green-500' : 'border-red-500';
-                const imgTag = p.imagen_url ? `<img src="https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${p.imagen_url}" class="w-16 h-16 object-cover rounded border">` : `<div class="w-16 h-16 bg-gray-200 flex items-center justify-center text-xs text-gray-500 rounded">Sin foto</div>`;
+            const panel = document.getElementById('panel');
+            try {
+                if (typeof window.supabase === 'undefined') throw new Error('El navegador no descargó la librería. Recarga la página.');
                 
-                html += `
-                <div class="bg-white p-4 rounded shadow flex flex-col md:flex-row justify-between items-start md:items-center border-l-4 ${borde} gap-4">
-                    <div class="flex gap-4 items-center w-full md:w-auto">
-                        ${imgTag}
-                        <div>
-                            <span class="text-xs font-mono bg-gray-100 px-2 py-1 rounded border">${p.codigo_interno}</span>
-                            <h3 class="font-bold text-lg leading-tight mt-1">${p.nombre_comercial}</h3>
-                            <p class="text-sm text-gray-500">$${p.precio} MXN | ${p.estado}</p>
+                const supabase = window.supabase.createClient('https://dmpovogobkqxiuqiqdku.supabase.co', 'sb_publishable_vxjNB2Og59jiF0wazOFJBw_-Cj1-q1I');
+                const { data, error } = await supabase.from('productos').select('*').order('codigo_interno', { ascending: true });
+                
+                if (error) throw new Error(error.message);
+
+                let html = '';
+                data.forEach(p => {
+                    const esDisp = p.estado === 'Disponible';
+                    const borde = esDisp ? 'border-green-500' : 'border-red-500';
+                    const imgTag = p.imagen_url ? `<img src="https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${p.imagen_url}" class="w-16 h-16 object-cover rounded border">` : `<div class="w-16 h-16 bg-gray-200 flex items-center justify-center text-xs text-gray-500 rounded text-center leading-tight p-1">Sin foto</div>`;
+                    
+                    html += `
+                    <div class="bg-white p-4 rounded shadow flex flex-col md:flex-row justify-between items-start md:items-center border-l-4 ${borde} gap-4">
+                        <div class="flex gap-4 items-center w-full md:w-auto">
+                            ${imgTag}
+                            <div>
+                                <span class="text-xs font-mono bg-gray-100 px-2 py-1 rounded border">${p.codigo_interno}</span>
+                                <h3 class="font-bold text-lg leading-tight mt-1">${p.nombre_comercial}</h3>
+                                <p class="text-sm text-gray-500">$${p.precio} MXN | <span class="${esDisp ? 'text-green-600' : 'text-red-600'} font-bold">${p.estado}</span></p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="flex flex-col md:flex-row gap-2 w-full md:w-auto">
-                        <div class="flex">
-                            <input type="text" id="img_${p.id}" value="${p.imagen_url || ''}" placeholder="Ej: GF-001.jpg" class="border p-2 text-sm rounded-l w-full md:w-32 outline-none focus:border-blue-500">
-                            <button onclick="vincularFoto('${p.id}')" class="bg-blue-600 hover:bg-blue-800 text-white px-3 py-2 text-sm font-bold rounded-r">Asignar Foto</button>
+                        <div class="flex flex-col md:flex-row gap-2 w-full md:w-auto">
+                            <div class="flex">
+                                <input type="text" id="img_${p.id}" value="${p.imagen_url || ''}" placeholder="Ej: GF-001.jpg" class="border p-2 text-sm rounded-l w-full md:w-32 outline-none focus:border-blue-500">
+                                <button onclick="vincularFoto('${p.id}')" class="bg-blue-600 hover:bg-blue-800 text-white px-3 py-2 text-sm font-bold rounded-r">Vincular</button>
+                            </div>
+                            <button onclick="cambiarEstado('${p.id}', '${esDisp ? 'Agotado' : 'Disponible'}')" class="${esDisp ? 'bg-[#b91c1c]' : 'bg-gray-800'} text-white px-4 py-2 rounded text-sm font-bold shadow transition-colors">${esDisp ? 'Agotar' : 'Activar'}</button>
                         </div>
-                        <button onclick="cambiarEstado('${p.id}', '${esDisp ? 'Agotado' : 'Disponible'}')" class="${esDisp ? 'bg-[#b91c1c]' : 'bg-gray-800'} text-white px-4 py-2 rounded text-sm font-bold shadow">${esDisp ? 'Marcar Agotado' : 'Reactivar'}</button>
-                    </div>
-                </div>`;
-            });
-            document.getElementById('panel').innerHTML = html;
+                    </div>`;
+                });
+                panel.innerHTML = html;
+            } catch (e) {
+                panel.innerHTML = `<div class="bg-red-100 text-red-900 border-l-4 border-red-600 p-4 font-bold shadow">Diagnóstico: ${e.message}</div>`;
+            }
         }
 
         window.vincularFoto = async function(id) {
+            const supabase = window.supabase.createClient('https://dmpovogobkqxiuqiqdku.supabase.co', 'sb_publishable_vxjNB2Og59jiF0wazOFJBw_-Cj1-q1I');
             const archivo = document.getElementById(`img_${id}`).value.trim();
             const { error } = await supabase.from('productos').update({ imagen_url: archivo }).eq('id', id);
-            if (error) alert('Error al vincular'); else cargarAdmin();
+            if (error) alert('Fallo de escritura SQL'); else cargarAdmin();
         }
 
         window.cambiarEstado = async function(id, nuevoEstado) {
+            const supabase = window.supabase.createClient('https://dmpovogobkqxiuqiqdku.supabase.co', 'sb_publishable_vxjNB2Og59jiF0wazOFJBw_-Cj1-q1I');
             const { error } = await supabase.from('productos').update({ estado: nuevoEstado }).eq('id', id);
             if (!error) cargarAdmin();
         }
 
         window.crearProducto = async function() {
+            const supabase = window.supabase.createClient('https://dmpovogobkqxiuqiqdku.supabase.co', 'sb_publishable_vxjNB2Og59jiF0wazOFJBw_-Cj1-q1I');
             const nuevo = {
-                codigo_interno: document.getElementById('n_codigo').value,
-                nombre_comercial: document.getElementById('n_nombre').value,
+                codigo_interno: document.getElementById('n_codigo').value.trim(),
+                nombre_comercial: document.getElementById('n_nombre').value.trim(),
                 categoria: document.getElementById('n_cat').value,
                 precio: parseFloat(document.getElementById('n_precio').value),
-                talla: document.getElementById('n_talla').value,
-                medidas: document.getElementById('n_medidas').value,
-                material: document.getElementById('n_material').value,
-                cuidados: document.getElementById('n_cuidados').value,
-                imagen_url: document.getElementById('n_imagen').value,
+                talla: document.getElementById('n_talla').value.trim() || 'N/A',
+                medidas: document.getElementById('n_medidas').value.trim() || 'N/A',
+                material: document.getElementById('n_material').value.trim() || 'N/A',
+                cuidados: document.getElementById('n_cuidados').value.trim() || 'N/A',
+                imagen_url: document.getElementById('n_imagen').value.trim() || null,
                 estado: 'Disponible'
             };
-            if(!nuevo.codigo_interno || !nuevo.nombre_comercial) return alert('Código y Nombre son obligatorios.');
+            
+            if(!nuevo.codigo_interno || !nuevo.nombre_comercial) return alert('El Código y Nombre Comercial son mandatorios.');
+            if(isNaN(nuevo.precio)) return alert('El precio debe ser numérico.');
             
             const { error } = await supabase.from('productos').insert([nuevo]);
-            if (error) alert('Error al guardar en base de datos.');
-            else { alert('Producto agregado exitosamente.'); location.reload(); }
+            if (error) alert('Error SQL: ' + error.message);
+            else { alert('Alta exitosa.'); location.reload(); }
         }
 
-        cargarAdmin();
+        // Micro-retraso de seguridad (Medida correctiva)
+        setTimeout(cargarAdmin, 600);
     </script>
 </body>
 </html>
