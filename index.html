@@ -13,15 +13,9 @@
         .tab-activa { border-bottom: 3px solid #000; color: #000; font-weight: bold; }
         .tab-inactiva { border-bottom: 3px solid transparent; color: #9ca3af; }
         
-        /* Efecto Zoom Interactivo por Click / Táctil */
-        .zoom-activo {
-            transform: scale(1.8);
-            cursor: zoom-out !important;
-        }
-        .zoom-normal {
-            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            cursor: zoom-in;
-        }
+        /* Efecto Zoom Interactivo */
+        .zoom-activo { transform: scale(1.8); cursor: zoom-out !important; }
+        .zoom-normal { transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); cursor: zoom-in; }
     </style>
 </head>
 <body class="bg-[#fcfbf9] bg-textura bg-fixed text-gray-800 font-sans antialiased selection:bg-black selection:text-white">
@@ -42,10 +36,19 @@
     </header>
 
     <main class="max-w-7xl mx-auto p-3 md:p-10 min-h-screen">
-        <!-- Pestañas de Navegación -->
-        <div class="flex justify-center mb-8 md:mb-14 border-b border-gray-200 overflow-x-auto" id="tabs-container"></div>
         
-        <!-- Cuadrícula del Catálogo (Optimizada a 2 columnas en móviles) -->
+        <!-- MEJORA 1: Barra de Búsqueda Instantánea -->
+        <div class="max-w-md mx-auto mb-8 relative">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">
+                <i class="fas fa-search"></i>
+            </span>
+            <input type="text" id="buscador" oninput="filtrarProductos()" placeholder="Buscar por nombre, código o material..." class="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-full text-sm shadow-sm focus:outline-none focus:border-black transition-all">
+        </div>
+
+        <!-- Pestañas de Navegación -->
+        <div class="flex justify-center mb-8 md:mb-12 border-b border-gray-200 overflow-x-auto" id="tabs-container"></div>
+        
+        <!-- Cuadrícula del Catálogo -->
         <div id="catalogo">
             <div class="text-center py-20 text-gray-400 font-bold uppercase tracking-widest text-sm animate-pulse">Cargando colección exclusiva...</div>
         </div>
@@ -54,7 +57,7 @@
         <div id="paginacion" class="flex justify-center items-center gap-4 mt-16 hidden"></div>
     </main>
 
-    <!-- Pantalla de Detalle (Modal con Zoom Táctil) -->
+    <!-- Pantalla de Detalle (Modal con Zoom y Funciones de Compartir) -->
     <div id="modal-producto" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-md hidden flex-col overflow-y-auto transition-opacity duration-300 opacity-0">
         <div class="min-h-screen w-full flex flex-col md:flex-row bg-[#fcfbf9] relative shadow-2xl">
             <button onclick="cerrarDetalle()" class="absolute top-4 left-4 md:top-8 md:left-8 z-30 bg-black/80 hover:bg-black text-white px-5 py-2.5 rounded-full font-bold uppercase text-xs tracking-widest transition-all shadow-xl backdrop-blur-sm flex items-center gap-2">
@@ -76,6 +79,7 @@
         let categoriaActual = '';
         let paginaActual = 1;
         const itemsPorPagina = 6;
+        let terminoBusqueda = '';
 
         async function cargarCatalogo() {
             const contenedor = document.getElementById('catalogo');
@@ -88,57 +92,107 @@
                 if (error) throw new Error(error.message);
                 
                 todosLosProductos = data;
-                datosInventario = {};
-                data.forEach(item => {
-                    if(!datosInventario[item.categoria]) datosInventario[item.categoria] = [];
-                    datosInventario[item.categoria].push(item);
-                });
-
+                organizarDatos(data);
                 generarPestañas();
-                categoriaActual = Object.keys(datosInventario)[0];
+                categoriaActual = Object.keys(datosInventario)[0] || '';
                 mostrarCategoria(categoriaActual, 1);
             } catch (err) {
                 contenedor.innerHTML = `<div class="bg-red-50 text-red-900 p-6 shadow-sm border border-red-200 text-center"><p class="font-bold">Error de sincronización: ${err.message}</p></div>`;
             }
         }
 
+        function organizarDatos(productos) {
+            datosInventario = {};
+            productos.forEach(item => {
+                if(!datosInventario[item.categoria]) datosInventario[item.categoria] = [];
+                datosInventario[item.categoria].push(item);
+            });
+        }
+
         function generarPestañas() {
             let html = '';
             for (const cat in datosInventario) {
-                html += `<button onclick="mostrarCategoria('${cat}', 1)" id="tab-${cat.replace(/\s+/g, '')}" class="px-6 md:px-8 py-4 text-xs md:text-sm uppercase tracking-[0.15em] transition-all whitespace-nowrap tab-inactiva hover:text-black focus:outline-none">${cat}</button>`;
+                html += `<button onclick="cambiarCategoria('${cat}')" id="tab-${cat.replace(/\s+/g, '')}" class="px-6 md:px-8 py-4 text-xs md:text-sm uppercase tracking-[0.15em] transition-all whitespace-nowrap tab-inactiva hover:text-black focus:outline-none">${cat}</button>`;
             }
             document.getElementById('tabs-container').innerHTML = html;
         }
 
-        window.mostrarCategoria = function(categoriaSeleccionada, paginaObjetivo) {
-            categoriaActual = categoriaSeleccionada;
-            paginaActual = paginaObjetivo;
+        window.cambiarCategoria = function(cat) {
+            document.getElementById('buscador').value = '';
+            terminoBusqueda = '';
+            mostrarCategoria(cat, 1);
+        }
 
+        window.filtrarProductos = function() {
+            terminoBusqueda = document.getElementById('buscador').value.toLowerCase().trim();
+            if (terminoBusqueda !== '') {
+                // Ocultar pestañas visualmente durante la búsqueda global
+                for (const cat in datosInventario) {
+                    const btn = document.getElementById(`tab-${cat.replace(/\s+/g, '')}`);
+                    if(btn) btn.classList.remove('tab-activa');
+                }
+            } else {
+                marcarPestañaActiva(categoriaActual);
+            }
+            mostrarCategoria(categoriaActual, 1);
+        }
+
+        function marcarPestañaActiva(catActiva) {
             for (const cat in datosInventario) {
                 const btn = document.getElementById(`tab-${cat.replace(/\s+/g, '')}`);
-                if(cat === categoriaActual) {
+                if(!btn) continue;
+                if(cat === catActiva && terminoBusqueda === '') {
                     btn.classList.remove('tab-inactiva'); btn.classList.add('tab-activa');
                 } else {
                     btn.classList.remove('tab-activa'); btn.classList.add('tab-inactiva');
                 }
             }
+        }
 
-            const productosTotales = datosInventario[categoriaActual];
-            const totalPaginas = Math.ceil(productosTotales.length / itemsPorPagina);
-            const productosPagina = productosTotales.slice((paginaActual - 1) * itemsPorPagina, ((paginaActual - 1) * itemsPorPagina) + itemsPorPagina);
+        window.mostrarCategoria = function(categoriaSeleccionada, paginaObjetivo) {
+            categoriaActual = categoriaSeleccionada;
+            paginaActual = paginaObjetivo;
+            marcarPestañaActiva(categoriaActual);
 
-            // MODIFICACIÓN CLAVE: grid-cols-2 en móviles para ver dos productos por fila
-            let html = `<div class="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-12">`;
+            let listaProductos = datosInventario[categoriaActual] || [];
+
+            // Aplicar filtro de búsqueda si existe
+            if (terminoBusqueda !== '') {
+                listaProductos = todosLosProductos.filter(p => 
+                    p.nombre_comercial.toLowerCase().includes(terminoBusqueda) ||
+                    p.codigo_interno.toLowerCase().includes(terminoBusqueda) ||
+                    p.material.toLowerCase().includes(terminoBusqueda)
+                );
+            }
+
+            const totalPaginas = Math.ceil(listaProductos.length / itemsPorPagina);
+            if(paginaActual > totalPaginas && totalPaginas > 0) paginaActual = totalPaginas;
+            const productosPagina = listaProductos.slice((paginaActual - 1) * itemsPorPagina, ((paginaActual - 1) * itemsPorPagina) + itemsPorPagina);
+
+            let html = '';
+            if (productosPagina.length === 0) {
+                html = `<div class="text-center py-20 text-gray-400 font-serif italic text-lg">No se encontraron piezas con esta búsqueda.</div>`;
+                document.getElementById('catalogo').innerHTML = html;
+                document.getElementById('paginacion').classList.add('hidden');
+                return;
+            }
+
+            html = `<div class="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-12">`;
             
             productosPagina.forEach(p => {
                 const imgPath = p.imagen_url ? `https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${p.imagen_url}` : 'https://via.placeholder.com/600x800.png?text=Fotograf%C3%ADa+en+proceso';
                 
+                // MEJORA 2: Badge Dinámico (Exclusivo / Pieza Única)
+                const badgeExclusivo = `<span class="absolute top-3 left-3 bg-[#d4af37] text-black text-[9px] md:text-xs font-bold px-2.5 py-1 rounded shadow-md tracking-widest uppercase"><i class="fas fa-gem mr-1"></i> Pieza Única</span>`;
+
                 html += `
                 <div class="bg-white shadow-sm hover:shadow-2xl border border-gray-100 flex flex-col overflow-hidden transition-all duration-500 cursor-pointer group rounded-sm" onclick="abrirDetalle('${p.codigo_interno}')">
                     <div class="relative h-[250px] sm:h-[350px] md:h-[480px] bg-gray-100 overflow-hidden">
                         <img src="${imgPath}" alt="${p.nombre_comercial}" class="w-full h-full object-cover object-top">
+                        ${badgeExclusivo}
                     </div>
                     <div class="p-3 md:p-6 text-center bg-white flex-grow flex flex-col justify-center">
+                        <span class="text-[10px] text-gray-400 font-mono mb-1">${p.codigo_interno}</span>
                         <h3 class="text-xs sm:text-lg md:text-2xl font-serif font-bold text-gray-900 mb-1 md:mb-2 tracking-wide leading-tight">${p.nombre_comercial}</h3>
                         <p class="text-sm sm:text-base md:text-lg font-light text-[#d4af37] tracking-widest">$${p.precio} <span class="text-[10px] md:text-xs text-gray-400">MXN</span></p>
                     </div>
@@ -162,7 +216,7 @@
             htmlPag += `<button onclick="mostrarCategoria('${categoriaActual}', ${paginaActual + 1})" class="px-5 py-2.5 border border-gray-300 hover:border-black text-gray-400 hover:text-black uppercase text-xs tracking-widest transition-colors ${paginaActual === totalPaginas ? 'opacity-30 pointer-events-none' : ''}">Siguiente</button>`;
             
             contPaginacion.innerHTML = htmlPag;
-            if(paginaActual > 1) document.getElementById('tabs-container').scrollIntoView({ behavior: 'smooth' });
+            if(paginaActual > 1 && terminoBusqueda === '') document.getElementById('tabs-container').scrollIntoView({ behavior: 'smooth' });
         }
 
         window.abrirDetalle = function(codigo) {
@@ -178,7 +232,15 @@
                     </div>
                 </div>
                 <div class="w-full md:w-2/5 p-6 md:p-14 flex flex-col justify-center bg-[#fcfbf9]">
-                    <p class="text-xs text-gray-400 font-mono mb-3 tracking-[0.2em] uppercase">${p.codigo_interno}</p>
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs text-gray-400 font-mono tracking-[0.2em] uppercase">${p.codigo_interno}</span>
+                        
+                        <!-- MEJORA 3: Botón Compartir / Copiar Código -->
+                        <button onclick="copiarCodigo('${p.codigo_interno}', '${p.nombre_comercial}')" class="text-xs uppercase tracking-wider text-gray-500 hover:text-black border border-gray-200 px-3 py-1 rounded bg-white transition-colors">
+                            <i class="fas fa-copy mr-1"></i> Copiar Código
+                        </button>
+                    </div>
+
                     <h2 class="text-3xl md:text-4xl font-serif font-bold text-gray-900 leading-tight mb-4">${p.nombre_comercial}</h2>
                     <p class="text-3xl font-light text-[#d4af37] mb-8">$${p.precio} <span class="text-sm text-gray-400 font-sans">MXN</span></p>
 
@@ -197,9 +259,11 @@
                         </div>
                     </div>
 
-                    <a href="${enlaceWapp}" target="_blank" class="block w-full text-center bg-black hover:bg-[#b91c1c] text-white font-bold py-4 md:py-5 rounded-sm uppercase text-sm tracking-widest shadow-xl transition-all hover:shadow-2xl">
-                        <i class="fab fa-whatsapp text-lg mr-2"></i> Adquirir esta pieza
-                    </a>
+                    <div class="space-y-3">
+                        <a href="${enlaceWapp}" target="_blank" class="block w-full text-center bg-black hover:bg-[#b91c1c] text-white font-bold py-4 md:py-5 rounded-sm uppercase text-sm tracking-widest shadow-xl transition-all hover:shadow-2xl">
+                            <i class="fab fa-whatsapp text-lg mr-2"></i> Adquirir esta pieza
+                        </a>
+                    </div>
                 </div>
             `;
             const modal = document.getElementById('modal-producto');
@@ -210,6 +274,13 @@
 
         window.toggleZoom = function(imgElement) {
             imgElement.classList.toggle('zoom-activo');
+        }
+
+        window.copiarCodigo = function(codigo, nombre) {
+            const texto = `Pieza: ${codigo} - ${nombre} | Laollaga Istmeña`;
+            navigator.clipboard.writeText(texto).then(() => {
+                alert('¡Código copiado al portapapeles! Ya puedes compartirlo.');
+            });
         }
 
         window.cerrarDetalle = function() {
