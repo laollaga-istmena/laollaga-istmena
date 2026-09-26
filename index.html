@@ -22,53 +22,65 @@
     </main>
 
     <script>
-        const supabase = window.supabase.createClient('https://dmpovogobkqxiuqiqdku.supabase.co', 'sb_publishable_vxjNB2Og59jiF0wazOFJBw_-Cj1-q1I');
-
         async function cargarCatalogo() {
-            const { data, error } = await supabase.from('productos').select('*').eq('estado', 'Disponible').order('codigo_interno', { ascending: true });
-            
-            if (error || !data || data.length === 0) {
-                document.getElementById('catalogo').innerHTML = '<p class="text-center mt-10 text-xl font-bold text-gray-600">No hay piezas disponibles en este momento.</p>';
-                return;
-            }
+            const contenedor = document.getElementById('catalogo');
+            try {
+                // 1. Validar que Brave no esté bloqueando el script
+                if (typeof window.supabase === 'undefined') {
+                    throw new Error("El navegador destruyó la conexión al servidor (Librería bloqueada). Apaga los escudos de seguridad (Shields).");
+                }
 
-            const categorias = {};
-            data.forEach(item => {
-                if(!categorias[item.categoria]) categorias[item.categoria] = [];
-                categorias[item.categoria].push(item);
-            });
+                const supabase = window.supabase.createClient('https://dmpovogobkqxiuqiqdku.supabase.co', 'sb_publishable_vxjNB2Og59jiF0wazOFJBw_-Cj1-q1I');
+                
+                // 2. Extraer datos con manejo de errores directo
+                const { data, error } = await supabase.from('productos').select('*').eq('estado', 'Disponible').order('codigo_interno', { ascending: true });
+                
+                if (error) {
+                    contenedor.innerHTML = `<div class="bg-red-100 border-l-4 border-red-600 text-red-900 p-4"><p class="font-bold">Error de Base de Datos:</p><p>${error.message}</p><p class="text-xs mt-2">Detalle: ${error.details || 'N/A'} | Código: ${error.code || 'N/A'}</p></div>`;
+                    return;
+                }
 
-            let html = '';
-            for (const cat in categorias) {
-                html += `<h2 class="text-2xl font-bold mt-10 mb-6 border-b-2 border-gray-200 pb-2 uppercase rojo-istmo tracking-wide">${cat}</h2>`;
-                html += `<div class="grid grid-cols-1 md:grid-cols-2 gap-6">`;
-                categorias[cat].forEach(p => {
-                    const textoWapp = `Hola, me interesa confirmar disponibilidad de la pieza: ${p.codigo_interno} - ${p.nombre_comercial}`;
-                    const enlaceWapp = `https://wa.me/529711140709?text=${encodeURIComponent(textoWapp)}`;
-                    html += `
-                    <div class="bg-white rounded-lg shadow-md border border-gray-100 flex flex-col overflow-hidden">
-                        <div class="p-6 flex-grow">
-                            <span class="inline-block px-2 py-1 bg-green-100 text-green-800 text-xs font-bold rounded mb-3 border border-green-200">● Disponible</span>
-                            <h3 class="text-xl font-bold mb-1 text-gray-900">${p.nombre_comercial}</h3>
-                            <p class="text-2xl font-bold text-black mb-4">$${p.precio} MXN</p>
-                            <div class="text-sm text-gray-600 space-y-1">
-                                <p><strong>Talla/Medidas:</strong> ${p.talla || ''} ${p.medidas && p.medidas !== 'N/A' ? p.medidas : ''}</p>
-                                <p><strong>Material:</strong> ${p.material}</p>
-                                <p><strong>Cuidados:</strong> ${p.cuidados}</p>
-                            </div>
-                        </div>
-                        <div class="bg-gray-50 p-4 border-t border-gray-100">
-                            <a href="${enlaceWapp}" target="_blank" class="block w-full text-center bg-black hover:bg-gray-800 text-white font-bold py-3 rounded uppercase text-sm tracking-wider transition-colors">
-                                Consultar por WhatsApp
-                            </a>
-                        </div>
-                    </div>`;
+                if (!data || data.length === 0) {
+                    contenedor.innerHTML = '<p class="text-center mt-10 text-xl font-bold text-gray-600">No hay piezas disponibles en este momento.</p>';
+                    return;
+                }
+
+                const categorias = {};
+                data.forEach(item => {
+                    if(!categorias[item.categoria]) categorias[item.categoria] = [];
+                    categorias[item.categoria].push(item);
                 });
-                html += `</div>`;
+
+                let html = '';
+                for (const cat in categorias) {
+                    html += `<h2 class="text-2xl font-bold mt-10 mb-6 border-b-2 border-gray-200 pb-2 uppercase rojo-istmo tracking-wide">${cat}</h2>`;
+                    html += `<div class="grid grid-cols-1 md:grid-cols-2 gap-6">`;
+                    categorias[cat].forEach(p => {
+                        const textoWapp = `Hola, me interesa confirmar disponibilidad de la pieza: ${p.codigo_interno} - ${p.nombre_comercial}`;
+                        const enlaceWapp = `https://wa.me/529711140709?text=${encodeURIComponent(textoWapp)}`;
+                        html += `
+                        <div class="bg-white rounded-lg shadow-md border border-gray-100 flex flex-col overflow-hidden">
+                            <div class="p-6 flex-grow">
+                                <span class="inline-block px-2 py-1 bg-green-100 text-green-800 text-xs font-bold rounded mb-3 border border-green-200">● Disponible</span>
+                                <h3 class="text-xl font-bold mb-1 text-gray-900">${p.nombre_comercial}</h3>
+                                <p class="text-2xl font-bold text-black mb-4">$${p.precio} MXN</p>
+                            </div>
+                            <div class="bg-gray-50 p-4 border-t border-gray-100">
+                                <a href="${enlaceWapp}" target="_blank" class="block w-full text-center bg-black hover:bg-gray-800 text-white font-bold py-3 rounded uppercase text-sm tracking-wider transition-colors">Consultar por WhatsApp</a>
+                            </div>
+                        </div>`;
+                    });
+                    html += `</div>`;
+                }
+                contenedor.innerHTML = html;
+            } catch (err) {
+                // 3. Capturar colapsos totales de Javascript
+                contenedor.innerHTML = `<div class="bg-red-100 border-l-4 border-red-600 text-red-900 p-4"><p class="font-bold">Colapso de Red / Frontend:</p><p>${err.message}</p></div>`;
             }
-            document.getElementById('catalogo').innerHTML = html;
         }
-        cargarCatalogo();
+        
+        // Ejecución con micro-retraso para vencer conexiones móviles lentas
+        setTimeout(cargarCatalogo, 500);
     </script>
 </body>
 </html>
