@@ -13,26 +13,32 @@
         .tab-activa { border-bottom: 3px solid #000; color: #000; font-weight: bold; }
         .tab-inactiva { border-bottom: 3px solid transparent; color: #9ca3af; }
         
-        /* Efecto de Zoom de Lupa en la Pantalla de Detalle */
-        .zoom-lupa-container { overflow: hidden; position: relative; cursor: zoom-in; }
-        .zoom-lupa-container img { transition: transform 0.5s ease; }
-        .zoom-lupa-container:hover img { transform: scale(1.5); }
+        /* Efecto Zoom Interactivo por Click / Táctil */
+        .zoom-activo {
+            transform: scale(1.8);
+            cursor: zoom-out !important;
+        }
+        .zoom-normal {
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: zoom-in;
+        }
     </style>
 </head>
 <body class="bg-[#fcfbf9] bg-textura bg-fixed text-gray-800 font-sans antialiased selection:bg-black selection:text-white">
     
-    <!-- Header Premium Inmersivo -->
+    <!-- Header Premium Inmersivo con Logo Forzado -->
     <header class="bg-[#0a0a0a] text-center py-12 md:py-16 px-4 shadow-2xl relative overflow-hidden bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]">
         
-        <!-- Logo con respaldo tipográfico de alta categoría garantizado -->
-        <div class="flex flex-col items-center justify-center mb-6 relative z-10">
-            <div class="w-40 h-40 md:w-48 md:h-48 rounded-full border-2 border-[#d4af37] p-1 shadow-[0_0_40px_rgba(212,175,55,0.3)] bg-black flex items-center justify-center overflow-hidden mb-3">
-                <img src="https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/Laollaga_istmena_cutout(1).png" alt="Laollaga Istmeña" class="w-full h-full object-cover rounded-full" onerror="this.onerror=null; this.parentElement.style.display='none'; document.getElementById('logo-fallback').style.display='block';">
+        <!-- Contenedor del Logo con doble ruta de respaldo -->
+        <div class="max-w-[180px] md:max-w-[220px] mx-auto mb-6 relative z-10">
+            <div class="w-36 h-36 md:w-44 md:h-44 mx-auto rounded-full p-1 bg-black shadow-[0_0_50px_rgba(212,175,55,0.4)] border-2 border-[#d4af37] flex items-center justify-center overflow-hidden">
+                <img src="https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/logo.png" alt="Laollaga Istmeña" class="w-full h-full object-cover rounded-full" onerror="this.src='https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/Laollaga_istmena_cutout(1).png'">
             </div>
-            <h2 id="logo-fallback" style="display:none;" class="text-3xl md:text-4xl font-serif oro tracking-widest uppercase">Laollaga Istmeña</h2>
         </div>
         
-        <p class="font-serif italic oro text-base md:text-xl tracking-[0.2em] relative z-10 drop-shadow-md">Arte tejido, tradición que se viste.</p>
+        <h1 class="text-3xl md:text-5xl font-serif oro tracking-widest uppercase relative z-10 drop-shadow-md mb-2">Laollaga Istmeña</h1>
+        <p class="font-serif italic text-gray-300 text-sm md:text-lg tracking-[0.2em] relative z-10 opacity-90">Arte tejido, tradición que se viste.</p>
+        
         <div class="absolute bottom-0 left-0 w-full h-1.5 bg-gradient-to-r from-yellow-700 via-yellow-400 to-yellow-700"></div>
     </header>
 
@@ -49,7 +55,7 @@
         <div id="paginacion" class="flex justify-center items-center gap-4 mt-16 hidden"></div>
     </main>
 
-    <!-- Pantalla de Detalle (Modal Responsivo con Zoom de Lupa) -->
+    <!-- Pantalla de Detalle (Modal con Zoom Táctil de Precisión) -->
     <div id="modal-producto" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-md hidden flex-col overflow-y-auto transition-opacity duration-300 opacity-0">
         <div class="min-h-screen w-full flex flex-col md:flex-row bg-[#fcfbf9] relative shadow-2xl">
             <!-- Botón flotante para regresar -->
@@ -167,9 +173,9 @@
             const enlaceWapp = `https://wa.me/529711140709?text=${encodeURIComponent(textoWapp)}`;
 
             document.getElementById('modal-content').innerHTML = `
-                <div class="w-full md:w-3/5 bg-black flex items-center justify-center relative min-h-[50vh] md:min-h-screen p-4 md:p-10">
-                    <div class="zoom-lupa-container w-full h-full max-h-[85vh] md:max-h-[90vh] flex items-center justify-center rounded overflow-hidden shadow-2xl">
-                        <img src="${imgPath}" class="w-full h-full object-contain">
+                <div class="w-full md:w-3/5 bg-black flex items-center justify-center relative min-h-[50vh] md:min-h-screen p-4 md:p-10 overflow-hidden">
+                    <div class="w-full h-full max-h-[85vh] md:max-h-[90vh] flex items-center justify-center rounded overflow-hidden">
+                        <img id="img-zoomable" src="${imgPath}" class="zoom-normal w-full h-full object-contain cursor-zoom-in" onclick="toggleZoom(this)" title="Toca para hacer zoom">
                     </div>
                 </div>
                 <div class="w-full md:w-2/5 p-6 md:p-14 flex flex-col justify-center bg-[#fcfbf9]">
@@ -201,6 +207,11 @@
             modal.classList.remove('hidden');
             setTimeout(() => modal.classList.remove('opacity-0'), 10);
             document.body.style.overflow = 'hidden'; 
+        }
+
+        // Función para activar y desactivar el zoom por toque o clic de forma limpia
+        window.toggleZoom = function(imgElement) {
+            imgElement.classList.toggle('zoom-activo');
         }
 
         window.cerrarDetalle = function() {
