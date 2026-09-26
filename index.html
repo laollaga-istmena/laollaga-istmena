@@ -26,10 +26,9 @@
 </head>
 <body class="bg-[#fcfbf9] bg-textura bg-fixed text-gray-800 font-sans antialiased selection:bg-black selection:text-white">
     
-    <!-- Header Premium Inmersivo con Logo Forzado -->
+    <!-- Header Premium Inmersivo con Logo -->
     <header class="bg-[#0a0a0a] text-center py-12 md:py-16 px-4 shadow-2xl relative overflow-hidden bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]">
         
-        <!-- Contenedor del Logo con doble ruta de respaldo -->
         <div class="max-w-[180px] md:max-w-[220px] mx-auto mb-6 relative z-10">
             <div class="w-36 h-36 md:w-44 md:h-44 mx-auto rounded-full p-1 bg-black shadow-[0_0_50px_rgba(212,175,55,0.4)] border-2 border-[#d4af37] flex items-center justify-center overflow-hidden">
                 <img src="https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/logo.png" alt="Laollaga Istmeña" class="w-full h-full object-cover rounded-full" onerror="this.src='https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/Laollaga_istmena_cutout(1).png'">
@@ -42,11 +41,11 @@
         <div class="absolute bottom-0 left-0 w-full h-1.5 bg-gradient-to-r from-yellow-700 via-yellow-400 to-yellow-700"></div>
     </header>
 
-    <main class="max-w-7xl mx-auto p-4 md:p-10 min-h-screen">
+    <main class="max-w-7xl mx-auto p-3 md:p-10 min-h-screen">
         <!-- Pestañas de Navegación -->
-        <div class="flex justify-center mb-10 md:mb-14 border-b border-gray-200 overflow-x-auto" id="tabs-container"></div>
+        <div class="flex justify-center mb-8 md:mb-14 border-b border-gray-200 overflow-x-auto" id="tabs-container"></div>
         
-        <!-- Cuadrícula del Catálogo -->
+        <!-- Cuadrícula del Catálogo (Optimizada a 2 columnas en móviles) -->
         <div id="catalogo">
             <div class="text-center py-20 text-gray-400 font-bold uppercase tracking-widest text-sm animate-pulse">Cargando colección exclusiva...</div>
         </div>
@@ -55,10 +54,9 @@
         <div id="paginacion" class="flex justify-center items-center gap-4 mt-16 hidden"></div>
     </main>
 
-    <!-- Pantalla de Detalle (Modal con Zoom Táctil de Precisión) -->
+    <!-- Pantalla de Detalle (Modal con Zoom Táctil) -->
     <div id="modal-producto" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-md hidden flex-col overflow-y-auto transition-opacity duration-300 opacity-0">
         <div class="min-h-screen w-full flex flex-col md:flex-row bg-[#fcfbf9] relative shadow-2xl">
-            <!-- Botón flotante para regresar -->
             <button onclick="cerrarDetalle()" class="absolute top-4 left-4 md:top-8 md:left-8 z-30 bg-black/80 hover:bg-black text-white px-5 py-2.5 rounded-full font-bold uppercase text-xs tracking-widest transition-all shadow-xl backdrop-blur-sm flex items-center gap-2">
                 <i class="fas fa-arrow-left"></i> Volver al catálogo
             </button>
@@ -129,19 +127,20 @@
             const totalPaginas = Math.ceil(productosTotales.length / itemsPorPagina);
             const productosPagina = productosTotales.slice((paginaActual - 1) * itemsPorPagina, ((paginaActual - 1) * itemsPorPagina) + itemsPorPagina);
 
-            let html = `<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">`;
+            // MODIFICACIÓN CLAVE: grid-cols-2 en móviles para ver dos productos por fila
+            let html = `<div class="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-12">`;
             
             productosPagina.forEach(p => {
                 const imgPath = p.imagen_url ? `https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${p.imagen_url}` : 'https://via.placeholder.com/600x800.png?text=Fotograf%C3%ADa+en+proceso';
                 
                 html += `
                 <div class="bg-white shadow-sm hover:shadow-2xl border border-gray-100 flex flex-col overflow-hidden transition-all duration-500 cursor-pointer group rounded-sm" onclick="abrirDetalle('${p.codigo_interno}')">
-                    <div class="relative h-[420px] md:h-[480px] bg-gray-100 overflow-hidden">
+                    <div class="relative h-[250px] sm:h-[350px] md:h-[480px] bg-gray-100 overflow-hidden">
                         <img src="${imgPath}" alt="${p.nombre_comercial}" class="w-full h-full object-cover object-top">
                     </div>
-                    <div class="p-6 text-center bg-white flex-grow flex flex-col justify-center">
-                        <h3 class="text-xl md:text-2xl font-serif font-bold text-gray-900 mb-2 tracking-wide">${p.nombre_comercial}</h3>
-                        <p class="text-lg font-light text-[#d4af37] tracking-widest">$${p.precio} <span class="text-xs text-gray-400">MXN</span></p>
+                    <div class="p-3 md:p-6 text-center bg-white flex-grow flex flex-col justify-center">
+                        <h3 class="text-xs sm:text-lg md:text-2xl font-serif font-bold text-gray-900 mb-1 md:mb-2 tracking-wide leading-tight">${p.nombre_comercial}</h3>
+                        <p class="text-sm sm:text-base md:text-lg font-light text-[#d4af37] tracking-widest">$${p.precio} <span class="text-[10px] md:text-xs text-gray-400">MXN</span></p>
                     </div>
                 </div>`;
             });
@@ -209,7 +208,6 @@
             document.body.style.overflow = 'hidden'; 
         }
 
-        // Función para activar y desactivar el zoom por toque o clic de forma limpia
         window.toggleZoom = function(imgElement) {
             imgElement.classList.toggle('zoom-activo');
         }
