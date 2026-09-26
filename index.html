@@ -3,35 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laollaga Istmeña | Catálogo</title>
+    <title>Laollaga Istmeña | Catálogo Premium</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .oro { color: #d4af37; }
         .rojo-istmo { color: #b91c1c; }
         .tab-activa { border-bottom: 4px solid #b91c1c; color: #000; font-weight: bold; }
         .tab-inactiva { border-bottom: 4px solid transparent; color: #6b7280; }
+        
+        /* Efecto de Zoom Suave para Imágenes */
+        .zoom-img-container { overflow: hidden; }
+        .zoom-img-container img {
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        /* El zoom se activa en hover (desktop) y active (móvil) */
+        .producto-card:hover .zoom-img-container img, 
+        .producto-card:active .zoom-img-container img {
+            transform: scale(1.08);
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans">
-    <header class="bg-black text-center py-10 px-4 shadow-xl relative overflow-hidden">
-        <h1 class="text-4xl md:text-5xl font-serif oro tracking-widest uppercase relative z-10 drop-shadow-md">Laollaga Istmeña</h1>
-        <p class="text-white mt-3 font-light tracking-widest uppercase text-sm relative z-10">La elegancia del Istmo se viste aquí</p>
-        <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-red-900 via-red-600 to-red-900"></div>
+    
+    <!-- Header Premium Inmersivo -->
+    <header class="bg-black text-center py-12 px-4 shadow-2xl relative overflow-hidden bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]">
+        <!-- Espacio para Logo (Reemplaza el src con tu enlace cuando lo tengas) -->
+        <!-- <img src="URL_DE_TU_LOGO.png" alt="Logo Laollaga" class="h-20 mx-auto mb-4 relative z-10"> -->
+        
+        <h1 class="text-5xl md:text-6xl font-serif oro tracking-widest uppercase relative z-10 drop-shadow-lg mb-2">Laollaga Istmeña</h1>
+        <p class="text-white mt-1 font-light tracking-widest uppercase text-sm md:text-base relative z-10 opacity-90">Arte tejido, tradición que se viste.</p>
+        
+        <!-- Contacto Directo en el Header -->
+        <a href="https://wa.me/529711140709" target="_blank" class="inline-flex items-center gap-2 mt-6 bg-[#b91c1c] hover:bg-red-800 text-white font-bold py-2 px-6 rounded-full uppercase text-xs tracking-wider transition-all transform hover:scale-105 shadow-lg relative z-10">
+            <i class="fab fa-whatsapp text-lg"></i> Contacto: 971 114 0709
+        </a>
+        
+        <!-- Línea Decorativa -->
+        <div class="absolute bottom-0 left-0 w-full h-1.5 bg-gradient-to-r from-yellow-600 via-yellow-400 to-yellow-600"></div>
     </header>
 
     <main class="max-w-6xl mx-auto p-4 md:p-8">
         <!-- Navegación por Pestañas -->
-        <div class="flex justify-center mb-8 border-b border-gray-300" id="tabs-container"></div>
+        <div class="flex justify-center mb-10 border-b border-gray-300" id="tabs-container"></div>
         
         <!-- Contenedor Dinámico -->
         <div id="catalogo">
-            <div class="text-center py-20 text-gray-500 font-bold animate-pulse">Sincronizando inventario de alta calidad...</div>
+            <div class="text-center py-20 text-gray-500 font-bold animate-pulse">Cargando experiencia visual...</div>
         </div>
+        
+        <!-- Contenedor de Paginación -->
+        <div id="paginacion" class="flex justify-center items-center gap-4 mt-12 hidden"></div>
     </main>
+
+    <!-- Footer Elegante -->
+    <footer class="bg-black text-center py-8 border-t-4 border-[#b91c1c] mt-12">
+        <p class="text-gray-400 text-sm font-light tracking-widest uppercase">&copy; 2026 Laollaga Istmeña. Todos los derechos reservados.</p>
+    </footer>
 
     <script>
         let datosInventario = {};
+        let categoriaActual = '';
+        let paginaActual = 1;
+        const itemsPorPagina = 6; // Límite de productos por página para que no sea interminable
 
         async function cargarCatalogo() {
             const contenedor = document.getElementById('catalogo');
@@ -55,8 +90,8 @@
                 });
 
                 generarPestañas();
-                const primeraCat = Object.keys(datosInventario)[0];
-                mostrarCategoria(primeraCat);
+                categoriaActual = Object.keys(datosInventario)[0];
+                mostrarCategoria(categoriaActual, 1);
             } catch (err) {
                 contenedor.innerHTML = `<div class="bg-red-100 border-l-4 border-red-600 text-red-900 p-4 shadow mt-10"><p class="font-bold">Error Técnico:</p><p>${err.message}</p></div>`;
             }
@@ -65,56 +100,109 @@
         function generarPestañas() {
             let html = '';
             for (const cat in datosInventario) {
-                html += `<button onclick="mostrarCategoria('${cat}')" id="tab-${cat.replace(/\s+/g, '')}" class="px-6 py-3 text-sm md:text-base uppercase tracking-wider transition-colors tab-inactiva hover:text-black">${cat}</button>`;
+                html += `<button onclick="mostrarCategoria('${cat}', 1)" id="tab-${cat.replace(/\s+/g, '')}" class="px-6 py-4 text-sm md:text-base uppercase tracking-widest transition-colors tab-inactiva hover:text-black focus:outline-none">${cat}</button>`;
             }
             document.getElementById('tabs-container').innerHTML = html;
         }
 
-        window.mostrarCategoria = function(categoriaSeleccionada) {
+        window.mostrarCategoria = function(categoriaSeleccionada, paginaObjetivo) {
+            categoriaActual = categoriaSeleccionada;
+            paginaActual = paginaObjetivo;
+
+            // Actualizar estilo visual de las pestañas
             for (const cat in datosInventario) {
                 const btn = document.getElementById(`tab-${cat.replace(/\s+/g, '')}`);
-                if(cat === categoriaSeleccionada) {
+                if(cat === categoriaActual) {
                     btn.classList.remove('tab-inactiva'); btn.classList.add('tab-activa');
                 } else {
                     btn.classList.remove('tab-activa'); btn.classList.add('tab-inactiva');
                 }
             }
 
-            const productos = datosInventario[categoriaSeleccionada];
-            let html = `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">`;
+            // Lógica de Paginación
+            const productosTotales = datosInventario[categoriaActual];
+            const totalPaginas = Math.ceil(productosTotales.length / itemsPorPagina);
+            const indiceInicio = (paginaActual - 1) * itemsPorPagina;
+            const indiceFin = indiceInicio + itemsPorPagina;
+            const productosPagina = productosTotales.slice(indiceInicio, indiceFin);
+
+            // Renderizar Productos
+            let html = `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">`;
             
-            productos.forEach(p => {
+            productosPagina.forEach(p => {
                 const imgPath = p.imagen_url 
                     ? `https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${p.imagen_url}` 
                     : 'https://via.placeholder.com/600x800.png?text=Fotograf%C3%ADa+en+proceso';
                 
-                const textoWapp = `Hola Laollaga Istmeña, me interesa adquirir: ${p.codigo_interno} - ${p.nombre_comercial}`;
+                const textoWapp = `Hola Laollaga Istmeña, me interesa adquirir la pieza: ${p.codigo_interno} - ${p.nombre_comercial}. ¿Sigue disponible?`;
                 const enlaceWapp = `https://wa.me/529711140709?text=${encodeURIComponent(textoWapp)}`;
                 
                 html += `
-                <div class="bg-white rounded-xl shadow-lg border border-gray-200 flex flex-col overflow-hidden">
-                    <div class="relative h-96 bg-gray-100">
+                <div class="producto-card bg-white rounded-xl shadow-md border border-gray-100 flex flex-col overflow-hidden transition-all duration-300">
+                    <div class="zoom-img-container relative h-96 bg-gray-50 border-b border-gray-100">
                         <img src="${imgPath}" alt="${p.nombre_comercial}" class="w-full h-full object-cover object-top" onerror="this.src='https://via.placeholder.com/600x800.png?text=Error+de+Imagen'">
-                        <div class="absolute top-4 left-4 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded shadow-md tracking-widest uppercase">Disponible</div>
+                        <div class="absolute top-4 left-4 bg-black/80 backdrop-blur-sm text-white text-[10px] font-bold px-3 py-1.5 rounded shadow tracking-widest uppercase border border-gray-700"><i class="fas fa-check-circle text-green-400 mr-1"></i> Disponible</div>
                     </div>
                     <div class="p-6 flex-grow flex flex-col justify-between">
                         <div>
+                            <p class="text-xs text-gray-400 font-mono mb-1">${p.codigo_interno}</p>
                             <h3 class="text-2xl font-serif font-bold text-gray-900 leading-tight mb-2">${p.nombre_comercial}</h3>
-                            <p class="text-3xl font-light text-[#d4af37] mb-6">$${p.precio} <span class="text-sm text-gray-400">MXN</span></p>
-                            <div class="text-sm text-gray-600 space-y-2 mb-6">
-                                <p class="flex justify-between border-b border-gray-50 pb-1"><span>Medidas:</span> <span class="font-medium text-black text-right">${p.talla || ''} ${p.medidas && p.medidas !== 'N/A' ? p.medidas : ''}</span></p>
-                                <p class="flex justify-between border-b border-gray-50 pb-1"><span>Material:</span> <span class="font-medium text-black text-right">${p.material}</span></p>
-                                <p class="flex justify-between border-b border-gray-50 pb-1"><span>Cuidados:</span> <span class="font-medium text-black text-right">${p.cuidados}</span></p>
+                            <p class="text-3xl font-light text-[#d4af37] mb-6">$${p.precio} <span class="text-sm text-gray-400 font-sans">MXN</span></p>
+                            
+                            <div class="text-sm text-gray-600 space-y-3 mb-8">
+                                <p class="flex justify-between border-b border-gray-100 pb-1 items-end">
+                                    <span class="text-gray-400 uppercase text-xs tracking-wider">Medidas</span> 
+                                    <span class="font-medium text-black text-right">${p.talla || ''} ${p.medidas && p.medidas !== 'N/A' ? p.medidas : ''}</span>
+                                </p>
+                                <p class="flex justify-between border-b border-gray-100 pb-1 items-end">
+                                    <span class="text-gray-400 uppercase text-xs tracking-wider">Material</span> 
+                                    <span class="font-medium text-black text-right w-1/2 leading-tight">${p.material}</span>
+                                </p>
+                                <p class="flex justify-between border-b border-gray-100 pb-1 items-end">
+                                    <span class="text-gray-400 uppercase text-xs tracking-wider">Cuidados</span> 
+                                    <span class="font-medium text-black text-right w-1/2 leading-tight">${p.cuidados}</span>
+                                </p>
                             </div>
                         </div>
-                        <a href="${enlaceWapp}" target="_blank" class="block w-full text-center bg-black text-white font-bold py-4 rounded uppercase text-sm tracking-widest shadow-md">
-                            Comprar Vía WhatsApp
+                        <a href="${enlaceWapp}" target="_blank" class="block w-full text-center bg-black hover:bg-[#b91c1c] text-white font-bold py-4 rounded uppercase text-sm tracking-widest shadow-lg transition-colors group">
+                            <i class="fab fa-whatsapp text-lg mr-2 group-hover:scale-110 transition-transform"></i> Pedir Detalles
                         </a>
                     </div>
                 </div>`;
             });
             html += `</div>`;
             document.getElementById('catalogo').innerHTML = html;
+
+            renderizarPaginacion(totalPaginas);
+        }
+
+        function renderizarPaginacion(totalPaginas) {
+            const contPaginacion = document.getElementById('paginacion');
+            if (totalPaginas <= 1) {
+                contPaginacion.classList.add('hidden');
+                return;
+            }
+            
+            contPaginacion.classList.remove('hidden');
+            let htmlPag = '';
+            
+            // Botón Anterior
+            htmlPag += `<button onclick="mostrarCategoria('${categoriaActual}', ${paginaActual - 1})" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded font-bold transition-colors ${paginaActual === 1 ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''}"><i class="fas fa-chevron-left"></i></button>`;
+            
+            // Números de Página
+            for(let i = 1; i <= totalPaginas; i++) {
+                htmlPag += `<button onclick="mostrarCategoria('${categoriaActual}', ${i})" class="w-10 h-10 flex items-center justify-center rounded font-bold transition-colors ${paginaActual === i ? 'bg-black text-white' : 'bg-gray-100 hover:bg-gray-200 text-black'}">${i}</button>`;
+            }
+
+            // Botón Siguiente
+            htmlPag += `<button onclick="mostrarCategoria('${categoriaActual}', ${paginaActual + 1})" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded font-bold transition-colors ${paginaActual === totalPaginas ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''}"><i class="fas fa-chevron-right"></i></button>`;
+            
+            contPaginacion.innerHTML = htmlPag;
+            
+            // Auto-scroll hacia las pestañas al cambiar de página
+            if(paginaActual > 1) {
+                document.getElementById('tabs-container').scrollIntoView({ behavior: 'smooth' });
+            }
         }
 
         setTimeout(cargarCatalogo, 600);
