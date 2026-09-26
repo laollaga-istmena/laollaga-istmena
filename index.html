@@ -25,7 +25,9 @@
         <div class="flex justify-center mb-8 border-b border-gray-300" id="tabs-container"></div>
         
         <!-- Contenedor Dinámico -->
-        <div id="catalogo" class="text-center py-20 text-gray-500 font-bold animate-pulse">Sincronizando inventario de alta calidad...</div>
+        <div id="catalogo">
+            <div class="text-center py-20 text-gray-500 font-bold animate-pulse">Sincronizando inventario de alta calidad...</div>
+        </div>
     </main>
 
     <script>
@@ -91,7 +93,6 @@
                 
                 html += `
                 <div class="bg-white rounded-xl shadow-lg border border-gray-200 flex flex-col overflow-hidden">
-
                     <div class="relative h-96 bg-gray-100">
                         <img src="${imgPath}" alt="${p.nombre_comercial}" class="w-full h-full object-cover object-top" onerror="this.src='https://via.placeholder.com/600x800.png?text=Error+de+Imagen'">
                         <div class="absolute top-4 left-4 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded shadow-md tracking-widest uppercase">Disponible</div>
@@ -106,7 +107,7 @@
                                 <p class="flex justify-between border-b border-gray-50 pb-1"><span>Cuidados:</span> <span class="font-medium text-black text-right">${p.cuidados}</span></p>
                             </div>
                         </div>
-                        <a href="${enlaceWapp}" target="_blank" class="block w-full text-center bg-black hover:bg-[#b91c1c] text-white font-bold py-4 rounded uppercase text-sm tracking-widest transition-colors shadow-md">
+                        <a href="${enlaceWapp}" target="_blank" class="block w-full text-center bg-black text-white font-bold py-4 rounded uppercase text-sm tracking-widest shadow-md">
                             Comprar Vía WhatsApp
                         </a>
                     </div>
@@ -116,7 +117,6 @@
             document.getElementById('catalogo').innerHTML = html;
         }
 
-        // Retraso de 600ms para asegurar la carga de la librería antes de ejecutar la lógica
         setTimeout(cargarCatalogo, 600);
     </script>
 </body>
