@@ -16,32 +16,31 @@
         /* Efecto Zoom Interactivo */
         .zoom-activo { transform: scale(1.8); cursor: zoom-out !important; }
         .zoom-normal { transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); cursor: zoom-in; }
+        
+        /* Transiciones de UI */
+        .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body class="bg-[#fcfbf9] bg-textura bg-fixed text-gray-800 font-sans antialiased selection:bg-black selection:text-white">
     
-    <!-- Header Premium Inmersivo con Logo -->
+    <!-- Header Premium -->
     <header class="bg-[#0a0a0a] text-center py-12 md:py-16 px-4 shadow-2xl relative overflow-hidden bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]">
-        
         <div class="max-w-[180px] md:max-w-[220px] mx-auto mb-6 relative z-10">
             <div class="w-36 h-36 md:w-44 md:h-44 mx-auto rounded-full p-1 bg-black shadow-[0_0_50px_rgba(212,175,55,0.4)] border-2 border-[#d4af37] flex items-center justify-center overflow-hidden">
                 <img src="https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/logo.png" alt="Laollaga Istmeña" class="w-full h-full object-cover rounded-full" onerror="this.src='https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/Laollaga_istmena_cutout(1).png'">
             </div>
         </div>
-        
         <h1 class="text-3xl md:text-5xl font-serif oro tracking-widest uppercase relative z-10 drop-shadow-md mb-2">Laollaga Istmeña</h1>
         <p class="font-serif italic text-gray-300 text-sm md:text-lg tracking-[0.2em] relative z-10 opacity-90">Arte tejido, tradición que se viste.</p>
-        
         <div class="absolute bottom-0 left-0 w-full h-1.5 bg-gradient-to-r from-yellow-700 via-yellow-400 to-yellow-700"></div>
     </header>
 
-    <main class="max-w-7xl mx-auto p-3 md:p-10 min-h-screen">
+    <main class="max-w-7xl mx-auto p-3 md:p-10 min-h-screen relative">
         
-        <!-- MEJORA 1: Barra de Búsqueda Instantánea -->
+        <!-- Buscador Instantáneo -->
         <div class="max-w-md mx-auto mb-8 relative">
-            <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">
-                <i class="fas fa-search"></i>
-            </span>
+            <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400"><i class="fas fa-search"></i></span>
             <input type="text" id="buscador" oninput="filtrarProductos()" placeholder="Buscar por nombre, código o material..." class="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-full text-sm shadow-sm focus:outline-none focus:border-black transition-all">
         </div>
 
@@ -57,20 +56,44 @@
         <div id="paginacion" class="flex justify-center items-center gap-4 mt-16 hidden"></div>
     </main>
 
-    <!-- Pantalla de Detalle (Modal con Zoom y Funciones de Compartir) -->
+    <!-- Botón Flotante: Carro de Selección -->
+    <button id="btn-carrito" onclick="abrirCarrito()" class="fixed bottom-6 right-6 bg-[#b91c1c] text-white p-4 rounded-full shadow-2xl z-40 hidden hover:scale-110 transition-transform border-2 border-white/20">
+        <i class="fas fa-shopping-bag text-xl"></i>
+        <span id="contador-carrito" class="absolute -top-2 -right-2 bg-black text-[#d4af37] text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center border border-[#d4af37]">0</span>
+    </button>
+
+    <!-- Modal: Resumen de Selección (Carrito) -->
+    <div id="modal-carrito" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex-col items-center justify-center p-4 transition-opacity duration-300 opacity-0">
+        <div class="bg-[#fcfbf9] w-full max-w-lg rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
+            <div class="bg-black text-white p-5 flex justify-between items-center border-b-2 border-[#d4af37]">
+                <h3 class="font-serif text-xl tracking-widest uppercase oro">Mi Selección</h3>
+                <button onclick="cerrarCarrito()" class="text-gray-400 hover:text-white"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <div id="lista-carrito" class="p-6 overflow-y-auto flex-grow space-y-4">
+                <!-- Items inyectados aquí -->
+            </div>
+            <div class="p-6 bg-white border-t border-gray-200">
+                <button onclick="enviarPedidoWhatsApp()" class="w-full bg-black hover:bg-[#b91c1c] text-white font-bold py-4 rounded-sm uppercase text-sm tracking-widest shadow-xl transition-colors">
+                    <i class="fab fa-whatsapp text-lg mr-2"></i> Solicitar Apartado
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pantalla de Detalle del Producto -->
     <div id="modal-producto" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-md hidden flex-col overflow-y-auto transition-opacity duration-300 opacity-0">
         <div class="min-h-screen w-full flex flex-col md:flex-row bg-[#fcfbf9] relative shadow-2xl">
             <button onclick="cerrarDetalle()" class="absolute top-4 left-4 md:top-8 md:left-8 z-30 bg-black/80 hover:bg-black text-white px-5 py-2.5 rounded-full font-bold uppercase text-xs tracking-widest transition-all shadow-xl backdrop-blur-sm flex items-center gap-2">
-                <i class="fas fa-arrow-left"></i> Volver al catálogo
+                <i class="fas fa-arrow-left"></i> Volver
             </button>
             
             <div id="modal-content" class="flex flex-col md:flex-row w-full min-h-screen"></div>
         </div>
     </div>
 
-    <!-- Footer Elegante -->
-    <footer class="bg-black text-center py-8 border-t-2 border-[#d4af37] mt-20 text-gray-400 text-xs tracking-[0.2em] uppercase">
-        &copy; 2026 Laollaga Istmeña. Tradición y Elegancia del Istmo.
+    <!-- Footer -->
+    <footer class="bg-black text-center py-8 border-t-2 border-[#d4af37] mt-10 text-gray-400 text-xs tracking-[0.2em] uppercase">
+        &copy; 2026 Laollaga Istmeña.
     </footer>
 
     <script>
@@ -80,6 +103,7 @@
         let paginaActual = 1;
         const itemsPorPagina = 6;
         let terminoBusqueda = '';
+        let carrito = []; // Estado de las prendas seleccionadas
 
         async function cargarCatalogo() {
             const contenedor = document.getElementById('catalogo');
@@ -97,7 +121,7 @@
                 categoriaActual = Object.keys(datosInventario)[0] || '';
                 mostrarCategoria(categoriaActual, 1);
             } catch (err) {
-                contenedor.innerHTML = `<div class="bg-red-50 text-red-900 p-6 shadow-sm border border-red-200 text-center"><p class="font-bold">Error de sincronización: ${err.message}</p></div>`;
+                contenedor.innerHTML = `<div class="bg-red-50 text-red-900 p-6 shadow-sm border border-red-200 text-center"><p class="font-bold">Error: ${err.message}</p></div>`;
             }
         }
 
@@ -125,15 +149,11 @@
 
         window.filtrarProductos = function() {
             terminoBusqueda = document.getElementById('buscador').value.toLowerCase().trim();
-            if (terminoBusqueda !== '') {
-                // Ocultar pestañas visualmente durante la búsqueda global
-                for (const cat in datosInventario) {
-                    const btn = document.getElementById(`tab-${cat.replace(/\s+/g, '')}`);
-                    if(btn) btn.classList.remove('tab-activa');
-                }
-            } else {
-                marcarPestañaActiva(categoriaActual);
+            for (const cat in datosInventario) {
+                const btn = document.getElementById(`tab-${cat.replace(/\s+/g, '')}`);
+                if(btn) btn.classList.remove('tab-activa');
             }
+            if(terminoBusqueda === '') marcarPestañaActiva(categoriaActual);
             mostrarCategoria(categoriaActual, 1);
         }
 
@@ -152,11 +172,9 @@
         window.mostrarCategoria = function(categoriaSeleccionada, paginaObjetivo) {
             categoriaActual = categoriaSeleccionada;
             paginaActual = paginaObjetivo;
-            marcarPestañaActiva(categoriaActual);
+            if(terminoBusqueda === '') marcarPestañaActiva(categoriaActual);
 
             let listaProductos = datosInventario[categoriaActual] || [];
-
-            // Aplicar filtro de búsqueda si existe
             if (terminoBusqueda !== '') {
                 listaProductos = todosLosProductos.filter(p => 
                     p.nombre_comercial.toLowerCase().includes(terminoBusqueda) ||
@@ -169,20 +187,16 @@
             if(paginaActual > totalPaginas && totalPaginas > 0) paginaActual = totalPaginas;
             const productosPagina = listaProductos.slice((paginaActual - 1) * itemsPorPagina, ((paginaActual - 1) * itemsPorPagina) + itemsPorPagina);
 
-            let html = '';
             if (productosPagina.length === 0) {
-                html = `<div class="text-center py-20 text-gray-400 font-serif italic text-lg">No se encontraron piezas con esta búsqueda.</div>`;
-                document.getElementById('catalogo').innerHTML = html;
+                document.getElementById('catalogo').innerHTML = `<div class="text-center py-20 text-gray-400 font-serif italic text-lg fade-in">No se encontraron piezas.</div>`;
                 document.getElementById('paginacion').classList.add('hidden');
                 return;
             }
 
-            html = `<div class="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-12">`;
+            let html = `<div class="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-12 fade-in">`;
             
             productosPagina.forEach(p => {
                 const imgPath = p.imagen_url ? `https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${p.imagen_url}` : 'https://via.placeholder.com/600x800.png?text=Fotograf%C3%ADa+en+proceso';
-                
-                // MEJORA 2: Badge Dinámico (Exclusivo / Pieza Única)
                 const badgeExclusivo = `<span class="absolute top-3 left-3 bg-[#d4af37] text-black text-[9px] md:text-xs font-bold px-2.5 py-1 rounded shadow-md tracking-widest uppercase"><i class="fas fa-gem mr-1"></i> Pieza Única</span>`;
 
                 html += `
@@ -200,7 +214,6 @@
             });
             html += `</div>`;
             document.getElementById('catalogo').innerHTML = html;
-
             renderizarPaginacion(totalPaginas);
         }
 
@@ -210,59 +223,87 @@
             contPaginacion.classList.remove('hidden');
             
             let htmlPag = `<button onclick="mostrarCategoria('${categoriaActual}', ${paginaActual - 1})" class="px-5 py-2.5 border border-gray-300 hover:border-black text-gray-400 hover:text-black uppercase text-xs tracking-widest transition-colors ${paginaActual === 1 ? 'opacity-30 pointer-events-none' : ''}">Anterior</button>`;
-            
             htmlPag += `<span class="text-xs tracking-widest font-mono text-gray-500 px-4">${paginaActual} / ${totalPaginas}</span>`;
-
             htmlPag += `<button onclick="mostrarCategoria('${categoriaActual}', ${paginaActual + 1})" class="px-5 py-2.5 border border-gray-300 hover:border-black text-gray-400 hover:text-black uppercase text-xs tracking-widest transition-colors ${paginaActual === totalPaginas ? 'opacity-30 pointer-events-none' : ''}">Siguiente</button>`;
             
             contPaginacion.innerHTML = htmlPag;
             if(paginaActual > 1 && terminoBusqueda === '') document.getElementById('tabs-container').scrollIntoView({ behavior: 'smooth' });
         }
 
+        // MOTOR NARRATIVO: Genera la frase cultural de arraigo
+        function obtenerFraseCultural(categoria, nombre) {
+            const cat = (categoria || '').toLowerCase();
+            const nom = (nombre || '').toLowerCase();
+            
+            if(cat.includes('huipil') || nom.includes('huipil')) {
+                return "El abrazo cálido del Istmo tejido en cada trazo de cadenilla, herencia viva de nuestras raíces zapotecas.";
+            } else if (cat.includes('guía') || nom.includes('floral')) {
+                return "Hilos que bordan la primavera perpetua de nuestra tierra. El color y el orgullo de la mujer istmeña en cada pétalo.";
+            } else {
+                return "Lleva contigo un fragmento de nuestra historia. Cada puntada resguarda la elegancia ancestral de nuestra gente.";
+            }
+        }
+
         window.abrirDetalle = function(codigo) {
             const p = todosLosProductos.find(x => x.codigo_interno === codigo);
             const imgPath = p.imagen_url ? `https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${p.imagen_url}` : 'https://via.placeholder.com/600x800.png?text=Fotograf%C3%ADa+en+proceso';
-            const textoWapp = `Hola Laollaga Istmeña, me interesa adquirir la pieza exclusiva: ${p.codigo_interno} - ${p.nombre_comercial}.`;
-            const enlaceWapp = `https://wa.me/529711140709?text=${encodeURIComponent(textoWapp)}`;
+            
+            const fraseEmotiva = obtenerFraseCultural(p.categoria, p.nombre_comercial);
+            const enCarrito = carrito.some(item => item.codigo_interno === p.codigo_interno);
+            
+            const textoBoton = enCarrito ? `<i class="fas fa-check mr-2"></i> Añadido a tu Selección` : `<i class="fas fa-plus mr-2"></i> Añadir a mi Selección`;
+            const colorBoton = enCarrito ? `bg-green-700 hover:bg-green-800` : `bg-black hover:bg-[#b91c1c]`;
 
             document.getElementById('modal-content').innerHTML = `
-                <div class="w-full md:w-3/5 bg-black flex items-center justify-center relative min-h-[50vh] md:min-h-screen p-4 md:p-10 overflow-hidden">
-                    <div class="w-full h-full max-h-[85vh] md:max-h-[90vh] flex items-center justify-center rounded overflow-hidden">
-                        <img id="img-zoomable" src="${imgPath}" class="zoom-normal w-full h-full object-contain cursor-zoom-in" onclick="toggleZoom(this)" title="Toca para hacer zoom">
-                    </div>
+                <div class="w-full md:w-3/5 bg-black flex items-center justify-center relative min-h-[40vh] md:min-h-screen p-4 overflow-hidden fade-in">
+                    <img id="img-zoomable" src="${imgPath}" class="zoom-normal w-full h-full object-contain max-h-[70vh] md:max-h-[90vh] cursor-zoom-in" onclick="toggleZoom(this)">
                 </div>
-                <div class="w-full md:w-2/5 p-6 md:p-14 flex flex-col justify-center bg-[#fcfbf9]">
-                    <div class="flex justify-between items-center mb-3">
-                        <span class="text-xs text-gray-400 font-mono tracking-[0.2em] uppercase">${p.codigo_interno}</span>
-                        
-                        <!-- MEJORA 3: Botón Compartir / Copiar Código -->
-                        <button onclick="copiarCodigo('${p.codigo_interno}', '${p.nombre_comercial}')" class="text-xs uppercase tracking-wider text-gray-500 hover:text-black border border-gray-200 px-3 py-1 rounded bg-white transition-colors">
-                            <i class="fas fa-copy mr-1"></i> Copiar Código
+                <div class="w-full md:w-2/5 p-6 md:p-14 flex flex-col justify-center bg-[#fcfbf9] overflow-y-auto max-h-screen fade-in border-l border-gray-200 shadow-[-10px_0_30px_rgba(0,0,0,0.05)]">
+                    
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-[10px] text-gray-400 font-mono tracking-[0.2em] uppercase border border-gray-300 px-2 py-1 rounded">${p.codigo_interno}</span>
+                        <button onclick="copiarCodigo('${p.codigo_interno}')" class="text-[10px] uppercase tracking-wider text-gray-500 hover:text-black bg-gray-100 px-3 py-1.5 rounded transition-colors">
+                            <i class="fas fa-copy mr-1"></i> Copiar
                         </button>
                     </div>
 
-                    <h2 class="text-3xl md:text-4xl font-serif font-bold text-gray-900 leading-tight mb-4">${p.nombre_comercial}</h2>
-                    <p class="text-3xl font-light text-[#d4af37] mb-8">$${p.precio} <span class="text-sm text-gray-400 font-sans">MXN</span></p>
+                    <h2 class="text-3xl md:text-5xl font-serif font-bold text-gray-900 leading-tight mb-2">${p.nombre_comercial}</h2>
+                    
+                    <!-- Inyección de la Esencia del Istmo -->
+                    <p class="text-sm font-serif italic text-gray-500 mb-6 leading-relaxed border-l-2 border-[#d4af37] pl-3 py-1 bg-gradient-to-r from-yellow-50 to-transparent">
+                        "${fraseEmotiva}"
+                    </p>
 
-                    <div class="space-y-6 mb-10 border-t border-b border-gray-200 py-6">
+                    <p class="text-3xl font-light text-[#d4af37] mb-8">$${p.precio} <span class="text-xs text-gray-400 font-sans">MXN</span></p>
+
+                    <!-- Sello de Autenticidad Artesanal -->
+                    <div class="bg-gradient-to-r from-[#1a1a1a] to-black rounded-lg p-4 mb-8 flex items-center gap-4 shadow-lg border border-yellow-900/50">
+                        <div class="text-[#d4af37] bg-yellow-900/30 p-3 rounded-full flex-shrink-0"><i class="fas fa-certificate text-xl"></i></div>
                         <div>
-                            <span class="block text-[10px] uppercase tracking-widest text-gray-400 mb-1">Medidas y Talla</span>
-                            <span class="font-medium text-gray-900 text-base md:text-lg">${p.talla || ''} ${p.medidas !== 'N/A' ? p.medidas : ''}</span>
-                        </div>
-                        <div>
-                            <span class="block text-[10px] uppercase tracking-widest text-gray-400 mb-1">Material / Confección</span>
-                            <span class="font-medium text-gray-900 text-base md:text-lg">${p.material}</span>
-                        </div>
-                        <div>
-                            <span class="block text-[10px] uppercase tracking-widest text-gray-400 mb-1">Mantenimiento</span>
-                            <span class="font-medium text-gray-900 text-base md:text-lg">${p.cuidados}</span>
+                            <h4 class="font-bold text-[#d4af37] text-[10px] tracking-widest uppercase">Garantía Artesanal</h4>
+                            <p class="text-[11px] text-gray-300 font-light mt-0.5">Confección exclusiva del Istmo. Identidad pura en cada hilo.</p>
                         </div>
                     </div>
 
-                    <div class="space-y-3">
-                        <a href="${enlaceWapp}" target="_blank" class="block w-full text-center bg-black hover:bg-[#b91c1c] text-white font-bold py-4 md:py-5 rounded-sm uppercase text-sm tracking-widest shadow-xl transition-all hover:shadow-2xl">
-                            <i class="fab fa-whatsapp text-lg mr-2"></i> Adquirir esta pieza
-                        </a>
+                    <div class="space-y-4 mb-10 border-t border-b border-gray-100 py-6 text-sm">
+                        <div class="flex justify-between items-end border-b border-gray-100 border-dashed pb-2">
+                            <span class="text-[10px] uppercase tracking-widest text-gray-400">Talla / Medida</span>
+                            <span class="font-medium text-gray-900 text-right">${p.talla || ''} ${p.medidas !== 'N/A' ? p.medidas : ''}</span>
+                        </div>
+                        <div class="flex justify-between items-end border-b border-gray-100 border-dashed pb-2">
+                            <span class="text-[10px] uppercase tracking-widest text-gray-400">Material</span>
+                            <span class="font-medium text-gray-900 text-right w-2/3 leading-tight">${p.material}</span>
+                        </div>
+                        <div class="flex justify-between items-end">
+                            <span class="text-[10px] uppercase tracking-widest text-gray-400">Cuidados</span>
+                            <span class="font-medium text-gray-900 text-right w-2/3 leading-tight">${p.cuidados}</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-3 mt-auto">
+                        <button id="btn-add-${p.codigo_interno}" onclick="toggleCarrito('${p.codigo_interno}')" class="w-full ${colorBoton} text-white font-bold py-4 rounded-sm uppercase text-[11px] tracking-widest shadow-lg transition-all">
+                            ${textoBoton}
+                        </button>
                     </div>
                 </div>
             `;
@@ -276,11 +317,8 @@
             imgElement.classList.toggle('zoom-activo');
         }
 
-        window.copiarCodigo = function(codigo, nombre) {
-            const texto = `Pieza: ${codigo} - ${nombre} | Laollaga Istmeña`;
-            navigator.clipboard.writeText(texto).then(() => {
-                alert('¡Código copiado al portapapeles! Ya puedes compartirlo.');
-            });
+        window.copiarCodigo = function(codigo) {
+            navigator.clipboard.writeText(codigo).then(() => alert('Código ' + codigo + ' copiado.'));
         }
 
         window.cerrarDetalle = function() {
@@ -290,6 +328,93 @@
                 modal.classList.add('hidden');
                 document.body.style.overflow = 'auto';
             }, 300);
+        }
+
+        // LÓGICA DEL CARRITO (Mi Selección)
+        window.toggleCarrito = function(codigo) {
+            const p = todosLosProductos.find(x => x.codigo_interno === codigo);
+            const index = carrito.findIndex(item => item.codigo_interno === codigo);
+            const btn = document.getElementById(`btn-add-${codigo}`);
+
+            if(index === -1) {
+                carrito.push(p);
+                if(btn) {
+                    btn.innerHTML = `<i class="fas fa-check mr-2"></i> Añadido a tu Selección`;
+                    btn.classList.replace('bg-black', 'bg-green-700');
+                    btn.classList.replace('hover:bg-[#b91c1c]', 'hover:bg-green-800');
+                }
+            } else {
+                carrito.splice(index, 1);
+                if(btn) {
+                    btn.innerHTML = `<i class="fas fa-plus mr-2"></i> Añadir a mi Selección`;
+                    btn.classList.replace('bg-green-700', 'bg-black');
+                    btn.classList.replace('hover:bg-green-800', 'hover:bg-[#b91c1c]');
+                }
+            }
+            actualizarUI_Carrito();
+        }
+
+        function actualizarUI_Carrito() {
+            const btnFlotante = document.getElementById('btn-carrito');
+            const contador = document.getElementById('contador-carrito');
+            
+            contador.innerText = carrito.length;
+            if(carrito.length > 0) {
+                btnFlotante.classList.remove('hidden');
+                btnFlotante.classList.add('fade-in');
+            } else {
+                btnFlotante.classList.add('hidden');
+                cerrarCarrito();
+            }
+        }
+
+        window.abrirCarrito = function() {
+            const modal = document.getElementById('modal-carrito');
+            const lista = document.getElementById('lista-carrito');
+            
+            lista.innerHTML = carrito.map(p => `
+                <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+                    <div>
+                        <p class="text-[10px] text-gray-500 font-mono">${p.codigo_interno}</p>
+                        <p class="font-bold text-sm font-serif">${p.nombre_comercial}</p>
+                        <p class="text-[#d4af37] text-xs font-bold">$${p.precio} MXN</p>
+                    </div>
+                    <button onclick="toggleCarrito('${p.codigo_interno}'); abrirCarrito();" class="text-red-500 hover:text-red-700 p-2"><i class="fas fa-trash"></i></button>
+                </div>
+            `).join('');
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => modal.classList.remove('opacity-0'), 10);
+            document.body.style.overflow = 'hidden'; 
+        }
+
+        window.cerrarCarrito = function() {
+            const modal = document.getElementById('modal-carrito');
+            modal.classList.add('opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                if(document.getElementById('modal-producto').classList.contains('hidden')) {
+                    document.body.style.overflow = 'auto';
+                }
+            }, 300);
+        }
+
+        window.enviarPedidoWhatsApp = function() {
+            let texto = "✨ Hola Laollaga Istmeña, quiero solicitar el apartado de las siguientes piezas de arte textil:\n\n";
+            let total = 0;
+            
+            carrito.forEach(p => {
+                texto += `▫️ *[${p.codigo_interno}]* ${p.nombre_comercial} - $${p.precio} MXN\n`;
+                total += parseFloat(p.precio) || 0;
+            });
+            
+            texto += `\n💰 *Total estimado:* $${total.toLocaleString('es-MX')} MXN\n`;
+            texto += `\n¿Están disponibles para concretar la compra?`;
+
+            const url = `https://wa.me/529711140709?text=${encodeURIComponent(texto)}`;
+            window.open(url, '_blank');
         }
 
         setTimeout(cargarCatalogo, 600);
