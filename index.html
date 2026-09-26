@@ -29,25 +29,35 @@
     </main>
 
     <script>
-        const supabase = window.supabase.createClient('https://dmpovogobkqxiuqiqdku.supabase.co', 'sb_publishable_vxjNB2Og59jiF0wazOFJBw_-Cj1-q1I');
         let datosInventario = {};
 
         async function cargarCatalogo() {
-            const { data, error } = await supabase.from('productos').select('*').eq('estado', 'Disponible').order('codigo_interno', { ascending: true });
-            
-            if (error || !data || data.length === 0) {
-                document.getElementById('catalogo').innerHTML = '<p class="text-center font-bold text-gray-600">Catálogo temporalmente sin disponibilidad.</p>';
-                return;
+            const contenedor = document.getElementById('catalogo');
+            try {
+                if (typeof window.supabase === 'undefined') throw new Error('El navegador no descargó la librería a tiempo. Recarga la página.');
+                
+                const supabase = window.supabase.createClient('https://dmpovogobkqxiuqiqdku.supabase.co', 'sb_publishable_vxjNB2Og59jiF0wazOFJBw_-Cj1-q1I');
+                const { data, error } = await supabase.from('productos').select('*').eq('estado', 'Disponible').order('codigo_interno', { ascending: true });
+                
+                if (error) throw new Error(error.message);
+                
+                if (!data || data.length === 0) {
+                    contenedor.innerHTML = '<p class="text-center font-bold text-gray-600 mt-10">Catálogo temporalmente sin disponibilidad.</p>';
+                    return;
+                }
+
+                datosInventario = {};
+                data.forEach(item => {
+                    if(!datosInventario[item.categoria]) datosInventario[item.categoria] = [];
+                    datosInventario[item.categoria].push(item);
+                });
+
+                generarPestañas();
+                const primeraCat = Object.keys(datosInventario)[0];
+                mostrarCategoria(primeraCat);
+            } catch (err) {
+                contenedor.innerHTML = `<div class="bg-red-100 border-l-4 border-red-600 text-red-900 p-4 shadow mt-10"><p class="font-bold">Error Técnico:</p><p>${err.message}</p></div>`;
             }
-
-            data.forEach(item => {
-                if(!datosInventario[item.categoria]) datosInventario[item.categoria] = [];
-                datosInventario[item.categoria].push(item);
-            });
-
-            generarPestañas();
-            const primeraCat = Object.keys(datosInventario)[0];
-            mostrarCategoria(primeraCat);
         }
 
         function generarPestañas() {
@@ -59,7 +69,6 @@
         }
 
         window.mostrarCategoria = function(categoriaSeleccionada) {
-            // Actualizar diseño de pestañas
             for (const cat in datosInventario) {
                 const btn = document.getElementById(`tab-${cat.replace(/\s+/g, '')}`);
                 if(cat === categoriaSeleccionada) {
@@ -69,7 +78,6 @@
                 }
             }
 
-            // Renderizar productos de esa categoría
             const productos = datosInventario[categoriaSeleccionada];
             let html = `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">`;
             
@@ -84,7 +92,7 @@
                 html += `
                 <div class="bg-white rounded-xl shadow-lg border border-gray-100 flex flex-col overflow-hidden hover:shadow-2xl transition-shadow duration-300">
                     <div class="relative h-96 bg-gray-100">
-                        <img src="${imgPath}" alt="${p.nombre_comercial}" class="w-full h-full object-cover object-top">
+                        <img src="${imgPath}" alt="${p.nombre_comercial}" class="w-full h-full object-cover object-top" onerror="this.src='https://via.placeholder.com/600x800.png?text=Error+de+Imagen'">
                         <div class="absolute top-4 left-4 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded shadow-md tracking-widest uppercase">Disponible</div>
                     </div>
                     <div class="p-6 flex-grow flex flex-col justify-between">
@@ -92,7 +100,7 @@
                             <h3 class="text-2xl font-serif font-bold text-gray-900 leading-tight mb-2">${p.nombre_comercial}</h3>
                             <p class="text-3xl font-light text-[#d4af37] mb-6">$${p.precio} <span class="text-sm text-gray-400">MXN</span></p>
                             <div class="text-sm text-gray-600 space-y-2 mb-6">
-                                <p class="flex justify-between border-b border-gray-50 pb-1"><span>Medidas:</span> <span class="font-medium text-black text-right">${p.talla || ''} ${p.medidas !== 'N/A' ? p.medidas : ''}</span></p>
+                                <p class="flex justify-between border-b border-gray-50 pb-1"><span>Medidas:</span> <span class="font-medium text-black text-right">${p.talla || ''} ${p.medidas && p.medidas !== 'N/A' ? p.medidas : ''}</span></p>
                                 <p class="flex justify-between border-b border-gray-50 pb-1"><span>Material:</span> <span class="font-medium text-black text-right">${p.material}</span></p>
                                 <p class="flex justify-between border-b border-gray-50 pb-1"><span>Cuidados:</span> <span class="font-medium text-black text-right">${p.cuidados}</span></p>
                             </div>
@@ -107,7 +115,8 @@
             document.getElementById('catalogo').innerHTML = html;
         }
 
-        setTimeout(cargarCatalogo, 300);
+        // Retraso de 600ms para asegurar la carga de la librería antes de ejecutar la lógica
+        setTimeout(cargarCatalogo, 600);
     </script>
 </body>
 </html>
