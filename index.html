@@ -22,26 +22,16 @@
     </main>
 
     <script>
-        async function cargarCatalogo() {
-            const contenedor = document.getElementById('catalogo');
-            try {
-                // 1. Validar que Brave no esté bloqueando el script
-                if (typeof window.supabase === 'undefined') {
-                    throw new Error("El navegador destruyó la conexión al servidor (Librería bloqueada). Apaga los escudos de seguridad (Shields).");
-                }
+        if (typeof window.supabase === 'undefined') {
+            document.getElementById('catalogo').innerHTML = '<div class="bg-red-100 border-l-4 border-red-600 text-red-900 p-4 font-bold text-center mt-10 shadow">Tu navegador está bloqueando la conexión al inventario. Por favor, desactiva el escudo de privacidad (Shields) o el bloqueador de anuncios y recarga la página.</div>';
+        } else {
+            const supabase = window.supabase.createClient('https://dmpovogobkqxiuqiqdku.supabase.co', 'sb_publishable_vxjNB2Og59jiF0wazOFJBw_-Cj1-q1I');
 
-                const supabase = window.supabase.createClient('https://dmpovogobkqxiuqiqdku.supabase.co', 'sb_publishable_vxjNB2Og59jiF0wazOFJBw_-Cj1-q1I');
-                
-                // 2. Extraer datos con manejo de errores directo
+            async function cargarCatalogo() {
                 const { data, error } = await supabase.from('productos').select('*').eq('estado', 'Disponible').order('codigo_interno', { ascending: true });
                 
-                if (error) {
-                    contenedor.innerHTML = `<div class="bg-red-100 border-l-4 border-red-600 text-red-900 p-4"><p class="font-bold">Error de Base de Datos:</p><p>${error.message}</p><p class="text-xs mt-2">Detalle: ${error.details || 'N/A'} | Código: ${error.code || 'N/A'}</p></div>`;
-                    return;
-                }
-
-                if (!data || data.length === 0) {
-                    contenedor.innerHTML = '<p class="text-center mt-10 text-xl font-bold text-gray-600">No hay piezas disponibles en este momento.</p>';
+                if (error || !data || data.length === 0) {
+                    document.getElementById('catalogo').innerHTML = '<p class="text-center mt-10 text-xl font-bold text-gray-600">No hay piezas disponibles en este momento.</p>';
                     return;
                 }
 
@@ -64,23 +54,25 @@
                                 <span class="inline-block px-2 py-1 bg-green-100 text-green-800 text-xs font-bold rounded mb-3 border border-green-200">● Disponible</span>
                                 <h3 class="text-xl font-bold mb-1 text-gray-900">${p.nombre_comercial}</h3>
                                 <p class="text-2xl font-bold text-black mb-4">$${p.precio} MXN</p>
+                                <div class="text-sm text-gray-600 space-y-1 mt-4 border-t border-gray-100 pt-4">
+                                    <p><strong>Talla/Medidas:</strong> ${p.talla || ''} ${p.medidas && p.medidas !== 'N/A' ? p.medidas : ''}</p>
+                                    <p><strong>Material:</strong> ${p.material}</p>
+                                    <p><strong>Cuidados:</strong> ${p.cuidados}</p>
+                                </div>
                             </div>
                             <div class="bg-gray-50 p-4 border-t border-gray-100">
-                                <a href="${enlaceWapp}" target="_blank" class="block w-full text-center bg-black hover:bg-gray-800 text-white font-bold py-3 rounded uppercase text-sm tracking-wider transition-colors">Consultar por WhatsApp</a>
+                                <a href="${enlaceWapp}" target="_blank" class="block w-full text-center bg-black hover:bg-gray-800 text-white font-bold py-3 rounded uppercase text-sm tracking-wider transition-colors">
+                                    Consultar por WhatsApp
+                                </a>
                             </div>
                         </div>`;
                     });
                     html += `</div>`;
                 }
-                contenedor.innerHTML = html;
-            } catch (err) {
-                // 3. Capturar colapsos totales de Javascript
-                contenedor.innerHTML = `<div class="bg-red-100 border-l-4 border-red-600 text-red-900 p-4"><p class="font-bold">Colapso de Red / Frontend:</p><p>${err.message}</p></div>`;
+                document.getElementById('catalogo').innerHTML = html;
             }
+            setTimeout(cargarCatalogo, 300);
         }
-        
-        // Ejecución con micro-retraso para vencer conexiones móviles lentas
-        setTimeout(cargarCatalogo, 500);
     </script>
 </body>
 </html>
