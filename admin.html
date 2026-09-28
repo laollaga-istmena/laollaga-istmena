@@ -3,117 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Control V2 | Laollaga Istmeña</title>
+    <title>Control V3 | Laollaga Istmeña</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body class="bg-gray-100 text-gray-800 font-sans pb-20">
-    <header class="bg-black text-white p-4 flex justify-between items-center shadow-md">
-        <h1 class="text-lg md:text-xl font-bold tracking-widest uppercase text-[#d4af37]">Control V2</h1>
-        <a href="index.html" class="text-sm bg-gray-800 px-3 py-1 rounded hover:bg-gray-700">Ver Catálogo ↗</a>
-    </header>
+<body class="bg-[#fcfbf9] font-sans text-gray-800">
+    
+    <div class="bg-black text-[#d4af37] p-5 flex justify-between items-center shadow-lg border-b-2 border-[#d4af37]">
+        <h1 class="font-serif font-bold tracking-[0.2em] uppercase">Control Maestro V3</h1>
+        <a href="index.html" class="text-white text-xs tracking-widest uppercase hover:text-[#d4af37] transition-colors">Ver Catálogo</a>
+    </div>
 
-    <main class="max-w-5xl mx-auto p-4 mt-4">
-        <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-black mb-8">
-            <h2 class="text-xl font-bold mb-4 uppercase">Registrar Nuevo Producto</h2>
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <input type="text" id="n_codigo" placeholder="Código (Ej: HC-025)" class="border p-2 rounded">
-                <input type="text" id="n_nombre" placeholder="Nombre Comercial" class="border p-2 rounded">
-                <select id="n_cat" class="border p-2 rounded"><option>Guías Florales</option><option>Huipiles de Cadenilla</option></select>
-                <input type="number" id="n_precio" placeholder="Precio ($)" class="border p-2 rounded">
-                <input type="text" id="n_talla" placeholder="Talla" class="border p-2 rounded">
-                <input type="text" id="n_medidas" placeholder="Medidas (o N/A)" class="border p-2 rounded">
-                <input type="text" id="n_material" placeholder="Material" class="border p-2 rounded">
-                <input type="text" id="n_cuidados" placeholder="Cuidados" class="border p-2 rounded">
-                <input type="text" id="n_imagen" placeholder="Archivo Foto (Ej: nueva.jpg)" class="border p-2 rounded">
+    <div class="max-w-2xl mx-auto mt-10 bg-white p-8 rounded-sm shadow-2xl border border-gray-100">
+        <h2 class="text-2xl font-serif font-bold mb-6 border-b pb-2">Registrar Nueva Pieza</h2>
+        
+        <form id="form-producto" class="space-y-5 text-sm">
+            <div class="grid grid-cols-2 gap-4">
+                <input type="text" id="codigo" placeholder="Código (Ej: DT-001)" class="w-full border border-gray-300 p-3 focus:border-black focus:outline-none" required>
+                <input type="text" id="nombre" placeholder="Nombre Comercial" class="w-full border border-gray-300 p-3 focus:border-black focus:outline-none" required>
             </div>
-            <button onclick="crearProducto()" class="mt-4 bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-6 rounded w-full md:w-auto">Guardar Nuevo Producto</button>
-        </div>
 
-        <h2 class="text-xl font-bold mb-4 uppercase border-b-2 border-gray-300 pb-2">Inventario Actual</h2>
-        <div id="panel" class="space-y-4">Cargando base de datos...</div>
-    </main>
+            <!-- CAMPO INTELIGENTE DE CATEGORÍA -->
+            <div>
+                <label class="text-xs text-gray-500 uppercase tracking-widest block mb-1">Categoría (Selecciona o escribe una nueva)</label>
+                <input type="text" id="categoria" list="lista-categorias" placeholder="Ej: Diademas de Terciopelo" class="w-full border border-gray-300 p-3 focus:border-black focus:outline-none bg-yellow-50" required>
+                <datalist id="lista-categorias"></datalist>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <input type="number" id="precio" placeholder="Precio ($)" class="w-full border border-gray-300 p-3 focus:border-black focus:outline-none" required>
+                <input type="text" id="talla" placeholder="Talla (Ej: Única)" class="w-full border border-gray-300 p-3 focus:border-black focus:outline-none">
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <input type="text" id="medidas" placeholder="Medidas (o N/A)" class="w-full border border-gray-300 p-3 focus:border-black focus:outline-none">
+                <input type="text" id="material" placeholder="Material" class="w-full border border-gray-300 p-3 focus:border-black focus:outline-none">
+            </div>
+
+            <input type="text" id="cuidados" placeholder="Mantenimiento / Cuidados" class="w-full border border-gray-300 p-3 focus:border-black focus:outline-none">
+
+            <!-- NUEVO CAMPO: ESLOGAN -->
+            <div>
+                <label class="text-xs text-gray-500 uppercase tracking-widest block mb-1">Eslogan de la pieza (Aparecerá en el modal)</label>
+                <textarea id="eslogan" placeholder="Corona de terciopelo que enmarca el porte y la majestad..." class="w-full border border-gray-300 p-3 focus:border-black focus:outline-none" rows="2" required></textarea>
+            </div>
+
+            <input type="text" id="imagen" placeholder="Nombre exacto de la foto (Ej: foto1.jpg)" class="w-full border border-gray-300 p-3 focus:border-black focus:outline-none bg-gray-50" required>
+
+            <button type="submit" class="w-full bg-black text-white font-bold py-4 uppercase tracking-[0.2em] shadow-xl hover:bg-[#1a1a1a] transition-colors">Guardar en Base de Datos</button>
+        </form>
+        <div id="mensaje" class="mt-6 font-bold text-center uppercase tracking-widest text-xs"></div>
+    </div>
 
     <script>
-        async function cargarAdmin() {
-            const panel = document.getElementById('panel');
-            try {
-                if (typeof window.supabase === 'undefined') throw new Error('El navegador no descargó la librería. Recarga la página.');
-                
-                const supabase = window.supabase.createClient('https://dmpovogobkqxiuqiqdku.supabase.co', 'sb_publishable_vxjNB2Og59jiF0wazOFJBw_-Cj1-q1I');
-                const { data, error } = await supabase.from('productos').select('*').order('codigo_interno', { ascending: true });
-                
-                if (error) throw new Error(error.message);
+        const supabase = window.supabase.createClient('https://dmpovogobkqxiuqiqdku.supabase.co', 'sb_publishable_vxjNB2Og59jiF0wazOFJBw_-Cj1-q1I');
 
-                let html = '';
-                data.forEach(p => {
-                    const esDisp = p.estado === 'Disponible';
-                    const borde = esDisp ? 'border-green-500' : 'border-red-500';
-                    const imgTag = p.imagen_url ? `<img src="https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${p.imagen_url}" class="w-16 h-16 object-cover rounded border">` : `<div class="w-16 h-16 bg-gray-200 flex items-center justify-center text-xs text-gray-500 rounded text-center leading-tight p-1">Sin foto</div>`;
-                    
-                    html += `
-                    <div class="bg-white p-4 rounded shadow flex flex-col md:flex-row justify-between items-start md:items-center border-l-4 ${borde} gap-4">
-                        <div class="flex gap-4 items-center w-full md:w-auto">
-                            ${imgTag}
-                            <div>
-                                <span class="text-xs font-mono bg-gray-100 px-2 py-1 rounded border">${p.codigo_interno}</span>
-                                <h3 class="font-bold text-lg leading-tight mt-1">${p.nombre_comercial}</h3>
-                                <p class="text-sm text-gray-500">$${p.precio} MXN | <span class="${esDisp ? 'text-green-600' : 'text-red-600'} font-bold">${p.estado}</span></p>
-                            </div>
-                        </div>
-                        <div class="flex flex-col md:flex-row gap-2 w-full md:w-auto">
-                            <div class="flex">
-                                <input type="text" id="img_${p.id}" value="${p.imagen_url || ''}" placeholder="Ej: GF-001.jpg" class="border p-2 text-sm rounded-l w-full md:w-32 outline-none focus:border-blue-500">
-                                <button onclick="vincularFoto('${p.id}')" class="bg-blue-600 hover:bg-blue-800 text-white px-3 py-2 text-sm font-bold rounded-r">Vincular</button>
-                            </div>
-                            <button onclick="cambiarEstado('${p.id}', '${esDisp ? 'Agotado' : 'Disponible'}')" class="${esDisp ? 'bg-[#b91c1c]' : 'bg-gray-800'} text-white px-4 py-2 rounded text-sm font-bold shadow transition-colors">${esDisp ? 'Agotar' : 'Activar'}</button>
-                        </div>
-                    </div>`;
-                });
-                panel.innerHTML = html;
-            } catch (e) {
-                panel.innerHTML = `<div class="bg-red-100 text-red-900 border-l-4 border-red-600 p-4 font-bold shadow">Diagnóstico: ${e.message}</div>`;
+        // Autocompletado de categorías existentes
+        async function cargarCategorias() {
+            const { data, error } = await supabase.from('productos').select('categoria');
+            if (!error && data) {
+                const categoriasUnicas = [...new Set(data.map(item => item.categoria))];
+                const datalist = document.getElementById('lista-categorias');
+                categoriasUnicas.forEach(cat => { datalist.innerHTML += `<option value="${cat}">`; });
             }
         }
+        cargarCategorias();
 
-        window.vincularFoto = async function(id) {
-            const supabase = window.supabase.createClient('https://dmpovogobkqxiuqiqdku.supabase.co', 'sb_publishable_vxjNB2Og59jiF0wazOFJBw_-Cj1-q1I');
-            const archivo = document.getElementById(`img_${id}`).value.trim();
-            const { error } = await supabase.from('productos').update({ imagen_url: archivo }).eq('id', id);
-            if (error) alert('Fallo de escritura SQL'); else cargarAdmin();
-        }
+        document.getElementById('form-producto').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.innerText = "Sincronizando...";
 
-        window.cambiarEstado = async function(id, nuevoEstado) {
-            const supabase = window.supabase.createClient('https://dmpovogobkqxiuqiqdku.supabase.co', 'sb_publishable_vxjNB2Og59jiF0wazOFJBw_-Cj1-q1I');
-            const { error } = await supabase.from('productos').update({ estado: nuevoEstado }).eq('id', id);
-            if (!error) cargarAdmin();
-        }
-
-        window.crearProducto = async function() {
-            const supabase = window.supabase.createClient('https://dmpovogobkqxiuqiqdku.supabase.co', 'sb_publishable_vxjNB2Og59jiF0wazOFJBw_-Cj1-q1I');
-            const nuevo = {
-                codigo_interno: document.getElementById('n_codigo').value.trim(),
-                nombre_comercial: document.getElementById('n_nombre').value.trim(),
-                categoria: document.getElementById('n_cat').value,
-                precio: parseFloat(document.getElementById('n_precio').value),
-                talla: document.getElementById('n_talla').value.trim() || 'N/A',
-                medidas: document.getElementById('n_medidas').value.trim() || 'N/A',
-                material: document.getElementById('n_material').value.trim() || 'N/A',
-                cuidados: document.getElementById('n_cuidados').value.trim() || 'N/A',
-                imagen_url: document.getElementById('n_imagen').value.trim() || null,
+            const nuevoProducto = {
+                codigo_interno: document.getElementById('codigo').value,
+                nombre_comercial: document.getElementById('nombre').value,
+                categoria: document.getElementById('categoria').value,
+                precio: document.getElementById('precio').value,
+                talla: document.getElementById('talla').value || 'N/A',
+                medidas: document.getElementById('medidas').value || 'N/A',
+                material: document.getElementById('material').value || 'N/A',
+                cuidados: document.getElementById('cuidados').value || 'N/A',
+                eslogan: document.getElementById('eslogan').value,
+                imagen_url: document.getElementById('imagen').value,
                 estado: 'Disponible'
             };
-            
-            if(!nuevo.codigo_interno || !nuevo.nombre_comercial) return alert('El Código y Nombre Comercial son mandatorios.');
-            if(isNaN(nuevo.precio)) return alert('El precio debe ser numérico.');
-            
-            const { error } = await supabase.from('productos').insert([nuevo]);
-            if (error) alert('Error SQL: ' + error.message);
-            else { alert('Alta exitosa.'); location.reload(); }
-        }
 
-        // Micro-retraso de seguridad (Medida correctiva)
-        setTimeout(cargarAdmin, 600);
+            const { error } = await supabase.from('productos').insert([nuevoProducto]);
+
+            if (error) {
+                document.getElementById('mensaje').innerHTML = `<span class="text-red-600"><i class="fas fa-times-circle"></i> Error: ${error.message}</span>`;
+            } else {
+                document.getElementById('mensaje').innerHTML = `<span class="text-green-600"><i class="fas fa-check-circle"></i> Pieza registrada y publicada exitosamente</span>`;
+                e.target.reset();
+                cargarCategorias(); // Refrescar lista por si se añadió categoría nueva
+            }
+            btn.innerText = "Guardar en Base de Datos";
+        });
     </script>
 </body>
 </html>
