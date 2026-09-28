@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control Maestro V4.2 | Laollaga Istmeña</title>
+    <title>Control Maestro V4.3 | Laollaga Istmeña</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .tab-admin-activa { border-bottom: 3px solid #d4af37; color: #000; font-weight: bold; background-color: white; }
@@ -15,7 +14,7 @@
 <body class="bg-[#f3f4f6] font-sans text-gray-800 pb-20">
     
     <div class="bg-black text-[#d4af37] p-5 flex justify-between items-center shadow-md border-b-2 border-[#d4af37] sticky top-0 z-50">
-        <h1 class="font-serif font-bold tracking-[0.2em] uppercase">Control Maestro V4.2</h1>
+        <h1 class="font-serif font-bold tracking-[0.2em] uppercase">Control Maestro V4.3</h1>
         <a href="index.html" class="text-white text-xs tracking-widest uppercase hover:text-[#d4af37] transition-colors bg-white/10 px-4 py-2 rounded">Ver Tienda <i class="fas fa-external-link-alt ml-1"></i></a>
     </div>
 
@@ -23,7 +22,7 @@
 
         <!-- FORMULARIO COLAPSABLE -->
         <div class="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
-            <button onclick="toggleRegistro()" class="w-full bg-gradient-to-r from-black to-gray-900 text-[#d4af37] p-5 flex justify-between items-center focus:outline-none">
+            <button id="btn-toggle-registro" class="w-full bg-gradient-to-r from-black to-gray-900 text-[#d4af37] p-5 flex justify-between items-center focus:outline-none">
                 <span class="font-serif font-bold uppercase tracking-widest text-sm md:text-base"><i class="fas fa-plus-circle mr-2"></i> Registrar Nueva Pieza</span>
                 <i id="icono-acordeon" class="fas fa-chevron-down transition-transform duration-300"></i>
             </button>
@@ -89,43 +88,47 @@
         <div class="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
             <div class="bg-gray-100 p-5 border-b border-gray-200 flex justify-between items-center">
                 <h2 class="font-serif font-bold uppercase tracking-widest text-black"><i class="fas fa-boxes mr-2"></i> Inventario de Tienda</h2>
-                <button onclick="iniciarAdmin()" class="text-xs text-gray-500 hover:text-black uppercase tracking-widest"><i class="fas fa-sync-alt"></i> Actualizar</button>
+                <button id="btn-actualizar" class="text-xs text-gray-500 hover:text-black uppercase tracking-widest"><i class="fas fa-sync-alt"></i> Actualizar</button>
             </div>
             
             <div id="admin-tabs" class="flex overflow-x-auto border-b border-gray-200 bg-gray-50 text-xs uppercase tracking-widest"></div>
             
             <div id="admin-grid" class="p-4 md:p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 bg-[#fcfbf9]">
-                <div class="text-center py-10 text-gray-400 font-bold uppercase tracking-widest text-xs col-span-full animate-pulse">Iniciando conexión segura...</div>
+                <div class="text-center py-10 text-gray-400 font-bold uppercase tracking-widest text-xs col-span-full animate-pulse">Conectando...</div>
             </div>
         </div>
 
     </main>
 
-    <script>
-        // Lógica Visual Independiente (El acordeón funcionará siempre)
-        window.toggleRegistro = function() {
+    <!-- Importación por Módulos (ESM) para garantizar la carga -->
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+        
+        const supabaseUrl = 'https://dmpovogobkqxiuqiqdku.supabase.co';
+        const supabaseKey = 'sb_publishable_vxjNB2Og59jiF0wazOFJBw_-Cj1-q1I';
+        const supabase = createClient(supabaseUrl, supabaseKey);
+
+        let inventarioAdmin = {};
+        let categoriaActualAdmin = '';
+
+        // UI: Acordeón
+        document.getElementById('btn-toggle-registro').addEventListener('click', () => {
             const panel = document.getElementById('panel-registro');
             const icono = document.getElementById('icono-acordeon');
             panel.classList.toggle('hidden');
             icono.classList.toggle('rotate-180');
-        };
+        });
 
-        let supabase = null;
-        let inventarioAdmin = {};
-        let categoriaActualAdmin = '';
+        // UI: Botón Actualizar
+        document.getElementById('btn-actualizar').addEventListener('click', () => {
+            cargarInventario();
+        });
 
-        // Inicialización Forzada de Base de Datos
-        window.iniciarAdmin = async function() {
+        async function cargarInventario() {
             const grid = document.getElementById('admin-grid');
-            grid.innerHTML = '<div class="text-center py-10 text-gray-400 text-xs col-span-full animate-pulse">Conectando con Supabase...</div>';
+            grid.innerHTML = '<div class="text-center py-10 text-gray-400 text-xs col-span-full animate-pulse">Consultando base de datos...</div>';
             
             try {
-                if (typeof window.supabase === 'undefined') {
-                    throw new Error('El navegador bloqueó la conexión externa. Apaga los escudos de seguridad (Brave) para esta página.');
-                }
-                
-                supabase = window.supabase.createClient('https://dmpovogobkqxiuqiqdku.supabase.co', 'sb_publishable_vxjNB2Og59jiF0wazOFJBw_-Cj1-q1I');
-                
                 const { data, error } = await supabase.from('productos').select('*').order('codigo_interno', { ascending: true });
                 
                 if (error) throw new Error(error.message);
@@ -155,19 +158,28 @@
                     grid.innerHTML = `<div class="text-center py-10 text-gray-500 text-xs col-span-full">No hay productos registrados.</div>`;
                 }
             } catch (err) {
-                grid.innerHTML = `<div class="text-red-600 p-6 text-center col-span-full font-bold">ALERTA TÉCNICA: ${err.message}</div>`;
+                grid.innerHTML = `<div class="text-red-600 p-6 text-center col-span-full font-bold">Error de conexión: ${err.message}</div>`;
             }
-        };
+        }
 
         function renderizarTabsAdmin(categorias) {
             let html = '';
             categorias.forEach(cat => {
-                html += `<button onclick="mostrarInventario('${cat}')" id="tab-adm-${cat.replace(/\s+/g, '')}" class="px-6 py-4 whitespace-nowrap transition-colors focus:outline-none tab-admin-inactiva">${cat}</button>`;
+                const idTab = `tab-adm-${cat.replace(/\s+/g, '')}`;
+                html += `<button id="${idTab}" class="px-6 py-4 whitespace-nowrap transition-colors focus:outline-none tab-admin-inactiva">${cat}</button>`;
             });
             document.getElementById('admin-tabs').innerHTML = html;
+
+            // Asignar eventos a las pestañas dinámicamente
+            categorias.forEach(cat => {
+                const idTab = `tab-adm-${cat.replace(/\s+/g, '')}`;
+                document.getElementById(idTab).addEventListener('click', () => {
+                    mostrarInventario(cat);
+                });
+            });
         }
 
-        window.mostrarInventario = function(cat) {
+        function mostrarInventario(cat) {
             categoriaActualAdmin = cat;
             
             for (const categoria in inventarioAdmin) {
@@ -188,9 +200,10 @@
                 const imgPath = p.imagen_url ? `https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${p.imagen_url}` : 'https://via.placeholder.com/150';
                 const isDisponible = p.estado === 'Disponible';
                 
+                const btnId = `btn-estado-${p.codigo_interno}`;
                 const btnEstado = isDisponible 
-                    ? `<button onclick="cambiarEstado('${p.codigo_interno}', 'Agotado')" class="w-full mt-3 bg-green-100 text-green-800 border border-green-300 py-2 rounded text-xs font-bold uppercase tracking-widest hover:bg-green-200 transition"><i class="fas fa-check-circle mr-1"></i> Disponible</button>`
-                    : `<button onclick="cambiarEstado('${p.codigo_interno}', 'Disponible')" class="w-full mt-3 bg-red-50 text-red-700 border border-red-200 py-2 rounded text-xs font-bold uppercase tracking-widest hover:bg-red-100 transition"><i class="fas fa-times-circle mr-1"></i> Agotado / Oculto</button>`;
+                    ? `<button id="${btnId}" data-codigo="${p.codigo_interno}" data-nuevo="Agotado" class="w-full mt-3 bg-green-100 text-green-800 border border-green-300 py-2 rounded text-xs font-bold uppercase tracking-widest hover:bg-green-200 transition"><i class="fas fa-check-circle mr-1"></i> Disponible</button>`
+                    : `<button id="${btnId}" data-codigo="${p.codigo_interno}" data-nuevo="Disponible" class="w-full mt-3 bg-red-50 text-red-700 border border-red-200 py-2 rounded text-xs font-bold uppercase tracking-widest hover:bg-red-100 transition"><i class="fas fa-times-circle mr-1"></i> Agotado / Oculto</button>`;
 
                 html += `
                 <div class="bg-white border ${isDisponible ? 'border-gray-200' : 'border-red-200 opacity-70'} p-3 flex flex-row gap-4 items-center shadow-sm rounded-lg">
@@ -204,15 +217,23 @@
                 </div>`;
             });
             document.getElementById('admin-grid').innerHTML = html;
+
+            // Asignar eventos a los botones de estado
+            productos.forEach(p => {
+                const btnId = `btn-estado-${p.codigo_interno}`;
+                document.getElementById(btnId).addEventListener('click', function() {
+                    cambiarEstado(this.dataset.codigo, this.dataset.nuevo);
+                });
+            });
         }
 
-        window.cambiarEstado = async function(codigo, nuevoEstado) {
+        async function cambiarEstado(codigo, nuevoEstado) {
             document.getElementById('admin-grid').style.opacity = '0.5';
             const { error } = await supabase.from('productos').update({ estado: nuevoEstado }).eq('codigo_interno', codigo);
             if (error) {
                 alert("Error al actualizar: " + error.message);
             } else {
-                await iniciarAdmin();
+                await cargarInventario();
             }
             document.getElementById('admin-grid').style.opacity = '1';
         }
@@ -245,15 +266,20 @@
                 document.getElementById('mensaje').innerHTML = `<span class="text-green-600"><i class="fas fa-check-circle"></i> Guardado exitoso.</span>`;
                 e.target.reset();
                 categoriaActualAdmin = nuevoProducto.categoria;
-                await iniciarAdmin();
-                toggleRegistro();
+                await cargarInventario();
+                
+                const panel = document.getElementById('panel-registro');
+                const icono = document.getElementById('icono-acordeon');
+                panel.classList.add('hidden');
+                icono.classList.remove('rotate-180');
+
                 setTimeout(() => { document.getElementById('mensaje').innerHTML = ''; }, 3000);
             }
             btn.innerHTML = textoOriginal;
         });
 
-        // Autoejecución
-        setTimeout(iniciarAdmin, 200);
+        // Iniciar
+        cargarInventario();
     </script>
 </body>
 </html>
