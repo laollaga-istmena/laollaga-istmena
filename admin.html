@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control Maestro V4 | Laollaga Istmeña</title>
+    <title>Control Maestro V4.1 | Laollaga Istmeña</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -97,7 +97,7 @@
         <div class="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
             <div class="bg-gray-100 p-5 border-b border-gray-200 flex justify-between items-center">
                 <h2 class="font-serif font-bold uppercase tracking-widest text-black"><i class="fas fa-boxes mr-2"></i> Inventario de Tienda</h2>
-                <button onclick="cargarInventario()" class="text-xs text-gray-500 hover:text-black uppercase tracking-widest"><i class="fas fa-sync-alt"></i> Actualizar</button>
+                <button onclick="iniciarAdmin()" class="text-xs text-gray-500 hover:text-black uppercase tracking-widest"><i class="fas fa-sync-alt"></i> Actualizar</button>
             </div>
             
             <!-- Pestañas de Categorías -->
@@ -112,12 +112,11 @@
     </main>
 
     <script>
-        const supabase = window.supabase.createClient('https://dmpovogobkqxiuqiqdku.supabase.co', 'sb_publishable_vxjNB2Og59jiF0wazOFJBw_-Cj1-q1I');
-
+        let supabase = null;
         let inventarioAdmin = {};
         let categoriaActualAdmin = '';
 
-        // 1. Control del Acordeón
+        // Control del Acordeón
         function toggleRegistro() {
             const panel = document.getElementById('panel-registro');
             const icono = document.getElementById('icono-acordeon');
@@ -125,44 +124,62 @@
             icono.classList.toggle('rotate-180');
         }
 
-        // 2. Cargar Datos Globales (Formulario e Inventario)
-        async function cargarInventario() {
-            document.getElementById('admin-grid').innerHTML = '<div class="text-center py-10 text-gray-400 text-xs col-span-full">Actualizando...</div>';
-            
-            // Traemos TODOS los productos (Disponibles y Agotados) ordenados alfabéticamente
-            const { data, error } = await supabase.from('productos').select('*').order('codigo_interno', { ascending: true });
-            
-            if (error) {
-                document.getElementById('admin-grid').innerHTML = `<div class="text-red-500 p-4">Error: ${error.message}</div>`;
-                return;
-            }
-
-            inventarioAdmin = {};
-            const categoriasUnicas = new Set();
-
-            data.forEach(p => {
-                categoriasUnicas.add(p.categoria);
-                if(!inventarioAdmin[p.categoria]) inventarioAdmin[p.categoria] = [];
-                inventarioAdmin[p.categoria].push(p);
-            });
-
-            // Llenar autocompletado del formulario
-            const datalist = document.getElementById('lista-categorias');
-            datalist.innerHTML = '';
-            categoriasUnicas.forEach(cat => { datalist.innerHTML += `<option value="${cat}">`; });
-
-            // Generar Pestañas del Inventario
-            renderizarTabsAdmin(Array.from(categoriasUnicas));
-            
-            // Seleccionar la primera categoría por defecto si no hay una activa
-            if(!categoriaActualAdmin && Array.from(categoriasUnicas).length > 0) {
-                categoriaActualAdmin = Array.from(categoriasUnicas)[0];
-            }
-            
-            if(categoriaActualAdmin) mostrarInventario(categoriaActualAdmin);
+        // Inicialización segura con retardo para asegurar que el CDN de Supabase cargue
+        function iniciarAdmin() {
+            setTimeout(() => {
+                try {
+                    if (typeof window.supabase === 'undefined') {
+                        throw new Error('La librería de Supabase no pudo cargarse desde el CDN.');
+                    }
+                    supabase = window.supabase.createClient('https://dmpovogobkqxiuqiqdku.supabase.co', 'sb_publishable_vxjNB2Og59jiF0wazOFJBw_-Cj1-q1I');
+                    cargarInventario();
+                } catch (err) {
+                    document.getElementById('admin-grid').innerHTML = `<div class="text-red-600 p-6 text-center col-span-full font-bold">Error de inicialización: ${err.message}</div>`;
+                }
+            }, 500);
         }
 
-        // 3. Renderizar Pestañas
+        // Cargar Datos Globales
+        async function cargarInventario() {
+            const grid = document.getElementById('admin-grid');
+            grid.innerHTML = '<div class="text-center py-10 text-gray-400 text-xs col-span-full animate-pulse">Consultando Supabase...</div>';
+            
+            try {
+                const { data, error } = await supabase.from('productos').select('*').order('codigo_interno', { ascending: true });
+                
+                if (error) throw new Error(error.message);
+
+                inventarioAdmin = {};
+                const categoriasUnicas = new Set();
+
+                data.forEach(p => {
+                    categoriasUnicas.add(p.categoria);
+                    if(!inventarioAdmin[p.categoria]) inventarioAdmin[p.categoria] = [];
+                    inventarioAdmin[p.categoria].push(p);
+                });
+
+                // Llenar autocompletado del formulario
+                const datalist = document.getElementById('lista-categorias');
+                datalist.innerHTML = '';
+                categoriasUnicas.forEach(cat => { datalist.innerHTML += `<option value="${cat}">`; });
+
+                renderizarTabsAdmin(Array.from(categoriasUnicas));
+                
+                if(!categoriaActualAdmin && Array.from(categoriasUnicas).length > 0) {
+                    categoriaActualAdmin = Array.from(categoriasUnicas)[0];
+                }
+                
+                if(categoriaActualAdmin) {
+                    mostrarInventario(categoriaActualAdmin);
+                } else {
+                    grid.innerHTML = `<div class="text-center py-10 text-gray-500 text-xs col-span-full">No hay productos registrados en la base de datos todavía.</div>`;
+                }
+            } catch (err) {
+                grid.innerHTML = `<div class="text-red-600 p-6 text-center col-span-full font-bold">Error al conectar con Supabase: ${err.message}</div>`;
+            }
+        }
+
+        // Renderizar Pestañas
         function renderizarTabsAdmin(categorias) {
             let html = '';
             categorias.forEach(cat => {
@@ -171,11 +188,10 @@
             document.getElementById('admin-tabs').innerHTML = html;
         }
 
-        // 4. Mostrar Inventario por Categoría Activa
+        // Mostrar Inventario por Categoría Activa
         window.mostrarInventario = function(cat) {
             categoriaActualAdmin = cat;
             
-            // Actualizar UI de Pestañas
             for (const categoria in inventarioAdmin) {
                 const btn = document.getElementById(`tab-adm-${categoria.replace(/\s+/g, '')}`);
                 if(btn) {
@@ -187,7 +203,6 @@
                 }
             }
 
-            // Renderizar Tarjetas
             const productos = inventarioAdmin[cat] || [];
             let html = '';
 
@@ -195,7 +210,6 @@
                 const imgPath = p.imagen_url ? `https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${p.imagen_url}` : 'https://via.placeholder.com/150';
                 const isDisponible = p.estado === 'Disponible';
                 
-                // Botón dinámico según el estado
                 const btnEstado = isDisponible 
                     ? `<button onclick="cambiarEstado('${p.codigo_interno}', 'Agotado')" class="w-full mt-3 bg-green-100 text-green-800 border border-green-300 py-2 rounded text-xs font-bold uppercase tracking-widest hover:bg-green-200 transition"><i class="fas fa-check-circle mr-1"></i> Disponible</button>`
                     : `<button onclick="cambiarEstado('${p.codigo_interno}', 'Disponible')" class="w-full mt-3 bg-red-50 text-red-700 border border-red-200 py-2 rounded text-xs font-bold uppercase tracking-widest hover:bg-red-100 transition"><i class="fas fa-times-circle mr-1"></i> Agotado / Oculto</button>`;
@@ -215,26 +229,19 @@
             document.getElementById('admin-grid').innerHTML = html;
         }
 
-        // 5. Función para Cambiar "Disponible" a "Agotado" y viceversa
+        // Cambiar Estado
         window.cambiarEstado = async function(codigo, nuevoEstado) {
-            // Animación de carga rápida
             document.getElementById('admin-grid').style.opacity = '0.5';
-            
-            const { error } = await supabase
-                .from('productos')
-                .update({ estado: nuevoEstado })
-                .eq('codigo_interno', codigo);
-                
+            const { error } = await supabase.from('productos').update({ estado: nuevoEstado }).eq('codigo_interno', codigo);
             if (error) {
                 alert("Error al actualizar estado: " + error.message);
             } else {
-                // Recargar el inventario para reflejar el cambio visualmente
                 await cargarInventario();
             }
             document.getElementById('admin-grid').style.opacity = '1';
         }
 
-        // 6. Registro de Nueva Pieza (Mantiene la lógica anterior)
+        // Registro de Nueva Pieza
         document.getElementById('form-producto').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = e.target.querySelector('button');
@@ -262,16 +269,16 @@
             } else {
                 document.getElementById('mensaje').innerHTML = `<span class="text-green-600"><i class="fas fa-check-circle"></i> Pieza registrada exitosamente.</span>`;
                 e.target.reset();
-                categoriaActualAdmin = nuevoProducto.categoria; // Enfocar la nueva categoría
-                await cargarInventario(); // Actualiza el panel inferior al instante
-                toggleRegistro(); // Cierra el acordeón automáticamente
+                categoriaActualAdmin = nuevoProducto.categoria;
+                await cargarInventario();
+                toggleRegistro();
                 setTimeout(() => { document.getElementById('mensaje').innerHTML = ''; }, 3000);
             }
             btn.innerHTML = textoOriginal;
         });
 
-        // Inicializar
-        cargarInventario();
+        // Ejecutar al cargar la página
+        window.onload = iniciarAdmin;
     </script>
 </body>
 </html>
