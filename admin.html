@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control Maestro V4.1 | Laollaga Istmeña</title>
+    <title>Control Maestro V4.2 | Laollaga Istmeña</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -14,15 +14,14 @@
 </head>
 <body class="bg-[#f3f4f6] font-sans text-gray-800 pb-20">
     
-    <!-- Header Admin -->
     <div class="bg-black text-[#d4af37] p-5 flex justify-between items-center shadow-md border-b-2 border-[#d4af37] sticky top-0 z-50">
-        <h1 class="font-serif font-bold tracking-[0.2em] uppercase">Control Maestro V4</h1>
+        <h1 class="font-serif font-bold tracking-[0.2em] uppercase">Control Maestro V4.2</h1>
         <a href="index.html" class="text-white text-xs tracking-widest uppercase hover:text-[#d4af37] transition-colors bg-white/10 px-4 py-2 rounded">Ver Tienda <i class="fas fa-external-link-alt ml-1"></i></a>
     </div>
 
     <main class="max-w-6xl mx-auto p-4 md:p-6 space-y-6 mt-4">
 
-        <!-- SECCIÓN 1: FORMULARIO COLAPSABLE (ACORDEÓN) -->
+        <!-- FORMULARIO COLAPSABLE -->
         <div class="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
             <button onclick="toggleRegistro()" class="w-full bg-gradient-to-r from-black to-gray-900 text-[#d4af37] p-5 flex justify-between items-center focus:outline-none">
                 <span class="font-serif font-bold uppercase tracking-widest text-sm md:text-base"><i class="fas fa-plus-circle mr-2"></i> Registrar Nueva Pieza</span>
@@ -41,13 +40,11 @@
                             <input type="text" id="nombre" placeholder="Ej: Jardín Azul Dorado" class="w-full border border-gray-300 rounded p-3 focus:border-black focus:outline-none" required>
                         </div>
                     </div>
-
                     <div>
                         <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-1">Categoría (Selecciona o escribe una nueva)</label>
                         <input type="text" id="categoria" list="lista-categorias" placeholder="Ej: Diademas de Terciopelo" class="w-full border border-yellow-400 bg-yellow-50 rounded p-3 focus:border-black focus:outline-none" required>
                         <datalist id="lista-categorias"></datalist>
                     </div>
-
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-1">Precio ($ MXN)</label>
@@ -58,7 +55,6 @@
                             <input type="text" id="talla" placeholder="Ej: Mediana" class="w-full border border-gray-300 rounded p-3 focus:border-black focus:outline-none">
                         </div>
                     </div>
-
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-1">Medidas</label>
@@ -69,82 +65,67 @@
                             <input type="text" id="material" placeholder="Ej: Tela sintética" class="w-full border border-gray-300 rounded p-3 focus:border-black focus:outline-none">
                         </div>
                     </div>
-
                     <div>
                         <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-1">Cuidados / Mantenimiento</label>
                         <input type="text" id="cuidados" placeholder="Ej: Limpiar con paño seco" class="w-full border border-gray-300 rounded p-3 focus:border-black focus:outline-none">
                     </div>
-
                     <div>
                         <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-1 font-bold text-black">Eslogan Promocional (Se muestra en la tienda)</label>
                         <textarea id="eslogan" placeholder="Frase que conecta con las raíces y la tradición..." class="w-full border border-gray-300 rounded p-3 focus:border-black focus:outline-none" rows="2" required></textarea>
                     </div>
-
                     <div>
                         <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-1">Archivo de Fotografía</label>
                         <input type="text" id="imagen" placeholder="Nombre exacto en Supabase. Ej: GF-011.jpg" class="w-full border border-gray-300 bg-gray-50 rounded p-3 focus:border-black focus:outline-none" required>
                     </div>
-
                     <button type="submit" class="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-4 rounded uppercase tracking-[0.2em] shadow-lg transition-colors">
-                        <i class="fas fa-save mr-2"></i> Guardar Pieza en Base de Datos
+                        <i class="fas fa-save mr-2"></i> Guardar Pieza
                     </button>
                 </form>
                 <div id="mensaje" class="mt-4 font-bold text-center uppercase tracking-widest text-xs"></div>
             </div>
         </div>
 
-        <!-- SECCIÓN 2: GESTOR DE INVENTARIO TABULADO -->
+        <!-- INVENTARIO -->
         <div class="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
             <div class="bg-gray-100 p-5 border-b border-gray-200 flex justify-between items-center">
                 <h2 class="font-serif font-bold uppercase tracking-widest text-black"><i class="fas fa-boxes mr-2"></i> Inventario de Tienda</h2>
                 <button onclick="iniciarAdmin()" class="text-xs text-gray-500 hover:text-black uppercase tracking-widest"><i class="fas fa-sync-alt"></i> Actualizar</button>
             </div>
             
-            <!-- Pestañas de Categorías -->
             <div id="admin-tabs" class="flex overflow-x-auto border-b border-gray-200 bg-gray-50 text-xs uppercase tracking-widest"></div>
             
-            <!-- Cuadrícula de Productos Administrables -->
             <div id="admin-grid" class="p-4 md:p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 bg-[#fcfbf9]">
-                <div class="text-center py-10 text-gray-400 font-bold uppercase tracking-widest text-xs col-span-full animate-pulse">Cargando base de datos...</div>
+                <div class="text-center py-10 text-gray-400 font-bold uppercase tracking-widest text-xs col-span-full animate-pulse">Iniciando conexión segura...</div>
             </div>
         </div>
 
     </main>
 
     <script>
-        let supabase = null;
-        let inventarioAdmin = {};
-        let categoriaActualAdmin = '';
-
-        // Control del Acordeón
-        function toggleRegistro() {
+        // Lógica Visual Independiente (El acordeón funcionará siempre)
+        window.toggleRegistro = function() {
             const panel = document.getElementById('panel-registro');
             const icono = document.getElementById('icono-acordeon');
             panel.classList.toggle('hidden');
             icono.classList.toggle('rotate-180');
-        }
+        };
 
-        // Inicialización segura con retardo para asegurar que el CDN de Supabase cargue
-        function iniciarAdmin() {
-            setTimeout(() => {
-                try {
-                    if (typeof window.supabase === 'undefined') {
-                        throw new Error('La librería de Supabase no pudo cargarse desde el CDN.');
-                    }
-                    supabase = window.supabase.createClient('https://dmpovogobkqxiuqiqdku.supabase.co', 'sb_publishable_vxjNB2Og59jiF0wazOFJBw_-Cj1-q1I');
-                    cargarInventario();
-                } catch (err) {
-                    document.getElementById('admin-grid').innerHTML = `<div class="text-red-600 p-6 text-center col-span-full font-bold">Error de inicialización: ${err.message}</div>`;
-                }
-            }, 500);
-        }
+        let supabase = null;
+        let inventarioAdmin = {};
+        let categoriaActualAdmin = '';
 
-        // Cargar Datos Globales
-        async function cargarInventario() {
+        // Inicialización Forzada de Base de Datos
+        window.iniciarAdmin = async function() {
             const grid = document.getElementById('admin-grid');
-            grid.innerHTML = '<div class="text-center py-10 text-gray-400 text-xs col-span-full animate-pulse">Consultando Supabase...</div>';
+            grid.innerHTML = '<div class="text-center py-10 text-gray-400 text-xs col-span-full animate-pulse">Conectando con Supabase...</div>';
             
             try {
+                if (typeof window.supabase === 'undefined') {
+                    throw new Error('El navegador bloqueó la conexión externa. Apaga los escudos de seguridad (Brave) para esta página.');
+                }
+                
+                supabase = window.supabase.createClient('https://dmpovogobkqxiuqiqdku.supabase.co', 'sb_publishable_vxjNB2Og59jiF0wazOFJBw_-Cj1-q1I');
+                
                 const { data, error } = await supabase.from('productos').select('*').order('codigo_interno', { ascending: true });
                 
                 if (error) throw new Error(error.message);
@@ -158,7 +139,6 @@
                     inventarioAdmin[p.categoria].push(p);
                 });
 
-                // Llenar autocompletado del formulario
                 const datalist = document.getElementById('lista-categorias');
                 datalist.innerHTML = '';
                 categoriasUnicas.forEach(cat => { datalist.innerHTML += `<option value="${cat}">`; });
@@ -172,14 +152,13 @@
                 if(categoriaActualAdmin) {
                     mostrarInventario(categoriaActualAdmin);
                 } else {
-                    grid.innerHTML = `<div class="text-center py-10 text-gray-500 text-xs col-span-full">No hay productos registrados en la base de datos todavía.</div>`;
+                    grid.innerHTML = `<div class="text-center py-10 text-gray-500 text-xs col-span-full">No hay productos registrados.</div>`;
                 }
             } catch (err) {
-                grid.innerHTML = `<div class="text-red-600 p-6 text-center col-span-full font-bold">Error al conectar con Supabase: ${err.message}</div>`;
+                grid.innerHTML = `<div class="text-red-600 p-6 text-center col-span-full font-bold">ALERTA TÉCNICA: ${err.message}</div>`;
             }
-        }
+        };
 
-        // Renderizar Pestañas
         function renderizarTabsAdmin(categorias) {
             let html = '';
             categorias.forEach(cat => {
@@ -188,7 +167,6 @@
             document.getElementById('admin-tabs').innerHTML = html;
         }
 
-        // Mostrar Inventario por Categoría Activa
         window.mostrarInventario = function(cat) {
             categoriaActualAdmin = cat;
             
@@ -225,23 +203,20 @@
                     </div>
                 </div>`;
             });
-            
             document.getElementById('admin-grid').innerHTML = html;
         }
 
-        // Cambiar Estado
         window.cambiarEstado = async function(codigo, nuevoEstado) {
             document.getElementById('admin-grid').style.opacity = '0.5';
             const { error } = await supabase.from('productos').update({ estado: nuevoEstado }).eq('codigo_interno', codigo);
             if (error) {
-                alert("Error al actualizar estado: " + error.message);
+                alert("Error al actualizar: " + error.message);
             } else {
-                await cargarInventario();
+                await iniciarAdmin();
             }
             document.getElementById('admin-grid').style.opacity = '1';
         }
 
-        // Registro de Nueva Pieza
         document.getElementById('form-producto').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = e.target.querySelector('button');
@@ -267,18 +242,18 @@
             if (error) {
                 document.getElementById('mensaje').innerHTML = `<span class="text-red-600"><i class="fas fa-times-circle"></i> Error: ${error.message}</span>`;
             } else {
-                document.getElementById('mensaje').innerHTML = `<span class="text-green-600"><i class="fas fa-check-circle"></i> Pieza registrada exitosamente.</span>`;
+                document.getElementById('mensaje').innerHTML = `<span class="text-green-600"><i class="fas fa-check-circle"></i> Guardado exitoso.</span>`;
                 e.target.reset();
                 categoriaActualAdmin = nuevoProducto.categoria;
-                await cargarInventario();
+                await iniciarAdmin();
                 toggleRegistro();
                 setTimeout(() => { document.getElementById('mensaje').innerHTML = ''; }, 3000);
             }
             btn.innerHTML = textoOriginal;
         });
 
-        // Ejecutar al cargar la página
-        window.onload = iniciarAdmin;
+        // Autoejecución
+        setTimeout(iniciarAdmin, 200);
     </script>
 </body>
 </html>
