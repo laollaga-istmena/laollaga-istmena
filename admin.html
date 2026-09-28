@@ -3,76 +3,243 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control V3 | Laollaga Istmeña</title>
+    <title>Control Maestro V4 | Laollaga Istmeña</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .tab-admin-activa { border-bottom: 3px solid #d4af37; color: #000; font-weight: bold; background-color: white; }
+        .tab-admin-inactiva { border-bottom: 3px solid transparent; color: #6b7280; background-color: #f9fafb; }
+    </style>
 </head>
-<body class="bg-[#fcfbf9] font-sans text-gray-800">
+<body class="bg-[#f3f4f6] font-sans text-gray-800 pb-20">
     
-    <div class="bg-black text-[#d4af37] p-5 flex justify-between items-center shadow-lg border-b-2 border-[#d4af37]">
-        <h1 class="font-serif font-bold tracking-[0.2em] uppercase">Control Maestro V3</h1>
-        <a href="index.html" class="text-white text-xs tracking-widest uppercase hover:text-[#d4af37] transition-colors">Ver Catálogo</a>
+    <!-- Header Admin -->
+    <div class="bg-black text-[#d4af37] p-5 flex justify-between items-center shadow-md border-b-2 border-[#d4af37] sticky top-0 z-50">
+        <h1 class="font-serif font-bold tracking-[0.2em] uppercase">Control Maestro V4</h1>
+        <a href="index.html" class="text-white text-xs tracking-widest uppercase hover:text-[#d4af37] transition-colors bg-white/10 px-4 py-2 rounded">Ver Tienda <i class="fas fa-external-link-alt ml-1"></i></a>
     </div>
 
-    <div class="max-w-2xl mx-auto mt-10 bg-white p-8 rounded-sm shadow-2xl border border-gray-100">
-        <h2 class="text-2xl font-serif font-bold mb-6 border-b pb-2">Registrar Nueva Pieza</h2>
-        
-        <form id="form-producto" class="space-y-5 text-sm">
-            <div class="grid grid-cols-2 gap-4">
-                <input type="text" id="codigo" placeholder="Código (Ej: DT-001)" class="w-full border border-gray-300 p-3 focus:border-black focus:outline-none" required>
-                <input type="text" id="nombre" placeholder="Nombre Comercial" class="w-full border border-gray-300 p-3 focus:border-black focus:outline-none" required>
+    <main class="max-w-6xl mx-auto p-4 md:p-6 space-y-6 mt-4">
+
+        <!-- SECCIÓN 1: FORMULARIO COLAPSABLE (ACORDEÓN) -->
+        <div class="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
+            <button onclick="toggleRegistro()" class="w-full bg-gradient-to-r from-black to-gray-900 text-[#d4af37] p-5 flex justify-between items-center focus:outline-none">
+                <span class="font-serif font-bold uppercase tracking-widest text-sm md:text-base"><i class="fas fa-plus-circle mr-2"></i> Registrar Nueva Pieza</span>
+                <i id="icono-acordeon" class="fas fa-chevron-down transition-transform duration-300"></i>
+            </button>
+            
+            <div id="panel-registro" class="hidden p-6 md:p-8 bg-[#fcfbf9]">
+                <form id="form-producto" class="space-y-5 text-sm">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-1">Código Interno</label>
+                            <input type="text" id="codigo" placeholder="Ej: GF-011" class="w-full border border-gray-300 rounded p-3 focus:border-black focus:outline-none" required>
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-1">Nombre de la Pieza</label>
+                            <input type="text" id="nombre" placeholder="Ej: Jardín Azul Dorado" class="w-full border border-gray-300 rounded p-3 focus:border-black focus:outline-none" required>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-1">Categoría (Selecciona o escribe una nueva)</label>
+                        <input type="text" id="categoria" list="lista-categorias" placeholder="Ej: Diademas de Terciopelo" class="w-full border border-yellow-400 bg-yellow-50 rounded p-3 focus:border-black focus:outline-none" required>
+                        <datalist id="lista-categorias"></datalist>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-1">Precio ($ MXN)</label>
+                            <input type="number" id="precio" placeholder="Ej: 450" class="w-full border border-gray-300 rounded p-3 focus:border-black focus:outline-none" required>
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-1">Talla</label>
+                            <input type="text" id="talla" placeholder="Ej: Mediana" class="w-full border border-gray-300 rounded p-3 focus:border-black focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-1">Medidas</label>
+                            <input type="text" id="medidas" placeholder="Ej: N/A" class="w-full border border-gray-300 rounded p-3 focus:border-black focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-1">Material de confección</label>
+                            <input type="text" id="material" placeholder="Ej: Tela sintética" class="w-full border border-gray-300 rounded p-3 focus:border-black focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-1">Cuidados / Mantenimiento</label>
+                        <input type="text" id="cuidados" placeholder="Ej: Limpiar con paño seco" class="w-full border border-gray-300 rounded p-3 focus:border-black focus:outline-none">
+                    </div>
+
+                    <div>
+                        <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-1 font-bold text-black">Eslogan Promocional (Se muestra en la tienda)</label>
+                        <textarea id="eslogan" placeholder="Frase que conecta con las raíces y la tradición..." class="w-full border border-gray-300 rounded p-3 focus:border-black focus:outline-none" rows="2" required></textarea>
+                    </div>
+
+                    <div>
+                        <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-1">Archivo de Fotografía</label>
+                        <input type="text" id="imagen" placeholder="Nombre exacto en Supabase. Ej: GF-011.jpg" class="w-full border border-gray-300 bg-gray-50 rounded p-3 focus:border-black focus:outline-none" required>
+                    </div>
+
+                    <button type="submit" class="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-4 rounded uppercase tracking-[0.2em] shadow-lg transition-colors">
+                        <i class="fas fa-save mr-2"></i> Guardar Pieza en Base de Datos
+                    </button>
+                </form>
+                <div id="mensaje" class="mt-4 font-bold text-center uppercase tracking-widest text-xs"></div>
             </div>
+        </div>
 
-            <!-- CAMPO INTELIGENTE DE CATEGORÍA -->
-            <div>
-                <label class="text-xs text-gray-500 uppercase tracking-widest block mb-1">Categoría (Selecciona o escribe una nueva)</label>
-                <input type="text" id="categoria" list="lista-categorias" placeholder="Ej: Diademas de Terciopelo" class="w-full border border-gray-300 p-3 focus:border-black focus:outline-none bg-yellow-50" required>
-                <datalist id="lista-categorias"></datalist>
+        <!-- SECCIÓN 2: GESTOR DE INVENTARIO TABULADO -->
+        <div class="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
+            <div class="bg-gray-100 p-5 border-b border-gray-200 flex justify-between items-center">
+                <h2 class="font-serif font-bold uppercase tracking-widest text-black"><i class="fas fa-boxes mr-2"></i> Inventario de Tienda</h2>
+                <button onclick="cargarInventario()" class="text-xs text-gray-500 hover:text-black uppercase tracking-widest"><i class="fas fa-sync-alt"></i> Actualizar</button>
             </div>
-
-            <div class="grid grid-cols-2 gap-4">
-                <input type="number" id="precio" placeholder="Precio ($)" class="w-full border border-gray-300 p-3 focus:border-black focus:outline-none" required>
-                <input type="text" id="talla" placeholder="Talla (Ej: Única)" class="w-full border border-gray-300 p-3 focus:border-black focus:outline-none">
+            
+            <!-- Pestañas de Categorías -->
+            <div id="admin-tabs" class="flex overflow-x-auto border-b border-gray-200 bg-gray-50 text-xs uppercase tracking-widest"></div>
+            
+            <!-- Cuadrícula de Productos Administrables -->
+            <div id="admin-grid" class="p-4 md:p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 bg-[#fcfbf9]">
+                <div class="text-center py-10 text-gray-400 font-bold uppercase tracking-widest text-xs col-span-full animate-pulse">Cargando base de datos...</div>
             </div>
+        </div>
 
-            <div class="grid grid-cols-2 gap-4">
-                <input type="text" id="medidas" placeholder="Medidas (o N/A)" class="w-full border border-gray-300 p-3 focus:border-black focus:outline-none">
-                <input type="text" id="material" placeholder="Material" class="w-full border border-gray-300 p-3 focus:border-black focus:outline-none">
-            </div>
-
-            <input type="text" id="cuidados" placeholder="Mantenimiento / Cuidados" class="w-full border border-gray-300 p-3 focus:border-black focus:outline-none">
-
-            <!-- NUEVO CAMPO: ESLOGAN -->
-            <div>
-                <label class="text-xs text-gray-500 uppercase tracking-widest block mb-1">Eslogan de la pieza (Aparecerá en el modal)</label>
-                <textarea id="eslogan" placeholder="Corona de terciopelo que enmarca el porte y la majestad..." class="w-full border border-gray-300 p-3 focus:border-black focus:outline-none" rows="2" required></textarea>
-            </div>
-
-            <input type="text" id="imagen" placeholder="Nombre exacto de la foto (Ej: foto1.jpg)" class="w-full border border-gray-300 p-3 focus:border-black focus:outline-none bg-gray-50" required>
-
-            <button type="submit" class="w-full bg-black text-white font-bold py-4 uppercase tracking-[0.2em] shadow-xl hover:bg-[#1a1a1a] transition-colors">Guardar en Base de Datos</button>
-        </form>
-        <div id="mensaje" class="mt-6 font-bold text-center uppercase tracking-widest text-xs"></div>
-    </div>
+    </main>
 
     <script>
         const supabase = window.supabase.createClient('https://dmpovogobkqxiuqiqdku.supabase.co', 'sb_publishable_vxjNB2Og59jiF0wazOFJBw_-Cj1-q1I');
 
-        // Autocompletado de categorías existentes
-        async function cargarCategorias() {
-            const { data, error } = await supabase.from('productos').select('categoria');
-            if (!error && data) {
-                const categoriasUnicas = [...new Set(data.map(item => item.categoria))];
-                const datalist = document.getElementById('lista-categorias');
-                categoriasUnicas.forEach(cat => { datalist.innerHTML += `<option value="${cat}">`; });
-            }
-        }
-        cargarCategorias();
+        let inventarioAdmin = {};
+        let categoriaActualAdmin = '';
 
+        // 1. Control del Acordeón
+        function toggleRegistro() {
+            const panel = document.getElementById('panel-registro');
+            const icono = document.getElementById('icono-acordeon');
+            panel.classList.toggle('hidden');
+            icono.classList.toggle('rotate-180');
+        }
+
+        // 2. Cargar Datos Globales (Formulario e Inventario)
+        async function cargarInventario() {
+            document.getElementById('admin-grid').innerHTML = '<div class="text-center py-10 text-gray-400 text-xs col-span-full">Actualizando...</div>';
+            
+            // Traemos TODOS los productos (Disponibles y Agotados) ordenados alfabéticamente
+            const { data, error } = await supabase.from('productos').select('*').order('codigo_interno', { ascending: true });
+            
+            if (error) {
+                document.getElementById('admin-grid').innerHTML = `<div class="text-red-500 p-4">Error: ${error.message}</div>`;
+                return;
+            }
+
+            inventarioAdmin = {};
+            const categoriasUnicas = new Set();
+
+            data.forEach(p => {
+                categoriasUnicas.add(p.categoria);
+                if(!inventarioAdmin[p.categoria]) inventarioAdmin[p.categoria] = [];
+                inventarioAdmin[p.categoria].push(p);
+            });
+
+            // Llenar autocompletado del formulario
+            const datalist = document.getElementById('lista-categorias');
+            datalist.innerHTML = '';
+            categoriasUnicas.forEach(cat => { datalist.innerHTML += `<option value="${cat}">`; });
+
+            // Generar Pestañas del Inventario
+            renderizarTabsAdmin(Array.from(categoriasUnicas));
+            
+            // Seleccionar la primera categoría por defecto si no hay una activa
+            if(!categoriaActualAdmin && Array.from(categoriasUnicas).length > 0) {
+                categoriaActualAdmin = Array.from(categoriasUnicas)[0];
+            }
+            
+            if(categoriaActualAdmin) mostrarInventario(categoriaActualAdmin);
+        }
+
+        // 3. Renderizar Pestañas
+        function renderizarTabsAdmin(categorias) {
+            let html = '';
+            categorias.forEach(cat => {
+                html += `<button onclick="mostrarInventario('${cat}')" id="tab-adm-${cat.replace(/\s+/g, '')}" class="px-6 py-4 whitespace-nowrap transition-colors focus:outline-none tab-admin-inactiva">${cat}</button>`;
+            });
+            document.getElementById('admin-tabs').innerHTML = html;
+        }
+
+        // 4. Mostrar Inventario por Categoría Activa
+        window.mostrarInventario = function(cat) {
+            categoriaActualAdmin = cat;
+            
+            // Actualizar UI de Pestañas
+            for (const categoria in inventarioAdmin) {
+                const btn = document.getElementById(`tab-adm-${categoria.replace(/\s+/g, '')}`);
+                if(btn) {
+                    if(categoria === cat) {
+                        btn.classList.replace('tab-admin-inactiva', 'tab-admin-activa');
+                    } else {
+                        btn.classList.replace('tab-admin-activa', 'tab-admin-inactiva');
+                    }
+                }
+            }
+
+            // Renderizar Tarjetas
+            const productos = inventarioAdmin[cat] || [];
+            let html = '';
+
+            productos.forEach(p => {
+                const imgPath = p.imagen_url ? `https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${p.imagen_url}` : 'https://via.placeholder.com/150';
+                const isDisponible = p.estado === 'Disponible';
+                
+                // Botón dinámico según el estado
+                const btnEstado = isDisponible 
+                    ? `<button onclick="cambiarEstado('${p.codigo_interno}', 'Agotado')" class="w-full mt-3 bg-green-100 text-green-800 border border-green-300 py-2 rounded text-xs font-bold uppercase tracking-widest hover:bg-green-200 transition"><i class="fas fa-check-circle mr-1"></i> Disponible</button>`
+                    : `<button onclick="cambiarEstado('${p.codigo_interno}', 'Disponible')" class="w-full mt-3 bg-red-50 text-red-700 border border-red-200 py-2 rounded text-xs font-bold uppercase tracking-widest hover:bg-red-100 transition"><i class="fas fa-times-circle mr-1"></i> Agotado / Oculto</button>`;
+
+                html += `
+                <div class="bg-white border ${isDisponible ? 'border-gray-200' : 'border-red-200 opacity-70'} p-3 flex flex-row gap-4 items-center shadow-sm rounded-lg">
+                    <img src="${imgPath}" class="w-20 h-24 object-cover rounded bg-gray-100 border border-gray-200">
+                    <div class="flex-grow">
+                        <span class="text-[10px] text-gray-500 font-mono tracking-widest bg-gray-100 px-1 rounded">${p.codigo_interno}</span>
+                        <h4 class="font-serif font-bold text-sm leading-tight mt-1 text-black">${p.nombre_comercial}</h4>
+                        <p class="text-[#d4af37] text-xs font-bold mt-1">$${p.precio}</p>
+                        ${btnEstado}
+                    </div>
+                </div>`;
+            });
+            
+            document.getElementById('admin-grid').innerHTML = html;
+        }
+
+        // 5. Función para Cambiar "Disponible" a "Agotado" y viceversa
+        window.cambiarEstado = async function(codigo, nuevoEstado) {
+            // Animación de carga rápida
+            document.getElementById('admin-grid').style.opacity = '0.5';
+            
+            const { error } = await supabase
+                .from('productos')
+                .update({ estado: nuevoEstado })
+                .eq('codigo_interno', codigo);
+                
+            if (error) {
+                alert("Error al actualizar estado: " + error.message);
+            } else {
+                // Recargar el inventario para reflejar el cambio visualmente
+                await cargarInventario();
+            }
+            document.getElementById('admin-grid').style.opacity = '1';
+        }
+
+        // 6. Registro de Nueva Pieza (Mantiene la lógica anterior)
         document.getElementById('form-producto').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = e.target.querySelector('button');
-            btn.innerText = "Sincronizando...";
+            const textoOriginal = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Guardando...';
 
             const nuevoProducto = {
                 codigo_interno: document.getElementById('codigo').value,
@@ -93,12 +260,18 @@
             if (error) {
                 document.getElementById('mensaje').innerHTML = `<span class="text-red-600"><i class="fas fa-times-circle"></i> Error: ${error.message}</span>`;
             } else {
-                document.getElementById('mensaje').innerHTML = `<span class="text-green-600"><i class="fas fa-check-circle"></i> Pieza registrada y publicada exitosamente</span>`;
+                document.getElementById('mensaje').innerHTML = `<span class="text-green-600"><i class="fas fa-check-circle"></i> Pieza registrada exitosamente.</span>`;
                 e.target.reset();
-                cargarCategorias(); // Refrescar lista por si se añadió categoría nueva
+                categoriaActualAdmin = nuevoProducto.categoria; // Enfocar la nueva categoría
+                await cargarInventario(); // Actualiza el panel inferior al instante
+                toggleRegistro(); // Cierra el acordeón automáticamente
+                setTimeout(() => { document.getElementById('mensaje').innerHTML = ''; }, 3000);
             }
-            btn.innerText = "Guardar en Base de Datos";
+            btn.innerHTML = textoOriginal;
         });
+
+        // Inicializar
+        cargarInventario();
     </script>
 </body>
 </html>
