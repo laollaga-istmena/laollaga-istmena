@@ -176,17 +176,18 @@
             
             productosPagina.forEach(p => {
                 const imgPath = p.imagen_url ? `https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${p.imagen_url}` : 'https://via.placeholder.com/600x800.png?text=Fotograf%C3%ADa+en+proceso';
-                const badgeExclusivo = `<span class="absolute top-3 left-3 bg-[#d4af37] text-black text-[9px] md:text-xs font-bold px-2.5 py-1 rounded shadow-md tracking-widest uppercase"><i class="fas fa-gem mr-1"></i> Pieza Única</span>`;
+                const badgeExclusivo = `<span class="absolute top-3 left-3 bg-[#d4af37] text-black text-[9px] md:text-xs font-bold px-2.5 py-1 rounded shadow-md tracking-widest uppercase z-10"><i class="fas fa-gem mr-1"></i> Pieza Única</span>`;
 
+                /* AQUI ESTA LA CORRECCION: object-contain, padding, flexbox centralizado */
                 html += `
                 <div class="bg-white shadow-sm hover:shadow-2xl border border-gray-100 flex flex-col overflow-hidden transition-all duration-500 cursor-pointer group rounded-sm" onclick="abrirDetalle('${p.codigo_interno}')">
-                    <div class="relative h-[250px] sm:h-[350px] md:h-[480px] bg-gray-100 overflow-hidden">
-                        <img src="${imgPath}" alt="${p.nombre_comercial}" class="w-full h-full object-cover object-top">
+                    <div class="relative h-[250px] sm:h-[350px] md:h-[450px] bg-[#fcfbf9] flex items-center justify-center p-4 md:p-8 overflow-hidden">
+                        <img src="${imgPath}" alt="${p.nombre_comercial}" class="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-700 drop-shadow-sm">
                         ${badgeExclusivo}
                     </div>
-                    <div class="p-3 md:p-6 text-center bg-white flex-grow flex flex-col justify-center">
+                    <div class="p-3 md:p-6 text-center bg-white flex-grow flex flex-col justify-center border-t border-gray-50">
                         <span class="text-[10px] text-gray-400 font-mono mb-1">${p.codigo_interno}</span>
-                        <h3 class="text-xs sm:text-lg md:text-2xl font-serif font-bold text-gray-900 mb-1 md:mb-2 tracking-wide leading-tight">${p.nombre_comercial}</h3>
+                        <h3 class="text-xs sm:text-lg md:text-xl font-serif font-bold text-gray-900 mb-1 md:mb-2 tracking-wide leading-tight">${p.nombre_comercial}</h3>
                         <p class="text-sm sm:text-base md:text-lg font-light text-[#d4af37] tracking-widest">$${p.precio} <span class="text-[10px] md:text-xs text-gray-400">MXN</span></p>
                     </div>
                 </div>`;
