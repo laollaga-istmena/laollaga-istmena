@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control Maestro V4.3 | Laollaga Istmeña</title>
+    <title>Control Maestro V4.4 | Laollaga Istmeña</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -14,7 +14,7 @@
 <body class="bg-[#f3f4f6] font-sans text-gray-800 pb-20">
     
     <div class="bg-black text-[#d4af37] p-5 flex justify-between items-center shadow-md border-b-2 border-[#d4af37] sticky top-0 z-50">
-        <h1 class="font-serif font-bold tracking-[0.2em] uppercase">Control Maestro V4.3</h1>
+        <h1 class="font-serif font-bold tracking-[0.2em] uppercase">Control Maestro V4.4</h1>
         <a href="index.html" class="text-white text-xs tracking-widest uppercase hover:text-[#d4af37] transition-colors bg-white/10 px-4 py-2 rounded">Ver Tienda <i class="fas fa-external-link-alt ml-1"></i></a>
     </div>
 
@@ -100,7 +100,6 @@
 
     </main>
 
-    <!-- Importación por Módulos (ESM) para garantizar la carga -->
     <script type="module">
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
         
@@ -130,7 +129,6 @@
             
             try {
                 const { data, error } = await supabase.from('productos').select('*').order('codigo_interno', { ascending: true });
-                
                 if (error) throw new Error(error.message);
 
                 inventarioAdmin = {};
@@ -152,8 +150,10 @@
                     categoriaActualAdmin = Array.from(categoriasUnicas)[0];
                 }
                 
-                if(categoriaActualAdmin) {
+                if(categoriaActualAdmin && inventarioAdmin[categoriaActualAdmin]) {
                     mostrarInventario(categoriaActualAdmin);
+                } else if (Array.from(categoriasUnicas).length > 0) {
+                     mostrarInventario(Array.from(categoriasUnicas)[0]);
                 } else {
                     grid.innerHTML = `<div class="text-center py-10 text-gray-500 text-xs col-span-full">No hay productos registrados.</div>`;
                 }
@@ -170,7 +170,6 @@
             });
             document.getElementById('admin-tabs').innerHTML = html;
 
-            // Asignar eventos a las pestañas dinámicamente
             categorias.forEach(cat => {
                 const idTab = `tab-adm-${cat.replace(/\s+/g, '')}`;
                 document.getElementById(idTab).addEventListener('click', () => {
@@ -200,29 +199,40 @@
                 const imgPath = p.imagen_url ? `https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${p.imagen_url}` : 'https://via.placeholder.com/150';
                 const isDisponible = p.estado === 'Disponible';
                 
-                const btnId = `btn-estado-${p.codigo_interno}`;
+                const btnEstadoId = `btn-estado-${p.codigo_interno}`;
+                const btnEliminarId = `btn-eliminar-${p.codigo_interno}`;
+                
                 const btnEstado = isDisponible 
-                    ? `<button id="${btnId}" data-codigo="${p.codigo_interno}" data-nuevo="Agotado" class="w-full mt-3 bg-green-100 text-green-800 border border-green-300 py-2 rounded text-xs font-bold uppercase tracking-widest hover:bg-green-200 transition"><i class="fas fa-check-circle mr-1"></i> Disponible</button>`
-                    : `<button id="${btnId}" data-codigo="${p.codigo_interno}" data-nuevo="Disponible" class="w-full mt-3 bg-red-50 text-red-700 border border-red-200 py-2 rounded text-xs font-bold uppercase tracking-widest hover:bg-red-100 transition"><i class="fas fa-times-circle mr-1"></i> Agotado / Oculto</button>`;
+                    ? `<button id="${btnEstadoId}" data-codigo="${p.codigo_interno}" data-nuevo="Agotado" class="flex-grow bg-green-100 text-green-800 border border-green-300 py-2 rounded text-[10px] font-bold uppercase tracking-widest hover:bg-green-200 transition"><i class="fas fa-check-circle mr-1"></i> Disp.</button>`
+                    : `<button id="${btnEstadoId}" data-codigo="${p.codigo_interno}" data-nuevo="Disponible" class="flex-grow bg-gray-100 text-gray-700 border border-gray-300 py-2 rounded text-[10px] font-bold uppercase tracking-widest hover:bg-gray-200 transition"><i class="fas fa-eye-slash mr-1"></i> Oculto</button>`;
+
+                const btnEliminar = `<button id="${btnEliminarId}" data-codigo="${p.codigo_interno}" class="bg-red-600 text-white px-3 py-2 rounded border border-red-700 hover:bg-red-800 transition shadow-sm" title="Eliminar Pieza Permanente"><i class="fas fa-trash-alt"></i></button>`;
 
                 html += `
-                <div class="bg-white border ${isDisponible ? 'border-gray-200' : 'border-red-200 opacity-70'} p-3 flex flex-row gap-4 items-center shadow-sm rounded-lg">
-                    <img src="${imgPath}" class="w-20 h-24 object-cover rounded bg-gray-100 border border-gray-200">
-                    <div class="flex-grow">
+                <div class="bg-white border ${isDisponible ? 'border-gray-200' : 'border-gray-200 opacity-60'} p-3 flex flex-row gap-4 items-center shadow-sm rounded-lg overflow-hidden">
+                    <img src="${imgPath}" class="w-20 h-24 object-cover rounded bg-gray-100 border border-gray-200 flex-shrink-0">
+                    <div class="flex-grow min-w-0">
                         <span class="text-[10px] text-gray-500 font-mono tracking-widest bg-gray-100 px-1 rounded">${p.codigo_interno}</span>
-                        <h4 class="font-serif font-bold text-sm leading-tight mt-1 text-black">${p.nombre_comercial}</h4>
+                        <h4 class="font-serif font-bold text-sm leading-tight mt-1 text-black truncate">${p.nombre_comercial}</h4>
                         <p class="text-[#d4af37] text-xs font-bold mt-1">$${p.precio}</p>
-                        ${btnEstado}
+                        <div class="flex gap-2 mt-2">
+                            ${btnEstado}
+                            ${btnEliminar}
+                        </div>
                     </div>
                 </div>`;
             });
             document.getElementById('admin-grid').innerHTML = html;
 
-            // Asignar eventos a los botones de estado
             productos.forEach(p => {
-                const btnId = `btn-estado-${p.codigo_interno}`;
-                document.getElementById(btnId).addEventListener('click', function() {
+                const btnEstadoId = `btn-estado-${p.codigo_interno}`;
+                document.getElementById(btnEstadoId).addEventListener('click', function() {
                     cambiarEstado(this.dataset.codigo, this.dataset.nuevo);
+                });
+
+                const btnEliminarId = `btn-eliminar-${p.codigo_interno}`;
+                document.getElementById(btnEliminarId).addEventListener('click', function() {
+                    eliminarPieza(this.dataset.codigo);
                 });
             });
         }
@@ -236,6 +246,22 @@
                 await cargarInventario();
             }
             document.getElementById('admin-grid').style.opacity = '1';
+        }
+
+        // NUEVA FUNCIÓN: ELIMINACIÓN PERMANENTE
+        async function eliminarPieza(codigo) {
+            const confirmacion = confirm(`⚠️ ALERTA: Estás a punto de eliminar permanentemente la pieza "${codigo}".\n\nEsta acción borrará el registro de la base de datos y no se puede deshacer.\n\n¿Deseas continuar?`);
+            
+            if (confirmacion) {
+                document.getElementById('admin-grid').style.opacity = '0.5';
+                const { error } = await supabase.from('productos').delete().eq('codigo_interno', codigo);
+                if (error) {
+                    alert("Error al eliminar de la base de datos: " + error.message);
+                } else {
+                    await cargarInventario();
+                }
+                document.getElementById('admin-grid').style.opacity = '1';
+            }
         }
 
         document.getElementById('form-producto').addEventListener('submit', async (e) => {
