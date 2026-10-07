@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control Maestro V4.7 | Laollaga Istmeña</title>
+    <title>Control Maestro V4.8 | Laollaga Istmeña</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Motor de Renderizado PDF -->
+    <!-- Motor PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         .tab-admin-activa { border-bottom: 3px solid #d4af37; color: #000; font-weight: bold; background-color: white; }
@@ -16,7 +16,7 @@
 <body class="bg-[#f3f4f6] font-sans text-gray-800 pb-20">
     
     <div class="bg-black text-[#d4af37] p-5 flex justify-between items-center shadow-md border-b-2 border-[#d4af37] sticky top-0 z-50">
-        <h1 class="font-serif font-bold tracking-[0.2em] uppercase">Control Maestro V4.7</h1>
+        <h1 class="font-serif font-bold tracking-[0.2em] uppercase">Control Maestro V4.8</h1>
         <a href="index.html" class="text-white text-xs tracking-widest uppercase hover:text-[#d4af37] transition-colors bg-white/10 px-4 py-2 rounded">Ver Tienda <i class="fas fa-external-link-alt ml-1"></i></a>
     </div>
 
@@ -86,16 +86,16 @@
             </div>
         </div>
 
-        <!-- INVENTARIO Y EXPORTACIÓN -->
+        <!-- INVENTARIO Y BOTONES -->
         <div class="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
             <div class="bg-gray-100 p-4 border-b border-gray-200 flex flex-col md:flex-row justify-between items-center gap-4">
                 <h2 class="font-serif font-bold uppercase tracking-widest text-black"><i class="fas fa-boxes mr-2"></i> Inventario de Tienda</h2>
                 <div class="flex flex-wrap justify-center gap-2">
                     <button id="btn-pdf" class="text-xs text-white bg-red-700 hover:bg-red-800 px-4 py-2 rounded uppercase tracking-widest transition-colors shadow-md">
-                        <i class="fas fa-file-pdf mr-1 text-sm"></i> Descargar PDF
+                        <i class="fas fa-file-pdf mr-1 text-sm"></i> Catálogo PDF
                     </button>
                     <button id="btn-whatsapp" class="text-xs text-[#d4af37] bg-black hover:bg-gray-800 px-4 py-2 rounded uppercase tracking-widest transition-colors shadow-md">
-                        <i class="fab fa-whatsapp mr-1 text-sm"></i> Texto App
+                        <i class="fab fa-whatsapp mr-1 text-sm"></i> Catálogo App
                     </button>
                     <button id="btn-actualizar" class="text-xs text-gray-700 bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded uppercase tracking-widest transition-colors shadow-sm border border-gray-300">
                         <i class="fas fa-sync-alt mr-1"></i> Actualizar
@@ -192,7 +192,7 @@
         document.getElementById('btn-whatsapp').addEventListener('click', exportarCatalogoWhatsApp);
         document.getElementById('btn-pdf').addEventListener('click', exportarCatalogoPDF);
 
-        // MOTOR DE EXPORTACIÓN PDF (ALTA CALIDAD)
+        // NUEVO MOTOR PDF A PRUEBA DE FALLOS
         async function exportarCatalogoPDF() {
             if (Object.keys(inventarioAdmin).length === 0) {
                 alert("El inventario está vacío.");
@@ -201,49 +201,39 @@
 
             const btn = document.getElementById('btn-pdf');
             const originalHTML = btn.innerHTML;
-            btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-1"></i> Generando PDF...`;
+            btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-1"></i> Generando...`;
             btn.classList.add('opacity-50', 'pointer-events-none');
 
-            // Construcción del documento HTML oculto para el PDF
-            const container = document.createElement('div');
-            container.id = "pdf-export-container";
-            container.style.width = "800px";
-            container.style.padding = "40px";
-            container.style.backgroundColor = "#ffffff";
-            container.style.fontFamily = "sans-serif";
-            container.style.color = "#000000";
-            
+            // HTML Estricto usando Inline-Block (100% compatible con PDF)
             let html = `
-                <div style="text-align:center; margin-bottom:30px; border-bottom:3px solid #d4af37; padding-bottom:20px;">
-                    <h1 style="font-family:serif; color:#000; font-size:32px; letter-spacing:4px; margin:0; text-transform:uppercase;">Laollaga Istmeña</h1>
-                    <p style="color:#666; font-size:14px; letter-spacing:2px; margin-top:5px; text-transform:uppercase;">Catálogo Oficial de Inventario</p>
-                    <p style="color:#999; font-size:10px; margin-top:5px;">Generado el: ${new Date().toLocaleDateString()}</p>
-                </div>
+                <div style="padding: 20px; font-family: Arial, sans-serif; color: #000; background: #fff;">
+                    <div style="text-align:center; margin-bottom:20px; border-bottom:2px solid #d4af37; padding-bottom:10px;">
+                        <h1 style="font-family: Georgia, serif; font-size:28px; letter-spacing:3px; margin:0; text-transform:uppercase;">Laollaga Istmeña</h1>
+                        <p style="color:#666; font-size:12px; letter-spacing:1px; margin-top:5px; text-transform:uppercase;">Catálogo Oficial de Inventario</p>
+                    </div>
             `;
 
             for (const categoria in inventarioAdmin) {
                 const disponibles = inventarioAdmin[categoria].filter(p => p.estado === 'Disponible');
                 if (disponibles.length > 0) {
                     html += `
-                    <div style="page-break-inside: avoid;">
-                        <h2 style="font-family:serif; color:#000; font-size:20px; text-transform:uppercase; border-bottom:1px solid #eee; padding-bottom:5px; margin-top:30px; margin-bottom:20px;">
+                    <div style="margin-bottom: 20px; page-break-inside: avoid;">
+                        <h2 style="font-family: Georgia, serif; font-size:18px; text-transform:uppercase; border-bottom:1px solid #ddd; padding-bottom:5px; margin-bottom:15px; color:#111;">
                             ${categoria}
                         </h2>
-                        <div style="display: flex; flex-wrap: wrap; gap: 2%;">
+                        <div style="width: 100%; text-align: left;">
                     `;
                     
                     disponibles.forEach(p => {
                         const imgUrl = p.imagen_url ? `https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${p.imagen_url}` : '';
-                        // Usamos inline-block y anchos fijos para garantizar el renderizado en la librería
                         html += `
-                        <div style="width: 31%; margin-bottom: 25px; text-align:center; border:1px solid #f0f0f0; border-radius:8px; padding:15px; box-sizing: border-box; page-break-inside: avoid;">
-                            <div style="height: 200px; display:flex; align-items:center; justify-content:center; margin-bottom:15px;">
-                                <img src="${imgUrl}" crossorigin="anonymous" style="max-width:100%; max-height:100%; object-fit:contain; border-radius:4px;">
+                        <div style="display: inline-block; width: 31%; margin: 0 1% 15px 1%; vertical-align: top; text-align:center; border:1px solid #eaeaea; border-radius:6px; padding:10px; box-sizing: border-box; page-break-inside: avoid;">
+                            <div style="height:160px; overflow:hidden; margin-bottom:10px;">
+                                <img src="${imgUrl}" crossorigin="anonymous" style="width:100%; height:100%; object-fit:contain;">
                             </div>
-                            <div style="background:#f9f9f9; display:inline-block; padding:3px 8px; border-radius:4px; font-family:monospace; font-size:10px; color:#888; margin-bottom:8px;">${p.codigo_interno}</div>
-                            <div style="font-family:serif; font-weight:bold; font-size:14px; line-height:1.2; margin-bottom:8px; color:#000; height:34px; overflow:hidden;">${p.nombre_comercial}</div>
-                            <div style="color:#d4af37; font-weight:bold; font-size:16px;">$${p.precio} MXN</div>
-                            <div style="font-size:10px; color:#666; margin-top:8px;">Talla: ${p.talla || 'N/A'}</div>
+                            <div style="background:#f0f0f0; padding:2px; font-family:monospace; font-size:9px; color:#555; margin-bottom:5px; border-radius:3px;">${p.codigo_interno}</div>
+                            <div style="font-family: Georgia, serif; font-weight:bold; font-size:11px; margin-bottom:5px; height:28px; overflow:hidden; color:#111;">${p.nombre_comercial}</div>
+                            <div style="color:#d4af37; font-weight:bold; font-size:13px; margin-bottom:3px;">$${p.precio} MXN</div>
                         </div>`;
                     });
                     html += `</div></div>`;
@@ -251,21 +241,23 @@
             }
             
             html += `
-                <div style="text-align:center; margin-top:50px; padding-top:20px; border-top:1px solid #eee; color:#888; font-size:12px; page-break-inside: avoid;">
+                <div style="text-align:center; margin-top:20px; padding-top:10px; border-top:1px solid #ddd; color:#888; font-size:10px; page-break-inside: avoid;">
                     <p>Catálogo interactivo disponible en: <strong>laollaga-istmena.vercel.app</strong></p>
-                    <p>Para apartados y pedidos, envíe el Código Interno de la pieza vía WhatsApp.</p>
+                    <p>Para hacer un apartado, compártenos el Código de la prenda por WhatsApp al 971 114 0709.</p>
                 </div>
-            `;
-            
-            container.innerHTML = html;
-            
-            // Lo añadimos al body fuera de la vista para renderizarlo
-            container.style.position = "absolute";
-            container.style.top = "-9999px";
-            document.body.appendChild(container);
+            </div>`;
+
+            // Contenedor temporal (Garantiza que el navegador lo dibuje sin esconderlo)
+            const contenedorTemporal = document.createElement('div');
+            contenedorTemporal.innerHTML = html;
+            contenedorTemporal.style.position = 'absolute';
+            contenedorTemporal.style.left = '-10000px'; 
+            contenedorTemporal.style.top = '0px';
+            contenedorTemporal.style.width = '800px';
+            document.body.appendChild(contenedorTemporal);
 
             const opcionesPDF = {
-                margin:       15,
+                margin:       10,
                 filename:     `Catalogo_Laollaga_${new Date().getTime()}.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { scale: 2, useCORS: true, logging: false },
@@ -273,14 +265,14 @@
             };
 
             try {
-                await html2pdf().set(opcionesPDF).from(container).save();
+                await html2pdf().set(opcionesPDF).from(contenedorTemporal).save();
                 btn.innerHTML = `<i class="fas fa-check mr-1"></i> Descargado`;
                 btn.classList.replace('bg-red-700', 'bg-green-600');
             } catch (err) {
-                alert("Hubo un error generando el PDF. Asegúrate de tener una conexión estable.");
+                alert("Error generando el PDF. Revisa tu conexión a internet.");
                 console.error(err);
             } finally {
-                document.body.removeChild(container);
+                document.body.removeChild(contenedorTemporal);
                 setTimeout(() => {
                     btn.innerHTML = originalHTML;
                     btn.classList.replace('bg-green-600', 'bg-red-700');
@@ -289,7 +281,6 @@
             }
         }
 
-        // MOTOR TEXTO WHATSAPP
         function exportarCatalogoWhatsApp() {
             const btn = document.getElementById('btn-whatsapp');
             const originalHTML = btn.innerHTML;
@@ -423,7 +414,6 @@
             });
         }
 
-        // MOTOR DE EDICIÓN
         function abrirEdicion(codigo) {
             let producto = null;
             for(let cat in inventarioAdmin) {
@@ -488,7 +478,6 @@
             btn.innerHTML = txtOriginal;
         });
 
-        // OTROS MOTORES
         async function cambiarEstado(codigo, nuevoEstado) {
             document.getElementById('admin-grid').style.opacity = '0.5';
             await supabase.from('productos').update({ estado: nuevoEstado }).eq('codigo_interno', codigo);
