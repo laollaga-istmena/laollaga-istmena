@@ -3,24 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control Maestro V4.9 | Laollaga Istmeña</title>
+    <title>Control Maestro V5.0 | Laollaga Istmeña</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Motor PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         .tab-admin-activa { border-bottom: 3px solid #d4af37; color: #000; font-weight: bold; background-color: white; }
         .tab-admin-inactiva { border-bottom: 3px solid transparent; color: #6b7280; background-color: #f9fafb; }
+        input[type="file"]::file-selector-button { background: #000; color: #d4af37; border: none; padding: 8px 16px; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 10px; margin-right: 10px; transition: background .2s; }
+        input[type="file"]::file-selector-button:hover { background: #333; }
     </style>
 </head>
 <body class="bg-[#f3f4f6] font-sans text-gray-800 pb-20">
     
     <div class="bg-black text-[#d4af37] p-5 flex justify-between items-center shadow-md border-b-2 border-[#d4af37] sticky top-0 z-50">
-        <h1 class="font-serif font-bold tracking-[0.2em] uppercase">Control Maestro V4.9</h1>
+        <h1 class="font-serif font-bold tracking-[0.2em] uppercase">Control Maestro V5.0</h1>
         <a href="index.html" class="text-white text-xs tracking-widest uppercase hover:text-[#d4af37] transition-colors bg-white/10 px-4 py-2 rounded">Ver Tienda <i class="fas fa-external-link-alt ml-1"></i></a>
     </div>
 
     <main class="max-w-6xl mx-auto p-4 md:p-6 space-y-6 mt-4">
 
-        <!-- FORMULARIO DE REGISTRO -->
+        <!-- FORMULARIO DE REGISTRO CON SUBIDA DIRECTA -->
         <div class="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
             <button id="btn-toggle-registro" class="w-full bg-gradient-to-r from-black to-gray-900 text-[#d4af37] p-5 flex justify-between items-center focus:outline-none">
                 <span class="font-serif font-bold uppercase tracking-widest text-sm md:text-base"><i class="fas fa-plus-circle mr-2"></i> Registrar Nueva Pieza</span>
@@ -32,7 +36,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-1">Código Interno</label>
-                            <input type="text" id="codigo" class="w-full border border-gray-300 rounded p-3 focus:border-black focus:outline-none" required>
+                            <input type="text" id="codigo" placeholder="Ej: HC-028" class="w-full border border-gray-300 rounded p-3 focus:border-black focus:outline-none" required>
                         </div>
                         <div>
                             <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-1">Nombre de la Pieza</label>
@@ -51,7 +55,7 @@
                         </div>
                         <div>
                             <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-1">Talla</label>
-                            <input type="text" id="talla" class="w-full border border-gray-300 rounded p-3 focus:border-black focus:outline-none">
+                            <input type="text" id="talla" value="Unitalla" class="w-full border border-gray-300 rounded p-3 focus:border-black focus:outline-none">
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-4">
@@ -73,10 +77,10 @@
                         <textarea id="eslogan" class="w-full border border-gray-300 rounded p-3 focus:border-black focus:outline-none" rows="2" required></textarea>
                     </div>
                     <div>
-                        <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-1">Archivo de Fotografía</label>
-                        <input type="text" id="imagen" class="w-full border border-gray-300 bg-gray-50 rounded p-3 focus:border-black focus:outline-none" required>
+                        <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-1 font-bold text-blue-600"><i class="fas fa-upload mr-1"></i> Subir Fotografía (El sistema la renombrará automáticamente)</label>
+                        <input type="file" id="archivo-foto" accept="image/jpeg, image/png, image/webp" class="w-full border border-gray-300 bg-gray-50 rounded p-2 focus:border-black focus:outline-none" required>
                     </div>
-                    <button type="submit" class="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-4 rounded uppercase tracking-[0.2em] shadow-lg transition-colors">
+                    <button type="submit" id="btn-guardar-nuevo" class="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-4 rounded uppercase tracking-[0.2em] shadow-lg transition-colors">
                         <i class="fas fa-save mr-2"></i> Guardar Nueva Pieza
                     </button>
                 </form>
@@ -90,7 +94,7 @@
                 <h2 class="font-serif font-bold uppercase tracking-widest text-black"><i class="fas fa-boxes mr-2"></i> Inventario de Tienda</h2>
                 <div class="flex flex-wrap justify-center gap-2">
                     <button id="btn-pdf" class="text-xs text-white bg-red-700 hover:bg-red-800 px-4 py-2 rounded uppercase tracking-widest transition-colors shadow-md">
-                        <i class="fas fa-file-pdf mr-1 text-sm"></i> Generar PDF
+                        <i class="fas fa-file-pdf mr-1 text-sm"></i> Catálogo PDF
                     </button>
                     <button id="btn-whatsapp" class="text-xs text-[#d4af37] bg-black hover:bg-gray-800 px-4 py-2 rounded uppercase tracking-widest transition-colors shadow-md">
                         <i class="fab fa-whatsapp mr-1 text-sm"></i> Catálogo App
@@ -159,9 +163,11 @@
                         <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-1">Eslogan Promocional</label>
                         <textarea id="edit-eslogan" class="w-full border border-gray-300 rounded p-2 focus:border-blue-500 focus:outline-none" rows="2" required></textarea>
                     </div>
-                    <div>
-                        <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-1">Archivo de Fotografía</label>
-                        <input type="text" id="edit-imagen" class="w-full border border-gray-300 rounded p-2 focus:border-blue-500 focus:outline-none" required>
+                    <div class="border border-dashed border-gray-400 p-3 bg-gray-50 rounded">
+                        <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-1">Reemplazar Foto (Opcional)</label>
+                        <input type="file" id="edit-archivo-foto" accept="image/jpeg, image/png, image/webp" class="w-full text-xs">
+                        <p class="text-[9px] text-gray-400 mt-1">Si no seleccionas un archivo, se mantendrá la foto actual.</p>
+                        <input type="hidden" id="edit-imagen-actual">
                     </div>
                     <button type="submit" id="btn-guardar-edicion" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-3 rounded uppercase tracking-widest shadow-lg transition-colors mt-4">
                         <i class="fas fa-save mr-2"></i> Guardar Cambios
@@ -190,7 +196,173 @@
         document.getElementById('btn-whatsapp').addEventListener('click', exportarCatalogoWhatsApp);
         document.getElementById('btn-pdf').addEventListener('click', exportarCatalogoPDF_Nativo);
 
-        // MOTOR PDF NATIVO (100% EFECTIVO, CERO PANTALLAS BLANCAS)
+        // MOTOR DE SUBIDA DIRECTA A SUPABASE STORAGE
+        async function subirArchivoSupabase(archivoFile, codigoInterno) {
+            const extension = archivoFile.name.split('.').pop();
+            const nombreArchivoFinal = `${codigoInterno.trim()}.${extension}`;
+            
+            const { data, error } = await supabase.storage
+                .from('catalogo')
+                .upload(nombreArchivoFinal, archivoFile, {
+                    cacheControl: '3600',
+                    upsert: true // Sobrescribe si ya existe uno con el mismo código
+                });
+                
+            if (error) throw new Error("Error subiendo foto: " + error.message);
+            return nombreArchivoFinal;
+        }
+
+        // MOTOR DE REGISTRO NUEVO
+        document.getElementById('form-producto').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-guardar-nuevo');
+            const txtOriginal = btn.innerHTML;
+            const msj = document.getElementById('mensaje');
+            
+            const codigo = document.getElementById('codigo').value;
+            const archivoInput = document.getElementById('archivo-foto');
+            const archivoFile = archivoInput.files[0];
+
+            if (!archivoFile) {
+                msj.innerHTML = `<span class="text-red-600">Debes seleccionar una fotografía.</span>`;
+                return;
+            }
+
+            try {
+                // FASE 1: Subir Archivo
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Subiendo Fotografía...';
+                const nombreArchivo = await subirArchivoSupabase(archivoFile, codigo);
+
+                // FASE 2: Registrar en Base de Datos
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Guardando Datos...';
+                const nuevo = {
+                    codigo_interno: codigo,
+                    nombre_comercial: document.getElementById('nombre').value,
+                    categoria: document.getElementById('categoria').value,
+                    precio: document.getElementById('precio').value,
+                    talla: document.getElementById('talla').value || 'N/A',
+                    medidas: document.getElementById('medidas').value || 'N/A',
+                    material: document.getElementById('material').value || 'N/A',
+                    cuidados: document.getElementById('cuidados').value || 'N/A',
+                    eslogan: document.getElementById('eslogan').value,
+                    imagen_url: nombreArchivo,
+                    estado: 'Disponible'
+                };
+
+                const { error } = await supabase.from('productos').insert([nuevo]);
+                if (error) throw new Error(error.message);
+
+                msj.innerHTML = `<span class="text-green-600"><i class="fas fa-check-circle"></i> Pieza registrada con éxito.</span>`;
+                e.target.reset();
+                categoriaActualAdmin = nuevo.categoria;
+                await cargarInventario();
+                
+                setTimeout(() => { 
+                    document.getElementById('panel-registro').classList.add('hidden');
+                    document.getElementById('icono-acordeon').classList.remove('rotate-180');
+                    msj.innerHTML = ''; 
+                }, 2000);
+
+            } catch (err) {
+                msj.innerHTML = `<span class="text-red-600">${err.message}</span>`;
+            } finally {
+                btn.innerHTML = txtOriginal;
+            }
+        });
+
+        // MOTOR DE EDICIÓN
+        document.getElementById('form-editar').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-guardar-edicion');
+            const txtOriginal = btn.innerHTML;
+            const codigo = document.getElementById('edit-codigo').value;
+            const archivoInput = document.getElementById('edit-archivo-foto');
+            let nombreArchivoDefinitivo = document.getElementById('edit-imagen-actual').value;
+
+            try {
+                // Si el usuario seleccionó una foto nueva, la subimos primero
+                if (archivoInput.files.length > 0) {
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Actualizando Foto...';
+                    nombreArchivoDefinitivo = await subirArchivoSupabase(archivoInput.files[0], codigo);
+                }
+
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Guardando Cambios...';
+                const datosActualizados = {
+                    nombre_comercial: document.getElementById('edit-nombre').value,
+                    categoria: document.getElementById('edit-categoria').value,
+                    precio: document.getElementById('edit-precio').value,
+                    talla: document.getElementById('edit-talla').value || 'N/A',
+                    medidas: document.getElementById('edit-medidas').value || 'N/A',
+                    material: document.getElementById('edit-material').value || 'N/A',
+                    cuidados: document.getElementById('edit-cuidados').value || 'N/A',
+                    eslogan: document.getElementById('edit-eslogan').value,
+                    imagen_url: nombreArchivoDefinitivo
+                };
+
+                const { error } = await supabase.from('productos').update(datosActualizados).eq('codigo_interno', codigo);
+                if (error) throw new Error(error.message);
+
+                await cargarInventario();
+                cerrarEdicion();
+            } catch (err) {
+                alert("Error técnico: " + err.message);
+            } finally {
+                btn.innerHTML = txtOriginal;
+            }
+        });
+
+        function abrirEdicion(codigo) {
+            let producto = null;
+            for(let cat in inventarioAdmin) {
+                let found = inventarioAdmin[cat].find(x => x.codigo_interno === codigo);
+                if(found) { producto = found; break; }
+            }
+            if(!producto) return;
+
+            document.getElementById('edit-codigo').value = producto.codigo_interno;
+            document.getElementById('edit-nombre').value = producto.nombre_comercial;
+            document.getElementById('edit-categoria').value = producto.categoria;
+            document.getElementById('edit-precio').value = producto.precio;
+            document.getElementById('edit-talla').value = producto.talla || '';
+            document.getElementById('edit-medidas').value = producto.medidas || '';
+            document.getElementById('edit-material').value = producto.material || '';
+            document.getElementById('edit-cuidados').value = producto.cuidados || '';
+            document.getElementById('edit-eslogan').value = producto.eslogan || '';
+            document.getElementById('edit-imagen-actual').value = producto.imagen_url || '';
+            document.getElementById('edit-archivo-foto').value = ''; // Limpiar el input de archivo
+
+            const modal = document.getElementById('modal-editar');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => modal.classList.remove('opacity-0'), 10);
+        }
+
+        function cerrarEdicion() {
+            const modal = document.getElementById('modal-editar');
+            modal.classList.add('opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 300);
+        }
+
+        async function cambiarEstado(codigo, nuevoEstado) {
+            document.getElementById('admin-grid').style.opacity = '0.5';
+            await supabase.from('productos').update({ estado: nuevoEstado }).eq('codigo_interno', codigo);
+            await cargarInventario();
+            document.getElementById('admin-grid').style.opacity = '1';
+        }
+
+        async function eliminarPieza(codigo) {
+            if (confirm(`⚠️ ALERTA: ¿Eliminar permanentemente "${codigo}"?`)) {
+                document.getElementById('admin-grid').style.opacity = '0.5';
+                await supabase.from('productos').delete().eq('codigo_interno', codigo);
+                // Opcional: También podríamos borrar la foto del bucket aquí, pero conservarla es más seguro por historial.
+                await cargarInventario();
+                document.getElementById('admin-grid').style.opacity = '1';
+            }
+        }
+
         function exportarCatalogoPDF_Nativo() {
             if (Object.keys(inventarioAdmin).length === 0) {
                 alert("El inventario está vacío.");
@@ -200,7 +372,6 @@
             const btn = document.getElementById('btn-pdf');
             btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-1"></i> Preparando...`;
 
-            // Construimos una página HTML pura y perfecta para impresión
             let htmlPrint = `
                 <!DOCTYPE html>
                 <html lang="es">
@@ -238,7 +409,8 @@
                 if (disponibles.length > 0) {
                     htmlPrint += `<div class="categoria"><h2>${categoria}</h2><div class="grid">`;
                     disponibles.forEach(p => {
-                        const imgUrl = p.imagen_url ? `https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${p.imagen_url}` : '';
+                        // Forzamos actualización de caché agregando un timestamp al final
+                        const imgUrl = p.imagen_url ? `https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${p.imagen_url}?v=${new Date().getTime()}` : '';
                         htmlPrint += `
                             <div class="producto">
                                 <div class="img-container"><img src="${imgUrl}" alt="Prenda"></div>
@@ -262,7 +434,6 @@
                 </html>
             `;
 
-            // Inyectamos el iframe invisible
             let iframe = document.getElementById('print-iframe');
             if (!iframe) {
                 iframe = document.createElement('iframe');
@@ -279,17 +450,15 @@
             doc.write(htmlPrint);
             doc.close();
 
-            // Esperamos a que el navegador procese las imágenes del iframe y disparamos la impresión
             iframe.onload = function() {
                 setTimeout(() => {
-                    btn.innerHTML = `<i class="fas fa-file-pdf mr-1 text-sm"></i> Generar PDF`;
+                    btn.innerHTML = `<i class="fas fa-file-pdf mr-1 text-sm"></i> Catálogo PDF`;
                     iframe.contentWindow.focus();
                     iframe.contentWindow.print();
                 }, 800);
             };
         }
 
-        // MOTOR TEXTO WHATSAPP
         function exportarCatalogoWhatsApp() {
             const btn = document.getElementById('btn-whatsapp');
             const originalHTML = btn.innerHTML;
@@ -392,7 +561,8 @@
             let html = '';
 
             productos.forEach(p => {
-                const imgPath = p.imagen_url ? `https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${p.imagen_url}` : 'https://via.placeholder.com/150';
+                // Se agrega timestamp ?v=... para evitar que el navegador muestre una foto vieja si se acaba de editar
+                const imgPath = p.imagen_url ? `https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${p.imagen_url}?v=${new Date().getTime()}` : 'https://via.placeholder.com/150';
                 const isDisponible = p.estado === 'Disponible';
                 
                 const btnEstado = isDisponible 
@@ -422,122 +592,6 @@
                 document.getElementById(`btn-edi-${p.codigo_interno}`).addEventListener('click', function() { abrirEdicion(this.dataset.codigo); });
             });
         }
-
-        function abrirEdicion(codigo) {
-            let producto = null;
-            for(let cat in inventarioAdmin) {
-                let found = inventarioAdmin[cat].find(x => x.codigo_interno === codigo);
-                if(found) { producto = found; break; }
-            }
-            if(!producto) return;
-
-            document.getElementById('edit-codigo').value = producto.codigo_interno;
-            document.getElementById('edit-nombre').value = producto.nombre_comercial;
-            document.getElementById('edit-categoria').value = producto.categoria;
-            document.getElementById('edit-precio').value = producto.precio;
-            document.getElementById('edit-talla').value = producto.talla || '';
-            document.getElementById('edit-medidas').value = producto.medidas || '';
-            document.getElementById('edit-material').value = producto.material || '';
-            document.getElementById('edit-cuidados').value = producto.cuidados || '';
-            document.getElementById('edit-eslogan').value = producto.eslogan || '';
-            document.getElementById('edit-imagen').value = producto.imagen_url || '';
-
-            const modal = document.getElementById('modal-editar');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            setTimeout(() => modal.classList.remove('opacity-0'), 10);
-        }
-
-        function cerrarEdicion() {
-            const modal = document.getElementById('modal-editar');
-            modal.classList.add('opacity-0');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-            }, 300);
-        }
-
-        document.getElementById('form-editar').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('btn-guardar-edicion');
-            const txtOriginal = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Guardando...';
-
-            const codigo = document.getElementById('edit-codigo').value;
-            const datosActualizados = {
-                nombre_comercial: document.getElementById('edit-nombre').value,
-                categoria: document.getElementById('edit-categoria').value,
-                precio: document.getElementById('edit-precio').value,
-                talla: document.getElementById('edit-talla').value || 'N/A',
-                medidas: document.getElementById('edit-medidas').value || 'N/A',
-                material: document.getElementById('edit-material').value || 'N/A',
-                cuidados: document.getElementById('edit-cuidados').value || 'N/A',
-                eslogan: document.getElementById('edit-eslogan').value,
-                imagen_url: document.getElementById('edit-imagen').value
-            };
-
-            const { error } = await supabase.from('productos').update(datosActualizados).eq('codigo_interno', codigo);
-
-            if(error) {
-                alert("Error técnico: " + error.message);
-            } else {
-                await cargarInventario();
-                cerrarEdicion();
-            }
-            btn.innerHTML = txtOriginal;
-        });
-
-        async function cambiarEstado(codigo, nuevoEstado) {
-            document.getElementById('admin-grid').style.opacity = '0.5';
-            await supabase.from('productos').update({ estado: nuevoEstado }).eq('codigo_interno', codigo);
-            await cargarInventario();
-            document.getElementById('admin-grid').style.opacity = '1';
-        }
-
-        async function eliminarPieza(codigo) {
-            if (confirm(`⚠️ ALERTA: ¿Eliminar permanentemente "${codigo}"?`)) {
-                document.getElementById('admin-grid').style.opacity = '0.5';
-                await supabase.from('productos').delete().eq('codigo_interno', codigo);
-                await cargarInventario();
-                document.getElementById('admin-grid').style.opacity = '1';
-            }
-        }
-
-        document.getElementById('form-producto').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = e.target.querySelector('button');
-            const txt = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Guardando...';
-
-            const nuevo = {
-                codigo_interno: document.getElementById('codigo').value,
-                nombre_comercial: document.getElementById('nombre').value,
-                categoria: document.getElementById('categoria').value,
-                precio: document.getElementById('precio').value,
-                talla: document.getElementById('talla').value || 'N/A',
-                medidas: document.getElementById('medidas').value || 'N/A',
-                material: document.getElementById('material').value || 'N/A',
-                cuidados: document.getElementById('cuidados').value || 'N/A',
-                eslogan: document.getElementById('eslogan').value,
-                imagen_url: document.getElementById('imagen').value,
-                estado: 'Disponible'
-            };
-
-            const { error } = await supabase.from('productos').insert([nuevo]);
-
-            if (error) {
-                document.getElementById('mensaje').innerHTML = `<span class="text-red-600">Error: ${error.message}</span>`;
-            } else {
-                document.getElementById('mensaje').innerHTML = `<span class="text-green-600">Guardado exitoso.</span>`;
-                e.target.reset();
-                categoriaActualAdmin = nuevo.categoria;
-                await cargarInventario();
-                document.getElementById('panel-registro').classList.add('hidden');
-                document.getElementById('icono-acordeon').classList.remove('rotate-180');
-                setTimeout(() => { document.getElementById('mensaje').innerHTML = ''; }, 3000);
-            }
-            btn.innerHTML = txt;
-        });
 
         cargarInventario();
     </script>
