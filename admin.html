@@ -205,7 +205,7 @@
                 .from('catalogo')
                 .upload(nombreArchivoFinal, archivoFile, {
                     cacheControl: '3600',
-                    upsert: true // Sobrescribe si ya existe uno con el mismo código
+                    upsert: true
                 });
                 
             if (error) throw new Error("Error subiendo foto: " + error.message);
@@ -229,11 +229,9 @@
             }
 
             try {
-                // FASE 1: Subir Archivo
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Subiendo Fotografía...';
                 const nombreArchivo = await subirArchivoSupabase(archivoFile, codigo);
 
-                // FASE 2: Registrar en Base de Datos
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Guardando Datos...';
                 const nuevo = {
                     codigo_interno: codigo,
@@ -280,7 +278,6 @@
             let nombreArchivoDefinitivo = document.getElementById('edit-imagen-actual').value;
 
             try {
-                // Si el usuario seleccionó una foto nueva, la subimos primero
                 if (archivoInput.files.length > 0) {
                     btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Actualizando Foto...';
                     nombreArchivoDefinitivo = await subirArchivoSupabase(archivoInput.files[0], codigo);
@@ -329,7 +326,7 @@
             document.getElementById('edit-cuidados').value = producto.cuidados || '';
             document.getElementById('edit-eslogan').value = producto.eslogan || '';
             document.getElementById('edit-imagen-actual').value = producto.imagen_url || '';
-            document.getElementById('edit-archivo-foto').value = ''; // Limpiar el input de archivo
+            document.getElementById('edit-archivo-foto').value = '';
 
             const modal = document.getElementById('modal-editar');
             modal.classList.remove('hidden');
@@ -357,7 +354,6 @@
             if (confirm(`⚠️ ALERTA: ¿Eliminar permanentemente "${codigo}"?`)) {
                 document.getElementById('admin-grid').style.opacity = '0.5';
                 await supabase.from('productos').delete().eq('codigo_interno', codigo);
-                // Opcional: También podríamos borrar la foto del bucket aquí, pero conservarla es más seguro por historial.
                 await cargarInventario();
                 document.getElementById('admin-grid').style.opacity = '1';
             }
@@ -409,7 +405,6 @@
                 if (disponibles.length > 0) {
                     htmlPrint += `<div class="categoria"><h2>${categoria}</h2><div class="grid">`;
                     disponibles.forEach(p => {
-                        // Forzamos actualización de caché agregando un timestamp al final
                         const imgUrl = p.imagen_url ? `https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${p.imagen_url}?v=${new Date().getTime()}` : '';
                         htmlPrint += `
                             <div class="producto">
@@ -561,8 +556,8 @@
             let html = '';
 
             productos.forEach(p => {
-                // Se agrega timestamp ?v=... para evitar que el navegador muestre una foto vieja si se acaba de editar
-                const imgPath = p.imagen_url ? `https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${p.imagen_url}?v=${new Date().getTime()}` : 'https://via.placeholder.com/150';
+                // Parámetro anti-caché eliminado para navegación instantánea
+                const imgPath = p.imagen_url ? `https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${p.imagen_url}` : 'https://via.placeholder.com/150';
                 const isDisponible = p.estado === 'Disponible';
                 
                 const btnEstado = isDisponible 
