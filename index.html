@@ -10,11 +10,8 @@
     <style>
         .oro { color: #d4af37; }
         .bg-textura { background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png'); }
-        
-        /* PÍLDORAS DE CATEGORÍA BLINDADAS */
         .tab-activa { background-color: #000 !important; color: #d4af37 !important; border-color: #000 !important; font-weight: bold; }
         .tab-inactiva { background-color: #fff !important; color: #6b7280 !important; border-color: #e5e7eb !important; }
-        
         .zoom-activo { transform: scale(1.8); cursor: zoom-out !important; }
         .zoom-normal { transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); cursor: zoom-in; }
         .fade-in { animation: fadeIn 0.4s ease-out forwards; }
@@ -40,7 +37,6 @@
             <input type="text" id="buscador" oninput="filtrarProductos()" placeholder="Buscar por nombre, código o material..." class="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-full text-sm shadow-sm focus:outline-none focus:border-black transition-all">
         </div>
 
-        <!-- CONTENEDOR MULTI-LÍNEA PARA CATEGORÍAS -->
         <div class="flex flex-wrap justify-center gap-2 md:gap-3 mb-8 md:mb-12" id="tabs-container"></div>
         
         <div id="catalogo"><div class="text-center py-20 text-gray-400 font-bold uppercase tracking-widest text-sm animate-pulse">Cargando colección exclusiva...</div></div>
@@ -90,13 +86,30 @@
         const itemsPorPagina = 6;
         let terminoBusqueda = '';
         let carrito = []; 
+        let supabaseClient = null;
+
+        async function registrarVisita() {
+            try {
+                await supabaseClient.from('visitas').insert([{ tipo: 'visita_tienda', detalle: 'general' }]);
+            } catch(e) { console.error("Error registrando visita", e); }
+        }
+
+        async function registrarClicProducto(codigo) {
+            try {
+                await supabaseClient.from('visitas').insert([{ tipo: 'clic_producto', detalle: codigo }]);
+            } catch(e) { console.error("Error registrando clic", e); }
+        }
 
         async function cargarCatalogo() {
             const contenedor = document.getElementById('catalogo');
             try {
                 if (typeof window.supabase === 'undefined') throw new Error('Librería no cargada.');
-                const supabase = window.supabase.createClient('https://dmpovogobkqxiuqiqdku.supabase.co', 'sb_publishable_vxjNB2Og59jiF0wazOFJBw_-Cj1-q1I');
-                const { data, error } = await supabase.from('productos').select('*').eq('estado', 'Disponible').order('codigo_interno', { ascending: true });
+                supabaseClient = window.supabase.createClient('https://dmpovogobkqxiuqiqdku.supabase.co', 'sb_publishable_vxjNB2Og59jiF0wazOFJBw_-Cj1-q1I');
+                
+                // Registrar visita de forma silenciosa al abrir
+                registrarVisita();
+
+                const { data, error } = await supabaseClient.from('productos').select('*').eq('estado', 'Disponible').order('codigo_interno', { ascending: true });
                 if (error) throw new Error(error.message);
                 
                 todosLosProductos = data;
@@ -213,6 +226,9 @@
         }
 
         window.abrirDetalle = function(codigo) {
+            // Registrar clic en la prenda específica para estadísticas
+            registrarClicProducto(codigo);
+
             const p = todosLosProductos.find(x => x.codigo_interno === codigo);
             const imgPath = p.imagen_url ? `https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${p.imagen_url}` : 'https://via.placeholder.com/600x800.png?text=Fotograf%C3%ADa+en+proceso';
             const fraseEmotiva = p.eslogan || "Lleva contigo un fragmento de nuestra historia. Cada puntada resguarda la elegancia ancestral de nuestra gente.";
@@ -315,7 +331,6 @@
             const modal = document.getElementById('modal-carrito');
             const lista = document.getElementById('lista-carrito');
             const totalElement = document.getElementById('total-carrito');
-            
             let total = 0;
             
             if (carrito.length === 0) {
@@ -356,24 +371,15 @@
         }
 
         window.enviarPedidoWhatsApp = function() {
-            if (carrito.length === 0) {
-                alert("Tu selección está vacía. Añade piezas al catálogo para solicitar un apartado.");
-                return;
-            }
-
-            let texto = "✨ Hola Laollaga Istmeña, quiero solicitar el apartado de las siguientes piezas de arte textil:\n\n";
+            if (carrito.length === 0) { alert("Tu selección está vacía."); return; }
+            let texto = "✨ Hola Laollaga Istmeña, quiero solicitar el apartado de las siguientes piezas:\n\n";
             let total = 0;
-            
             carrito.forEach(p => {
                 texto += `▫️ *[${p.codigo_interno}]* ${p.nombre_comercial} - $${p.precio} MXN\n`;
                 total += parseFloat(p.precio) || 0;
             });
-            
-            texto += `\n💰 *Total estimado:* $${total.toLocaleString('es-MX')} MXN\n`;
-            texto += `\n¿Están disponibles para concretar la compra?`;
-
-            const url = `https://wa.me/529711140709?text=${encodeURIComponent(texto)}`;
-            window.open(url, '_blank');
+            texto += `\n💰 *Total:* $${total.toLocaleString('es-MX')} MXN\n\n¿Están disponibles?`;
+            window.open(`https://wa.me/529711140709?text=${encodeURIComponent(texto)}`, '_blank');
         }
 
         setTimeout(cargarCatalogo, 600);
