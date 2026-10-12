@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control Maestro V5.0 | Laollaga Istmeña</title>
+    <title>Control Maestro V5.1 | Laollaga Istmeña</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Motor PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         .tab-admin-activa { border-bottom: 3px solid #d4af37; color: #000; font-weight: bold; background-color: white; }
@@ -18,13 +17,35 @@
 <body class="bg-[#f3f4f6] font-sans text-gray-800 pb-20">
     
     <div class="bg-black text-[#d4af37] p-5 flex justify-between items-center shadow-md border-b-2 border-[#d4af37] sticky top-0 z-50">
-        <h1 class="font-serif font-bold tracking-[0.2em] uppercase">Control Maestro V5.0</h1>
+        <h1 class="font-serif font-bold tracking-[0.2em] uppercase">Control Maestro V5.1</h1>
         <a href="index.html" class="text-white text-xs tracking-widest uppercase hover:text-[#d4af37] transition-colors bg-white/10 px-4 py-2 rounded">Ver Tienda <i class="fas fa-external-link-alt ml-1"></i></a>
     </div>
 
     <main class="max-w-6xl mx-auto p-4 md:p-6 space-y-6 mt-4">
 
-        <!-- FORMULARIO DE REGISTRO CON SUBIDA DIRECTA -->
+        <!-- PANEL DE MÉTRICAS / ANALÍTICAS -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-white p-5 rounded-lg shadow-sm border border-gray-200 flex items-center justify-between">
+                <div>
+                    <p class="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Visitas Totales a la Tienda</p>
+                    <h3 id="stat-visitas" class="text-3xl font-serif font-bold text-black mt-1">...</h3>
+                </div>
+                <div class="bg-yellow-50 text-[#d4af37] w-12 h-12 rounded-full flex items-center justify-center text-xl border border-yellow-200">
+                    <i class="fas fa-eye"></i>
+                </div>
+            </div>
+            <div class="bg-white p-5 rounded-lg shadow-sm border border-gray-200 flex items-center justify-between">
+                <div>
+                    <p class="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Prenda Más Visitada / Consultada</p>
+                    <h3 id="stat-popular" class="text-lg font-serif font-bold text-black mt-1">Cargando...</h3>
+                </div>
+                <div class="bg-black text-[#d4af37] w-12 h-12 rounded-full flex items-center justify-center text-xl border border-gray-800">
+                    <i class="fas fa-fire"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- FORMULARIO DE REGISTRO -->
         <div class="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
             <button id="btn-toggle-registro" class="w-full bg-gradient-to-r from-black to-gray-900 text-[#d4af37] p-5 flex justify-between items-center focus:outline-none">
                 <span class="font-serif font-bold uppercase tracking-widest text-sm md:text-base"><i class="fas fa-plus-circle mr-2"></i> Registrar Nueva Pieza</span>
@@ -77,7 +98,7 @@
                         <textarea id="eslogan" class="w-full border border-gray-300 rounded p-3 focus:border-black focus:outline-none" rows="2" required></textarea>
                     </div>
                     <div>
-                        <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-1 font-bold text-blue-600"><i class="fas fa-upload mr-1"></i> Subir Fotografía (El sistema la renombrará automáticamente)</label>
+                        <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-1 font-bold text-blue-600"><i class="fas fa-upload mr-1"></i> Subir Fotografía</label>
                         <input type="file" id="archivo-foto" accept="image/jpeg, image/png, image/webp" class="w-full border border-gray-300 bg-gray-50 rounded p-2 focus:border-black focus:outline-none" required>
                     </div>
                     <button type="submit" id="btn-guardar-nuevo" class="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-4 rounded uppercase tracking-[0.2em] shadow-lg transition-colors">
@@ -88,7 +109,7 @@
             </div>
         </div>
 
-        <!-- INVENTARIO Y BOTONES -->
+        <!-- INVENTARIO -->
         <div class="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
             <div class="bg-gray-100 p-4 border-b border-gray-200 flex flex-col md:flex-row justify-between items-center gap-4">
                 <h2 class="font-serif font-bold uppercase tracking-widest text-black"><i class="fas fa-boxes mr-2"></i> Inventario de Tienda</h2>
@@ -114,7 +135,7 @@
 
     </main>
 
-    <!-- MODAL DE EDICIÓN FLOTANTE -->
+    <!-- MODAL DE EDICIÓN -->
     <div id="modal-editar" class="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm hidden flex-col items-center justify-center p-4 transition-opacity duration-300 opacity-0">
         <div class="bg-white w-full max-w-2xl rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-[95vh]">
             <div class="bg-blue-900 text-white p-5 flex justify-between items-center border-b-4 border-blue-500">
@@ -166,7 +187,6 @@
                     <div class="border border-dashed border-gray-400 p-3 bg-gray-50 rounded">
                         <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-1">Reemplazar Foto (Opcional)</label>
                         <input type="file" id="edit-archivo-foto" accept="image/jpeg, image/png, image/webp" class="w-full text-xs">
-                        <p class="text-[9px] text-gray-400 mt-1">Si no seleccionas un archivo, se mantendrá la foto actual.</p>
                         <input type="hidden" id="edit-imagen-actual">
                     </div>
                     <button type="submit" id="btn-guardar-edicion" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-3 rounded uppercase tracking-widest shadow-lg transition-colors mt-4">
@@ -191,48 +211,56 @@
             document.getElementById('panel-registro').classList.toggle('hidden');
             document.getElementById('icono-acordeon').classList.toggle('rotate-180');
         });
-        document.getElementById('btn-actualizar').addEventListener('click', cargarInventario);
+        document.getElementById('btn-actualizar').addEventListener('click', cargarTodo);
         document.getElementById('btn-cerrar-edicion').addEventListener('click', cerrarEdicion);
         document.getElementById('btn-whatsapp').addEventListener('click', exportarCatalogoWhatsApp);
         document.getElementById('btn-pdf').addEventListener('click', exportarCatalogoPDF_Nativo);
 
-        // MOTOR DE SUBIDA DIRECTA A SUPABASE STORAGE
+        async function cargarEstadisticas() {
+            try {
+                // Visitas totales
+                const { count, error } = await supabase.from('visitas').select('*', { count: 'exact', head: true }).eq('tipo', 'visita_tienda');
+                if(!error) document.getElementById('stat-visitas').innerText = count || 0;
+
+                // Prenda más popular
+                const { data, error: err2 } = await supabase.from('visitas').select('detalle').eq('tipo', 'clic_producto');
+                if(!err2 && data && data.length > 0) {
+                    const conteo = {};
+                    data.forEach(v => { conteo[v.detalle] = (conteo[v.detalle] || 0) + 1; });
+                    const masPopular = Object.keys(conteo).reduce((a, b) => conteo[a] > conteo[b] ? a : b);
+                    document.getElementById('stat-popular').innerText = `Código: ${masPopular} (${conteo[masPopular]} clics)`;
+                } else {
+                    document.getElementById('stat-popular').innerText = "Sin registros aún";
+                }
+            } catch(e) {
+                document.getElementById('stat-visitas').innerText = "0";
+                document.getElementById('stat-popular').innerText = "No disponible";
+            }
+        }
+
         async function subirArchivoSupabase(archivoFile, codigoInterno) {
             const extension = archivoFile.name.split('.').pop();
             const nombreArchivoFinal = `${codigoInterno.trim()}.${extension}`;
-            
-            const { data, error } = await supabase.storage
-                .from('catalogo')
-                .upload(nombreArchivoFinal, archivoFile, {
-                    cacheControl: '3600',
-                    upsert: true
-                });
-                
+            const { data, error } = await supabase.storage.from('catalogo').upload(nombreArchivoFinal, archivoFile, { cacheControl: '3600', upsert: true });
             if (error) throw new Error("Error subiendo foto: " + error.message);
             return nombreArchivoFinal;
         }
 
-        // MOTOR DE REGISTRO NUEVO
         document.getElementById('form-producto').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btn-guardar-nuevo');
             const txtOriginal = btn.innerHTML;
             const msj = document.getElementById('mensaje');
-            
             const codigo = document.getElementById('codigo').value;
-            const archivoInput = document.getElementById('archivo-foto');
-            const archivoFile = archivoInput.files[0];
+            const archivoFile = document.getElementById('archivo-foto').files[0];
 
-            if (!archivoFile) {
-                msj.innerHTML = `<span class="text-red-600">Debes seleccionar una fotografía.</span>`;
-                return;
-            }
+            if (!archivoFile) { msj.innerHTML = `<span class="text-red-600">Selecciona una fotografía.</span>`; return; }
 
             try {
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Subiendo Fotografía...';
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Subiendo...';
                 const nombreArchivo = await subirArchivoSupabase(archivoFile, codigo);
-
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Guardando Datos...';
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Guardando...';
+                
                 const nuevo = {
                     codigo_interno: codigo,
                     nombre_comercial: document.getElementById('nombre').value,
@@ -250,17 +278,11 @@
                 const { error } = await supabase.from('productos').insert([nuevo]);
                 if (error) throw new Error(error.message);
 
-                msj.innerHTML = `<span class="text-green-600"><i class="fas fa-check-circle"></i> Pieza registrada con éxito.</span>`;
+                msj.innerHTML = `<span class="text-green-600"><i class="fas fa-check-circle"></i> Éxito.</span>`;
                 e.target.reset();
                 categoriaActualAdmin = nuevo.categoria;
-                await cargarInventario();
-                
-                setTimeout(() => { 
-                    document.getElementById('panel-registro').classList.add('hidden');
-                    document.getElementById('icono-acordeon').classList.remove('rotate-180');
-                    msj.innerHTML = ''; 
-                }, 2000);
-
+                await cargarTodo();
+                setTimeout(() => { document.getElementById('panel-registro').classList.add('hidden'); document.getElementById('icono-acordeon').classList.remove('rotate-180'); msj.innerHTML = ''; }, 2000);
             } catch (err) {
                 msj.innerHTML = `<span class="text-red-600">${err.message}</span>`;
             } finally {
@@ -268,7 +290,6 @@
             }
         });
 
-        // MOTOR DE EDICIÓN
         document.getElementById('form-editar').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btn-guardar-edicion');
@@ -282,8 +303,7 @@
                     btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Actualizando Foto...';
                     nombreArchivoDefinitivo = await subirArchivoSupabase(archivoInput.files[0], codigo);
                 }
-
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Guardando Cambios...';
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Guardando...';
                 const datosActualizados = {
                     nombre_comercial: document.getElementById('edit-nombre').value,
                     categoria: document.getElementById('edit-categoria').value,
@@ -295,14 +315,12 @@
                     eslogan: document.getElementById('edit-eslogan').value,
                     imagen_url: nombreArchivoDefinitivo
                 };
-
                 const { error } = await supabase.from('productos').update(datosActualizados).eq('codigo_interno', codigo);
                 if (error) throw new Error(error.message);
-
-                await cargarInventario();
+                await cargarTodo();
                 cerrarEdicion();
             } catch (err) {
-                alert("Error técnico: " + err.message);
+                alert("Error: " + err.message);
             } finally {
                 btn.innerHTML = txtOriginal;
             }
@@ -315,7 +333,6 @@
                 if(found) { producto = found; break; }
             }
             if(!producto) return;
-
             document.getElementById('edit-codigo').value = producto.codigo_interno;
             document.getElementById('edit-nombre').value = producto.nombre_comercial;
             document.getElementById('edit-categoria').value = producto.categoria;
@@ -327,201 +344,86 @@
             document.getElementById('edit-eslogan').value = producto.eslogan || '';
             document.getElementById('edit-imagen-actual').value = producto.imagen_url || '';
             document.getElementById('edit-archivo-foto').value = '';
-
             const modal = document.getElementById('modal-editar');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
+            modal.classList.remove('hidden'); modal.classList.add('flex');
             setTimeout(() => modal.classList.remove('opacity-0'), 10);
         }
 
         function cerrarEdicion() {
             const modal = document.getElementById('modal-editar');
             modal.classList.add('opacity-0');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-            }, 300);
+            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 300);
         }
 
         async function cambiarEstado(codigo, nuevoEstado) {
-            document.getElementById('admin-grid').style.opacity = '0.5';
             await supabase.from('productos').update({ estado: nuevoEstado }).eq('codigo_interno', codigo);
-            await cargarInventario();
-            document.getElementById('admin-grid').style.opacity = '1';
+            await cargarTodo();
         }
 
         async function eliminarPieza(codigo) {
-            if (confirm(`⚠️ ALERTA: ¿Eliminar permanentemente "${codigo}"?`)) {
-                document.getElementById('admin-grid').style.opacity = '0.5';
+            if (confirm(`⚠️ ¿Eliminar permanentemente "${codigo}"?`)) {
                 await supabase.from('productos').delete().eq('codigo_interno', codigo);
-                await cargarInventario();
-                document.getElementById('admin-grid').style.opacity = '1';
+                await cargarTodo();
             }
         }
 
         function exportarCatalogoPDF_Nativo() {
-            if (Object.keys(inventarioAdmin).length === 0) {
-                alert("El inventario está vacío.");
-                return;
-            }
-
+            if (Object.keys(inventarioAdmin).length === 0) { alert("Inventario vacío."); return; }
             const btn = document.getElementById('btn-pdf');
             btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-1"></i> Preparando...`;
-
-            let htmlPrint = `
-                <!DOCTYPE html>
-                <html lang="es">
-                <head>
-                    <meta charset="UTF-8">
-                    <title>Catálogo Laollaga Istmeña</title>
-                    <style>
-                        @page { size: A4 portrait; margin: 15mm; }
-                        body { font-family: 'Georgia', serif; color: #111; background: #fff; margin: 0; padding: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-                        .header { text-align: center; border-bottom: 2px solid #d4af37; padding-bottom: 10px; margin-bottom: 25px; }
-                        .header h1 { margin: 0; font-size: 28px; text-transform: uppercase; letter-spacing: 3px; }
-                        .header p { color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; }
-                        .categoria { margin-bottom: 30px; }
-                        .categoria h2 { font-size: 18px; border-bottom: 1px solid #eee; padding-bottom: 5px; text-transform: uppercase; color: #000; margin-bottom: 15px; page-break-after: avoid; }
-                        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-                        .producto { border: 1px solid #eaeaea; border-radius: 8px; padding: 12px; box-sizing: border-box; text-align: center; page-break-inside: avoid; }
-                        .img-container { height: 180px; width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; overflow: hidden; }
-                        .img-container img { max-width: 100%; max-height: 100%; object-fit: contain; }
-                        .codigo { background: #f0f0f0; display: inline-block; padding: 3px 6px; font-family: monospace; font-size: 10px; color: #555; border-radius: 4px; margin-bottom: 8px; }
-                        .nombre { font-size: 13px; font-weight: bold; margin-bottom: 5px; line-height: 1.2; height: 32px; overflow: hidden; }
-                        .precio { color: #d4af37; font-size: 16px; font-weight: bold; margin-bottom: 4px; }
-                        .talla { font-size: 10px; color: #666; font-family: sans-serif; }
-                        .footer { text-align: center; margin-top: 40px; padding-top: 15px; border-top: 1px solid #eee; font-size: 11px; color: #666; page-break-inside: avoid; }
-                    </style>
-                </head>
-                <body>
-                    <div class="header">
-                        <h1>Laollaga Istmeña</h1>
-                        <p>Catálogo Oficial de Colecciones</p>
-                    </div>
-            `;
-
+            let htmlPrint = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Catálogo</title><style>@page { size: A4 portrait; margin: 15mm; } body { font-family: Georgia, serif; color: #111; background: #fff; margin: 0; }</style></head><body><div style="text-align:center; border-bottom:2px solid #d4af37; padding-bottom:10px; margin-bottom:25px;"><h1>Laollaga Istmeña</h1><p>Catálogo Oficial</p></div>`;
             for (const categoria in inventarioAdmin) {
                 const disponibles = inventarioAdmin[categoria].filter(p => p.estado === 'Disponible');
                 if (disponibles.length > 0) {
-                    htmlPrint += `<div class="categoria"><h2>${categoria}</h2><div class="grid">`;
+                    htmlPrint += `<h2>${categoria}</h2><div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:15px;">`;
                     disponibles.forEach(p => {
-                        const imgUrl = p.imagen_url ? `https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${p.imagen_url}?v=${new Date().getTime()}` : '';
-                        htmlPrint += `
-                            <div class="producto">
-                                <div class="img-container"><img src="${imgUrl}" alt="Prenda"></div>
-                                <div class="codigo">${p.codigo_interno}</div>
-                                <div class="nombre">${p.nombre_comercial}</div>
-                                <div class="precio">$${p.precio} MXN</div>
-                                <div class="talla">Talla: ${p.talla || 'Unitalla'}</div>
-                            </div>
-                        `;
+                        const imgUrl = p.imagen_url ? `https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${p.imagen_url}` : '';
+                        htmlPrint += `<div style="border:1px solid #eaeaza; padding:10px; text-align:center;"><img src="${imgUrl}" style="max-width:100%; height:150px; object-fit:contain;"><br><b>${p.codigo_interno}</b><br>${p.nombre_comercial}<br><span style="color:#d4af37">$${p.precio} MXN</span></div>`;
                     });
-                    htmlPrint += `</div></div>`;
+                    htmlPrint += `</div>`;
                 }
             }
-            
-            htmlPrint += `
-                    <div class="footer">
-                        <p>Catálogo interactivo en vivo: <strong>laollaga-istmena.vercel.app</strong></p>
-                        <p>Para procesar un apartado, por favor indícanos el <strong>Código</strong> de la pieza vía WhatsApp al 971 114 0709.</p>
-                    </div>
-                </body>
-                </html>
-            `;
-
+            htmlPrint += `</body></html>`;
             let iframe = document.getElementById('print-iframe');
-            if (!iframe) {
-                iframe = document.createElement('iframe');
-                iframe.id = 'print-iframe';
-                iframe.style.position = 'absolute';
-                iframe.style.width = '0px';
-                iframe.style.height = '0px';
-                iframe.style.border = 'none';
-                document.body.appendChild(iframe);
-            }
-
-            const doc = iframe.contentWindow.document;
-            doc.open();
-            doc.write(htmlPrint);
-            doc.close();
-
-            iframe.onload = function() {
-                setTimeout(() => {
-                    btn.innerHTML = `<i class="fas fa-file-pdf mr-1 text-sm"></i> Catálogo PDF`;
-                    iframe.contentWindow.focus();
-                    iframe.contentWindow.print();
-                }, 800);
-            };
+            if (!iframe) { iframe = document.createElement('iframe'); iframe.id = 'print-iframe'; iframe.style.display = 'none'; document.body.appendChild(iframe); }
+            iframe.contentWindow.document.open(); iframe.contentWindow.document.write(htmlPrint); iframe.contentWindow.document.close();
+            iframe.onload = function() { setTimeout(() => { btn.innerHTML = `<i class="fas fa-file-pdf mr-1"></i> Catálogo PDF`; iframe.contentWindow.print(); }, 800); };
         }
 
         function exportarCatalogoWhatsApp() {
-            const btn = document.getElementById('btn-whatsapp');
-            const originalHTML = btn.innerHTML;
-            
-            if (Object.keys(inventarioAdmin).length === 0) {
-                alert("El inventario está vacío.");
-                return;
-            }
-
-            let texto = "✨ *CATÁLOGO OFICIAL | LAOLLAGA ISTMEÑA* ✨\n_Arte tejido, tradición que se viste_\n\n";
-
+            let texto = "✨ *CATÁLOGO OFICIAL | LAOLLAGA ISTMEÑA* ✨\n\n";
             for (const categoria in inventarioAdmin) {
                 const disponibles = inventarioAdmin[categoria].filter(p => p.estado === 'Disponible');
                 if (disponibles.length > 0) {
-                    texto += `\n📍 *${categoria.toUpperCase()}*\n`;
-                    disponibles.forEach(p => {
-                        texto += `▪️ [${p.codigo_interno}] ${p.nombre_comercial} - $${p.precio} MXN\n`;
-                    });
+                    texto += `📍 *${categoria.toUpperCase()}*\n`;
+                    disponibles.forEach(p => { texto += `▪️ [${p.codigo_interno}] ${p.nombre_comercial} - $${p.precio} MXN\n`; });
                 }
             }
-
-            texto += `\n🌐 *Ver fotos y detalles aquí:*\nhttps://laollaga-istmena.vercel.app\n`;
-            texto += `\n📦 _Para apartar, responde con el código de la pieza._`;
-
-            navigator.clipboard.writeText(texto).then(() => {
-                btn.innerHTML = `<i class="fas fa-check mr-1"></i> Copiado`;
-                btn.classList.replace('text-[#d4af37]', 'text-green-400');
-                setTimeout(() => {
-                    btn.innerHTML = originalHTML;
-                    btn.classList.replace('text-green-400', 'text-[#d4af37]');
-                }, 3000);
-            }).catch(() => alert("Error al copiar al portapapeles."));
+            texto += `\n🌐 https://laollaga-istmena.vercel.app`;
+            navigator.clipboard.writeText(texto).then(() => alert("Catálogo copiado para WhatsApp."));
         }
 
-        async function cargarInventario() {
+        async function cargarTodo() {
+            await cargarEstadisticas();
             const grid = document.getElementById('admin-grid');
-            grid.innerHTML = '<div class="text-center py-10 text-gray-400 text-xs col-span-full animate-pulse">Sincronizando...</div>';
-            
             try {
                 const { data, error } = await supabase.from('productos').select('*').order('codigo_interno', { ascending: true });
                 if (error) throw new Error(error.message);
-
                 inventarioAdmin = {};
                 const categoriasUnicas = new Set();
-
                 data.forEach(p => {
                     categoriasUnicas.add(p.categoria);
                     if(!inventarioAdmin[p.categoria]) inventarioAdmin[p.categoria] = [];
                     inventarioAdmin[p.categoria].push(p);
                 });
-
                 const datalist = document.getElementById('lista-categorias');
                 datalist.innerHTML = '';
                 categoriasUnicas.forEach(cat => { datalist.innerHTML += `<option value="${cat}">`; });
-
                 renderizarTabsAdmin(Array.from(categoriasUnicas));
-                
-                if(!categoriaActualAdmin && Array.from(categoriasUnicas).length > 0) {
-                    categoriaActualAdmin = Array.from(categoriasUnicas)[0];
-                }
-                
-                if(categoriaActualAdmin && inventarioAdmin[categoriaActualAdmin]) {
-                    mostrarInventario(categoriaActualAdmin);
-                } else if (Array.from(categoriasUnicas).length > 0) {
-                     mostrarInventario(Array.from(categoriasUnicas)[0]);
-                } else {
-                    grid.innerHTML = `<div class="text-center py-10 text-gray-500 text-xs col-span-full">Inventario vacío.</div>`;
-                }
+                if(!categoriaActualAdmin && Array.from(categoriasUnicas).length > 0) categoriaActualAdmin = Array.from(categoriasUnicas)[0];
+                if(categoriaActualAdmin && inventarioAdmin[categoriaActualAdmin]) mostrarInventario(categoriaActualAdmin);
+                else if (Array.from(categoriasUnicas).length > 0) mostrarInventario(Array.from(categoriasUnicas)[0]);
+                else grid.innerHTML = `<div class="text-center py-10 text-gray-500 text-xs col-span-full">Inventario vacío.</div>`;
             } catch (err) {
                 grid.innerHTML = `<div class="text-red-600 p-6 text-center col-span-full font-bold">Error: ${err.message}</div>`;
             }
@@ -534,7 +436,6 @@
                 html += `<button id="${idTab}" class="px-6 py-4 whitespace-nowrap transition-colors focus:outline-none tab-admin-inactiva">${cat}</button>`;
             });
             document.getElementById('admin-tabs').innerHTML = html;
-
             categorias.forEach(cat => {
                 document.getElementById(`tab-adm-${cat.replace(/\s+/g, '')}`).addEventListener('click', () => mostrarInventario(cat));
             });
@@ -542,30 +443,21 @@
 
         function mostrarInventario(cat) {
             categoriaActualAdmin = cat;
-            
             for (const categoria in inventarioAdmin) {
                 const btn = document.getElementById(`tab-adm-${categoria.replace(/\s+/g, '')}`);
-                if(btn) {
-                    btn.className = (categoria === cat) 
-                        ? 'px-6 py-4 whitespace-nowrap transition-colors focus:outline-none tab-admin-activa'
-                        : 'px-6 py-4 whitespace-nowrap transition-colors focus:outline-none tab-admin-inactiva';
-                }
+                if(btn) btn.className = (categoria === cat) ? 'px-6 py-4 whitespace-nowrap transition-colors focus:outline-none tab-admin-activa' : 'px-6 py-4 whitespace-nowrap transition-colors focus:outline-none tab-admin-inactiva';
             }
-
             const productos = inventarioAdmin[cat] || [];
             let html = '';
-
             productos.forEach(p => {
-                // Parámetro anti-caché eliminado para navegación instantánea
                 const imgPath = p.imagen_url ? `https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${p.imagen_url}` : 'https://via.placeholder.com/150';
                 const isDisponible = p.estado === 'Disponible';
-                
                 const btnEstado = isDisponible 
                     ? `<button id="btn-est-${p.codigo_interno}" data-codigo="${p.codigo_interno}" data-nuevo="Agotado" class="flex-grow bg-green-100 text-green-800 border border-green-300 py-1.5 rounded text-[10px] font-bold uppercase tracking-widest hover:bg-green-200 transition">Disp.</button>`
                     : `<button id="btn-est-${p.codigo_interno}" data-codigo="${p.codigo_interno}" data-nuevo="Disponible" class="flex-grow bg-gray-100 text-gray-700 border border-gray-300 py-1.5 rounded text-[10px] font-bold uppercase tracking-widest hover:bg-gray-200 transition">Oculto</button>`;
 
                 html += `
-                <div class="bg-white border ${isDisponible ? 'border-gray-200' : 'border-gray-200 opacity-60'} p-3 flex flex-row gap-3 items-center shadow-sm rounded-lg overflow-hidden">
+                <div class="bg-white border border-gray-200 p-3 flex flex-row gap-3 items-center shadow-sm rounded-lg overflow-hidden">
                     <img src="${imgPath}" class="w-16 h-20 object-cover rounded bg-gray-100 border border-gray-200 flex-shrink-0">
                     <div class="flex-grow min-w-0">
                         <span class="text-[10px] text-gray-500 font-mono tracking-widest bg-gray-100 px-1 rounded">${p.codigo_interno}</span>
@@ -580,7 +472,6 @@
                 </div>`;
             });
             document.getElementById('admin-grid').innerHTML = html;
-
             productos.forEach(p => {
                 document.getElementById(`btn-est-${p.codigo_interno}`).addEventListener('click', function() { cambiarEstado(this.dataset.codigo, this.dataset.nuevo); });
                 document.getElementById(`btn-eli-${p.codigo_interno}`).addEventListener('click', function() { eliminarPieza(this.dataset.codigo); });
@@ -588,7 +479,7 @@
             });
         }
 
-        cargarInventario();
+        cargarTodo();
     </script>
 </body>
 </html>
