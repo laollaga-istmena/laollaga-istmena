@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control Maestro V5.5 | Laollaga Istmeña</title>
+    <title>Control Maestro V5.6 | Laollaga Istmeña</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -16,7 +16,7 @@
 <body class="bg-[#f3f4f6] font-sans text-gray-800 pb-20">
     
     <div class="bg-black text-[#d4af37] p-5 flex justify-between items-center shadow-md border-b-2 border-[#d4af37] sticky top-0 z-50">
-        <h1 class="font-serif font-bold tracking-[0.2em] uppercase">Control Maestro V5.5</h1>
+        <h1 class="font-serif font-bold tracking-[0.2em] uppercase">Control Maestro V5.6</h1>
         <a href="index.html" class="text-white text-xs tracking-widest uppercase hover:text-[#d4af37] transition-colors bg-white/10 px-4 py-2 rounded">Ver Tienda <i class="fas fa-external-link-alt ml-1"></i></a>
     </div>
 
@@ -284,7 +284,7 @@
         document.getElementById('btn-actualizar').addEventListener('click', cargarTodo);
         document.getElementById('btn-cerrar-edicion').addEventListener('click', cerrarEdicion);
         document.getElementById('btn-whatsapp').addEventListener('click', exportarCatalogoWhatsApp);
-        document.getElementById('btn-pdf').addEventListener('click', exportarCatalogoPDF_V55);
+        document.getElementById('btn-pdf').addEventListener('click', exportarCatalogoPDF_V56);
 
         window.abrirModalApartado = function() {
             const m = document.getElementById('modal-apartado');
@@ -504,11 +504,11 @@
             }
         }
 
-        // MOTOR EDITORIAL V5.5 LOOKBOOK ULTRA-LUJO
-        function exportarCatalogoPDF_V55() {
+        // MOTOR EDITORIAL V5.6 LOOKBOOK ULTRA-LUJO (BLINDADO)
+        function exportarCatalogoPDF_V56() {
             if (Object.keys(inventarioAdmin).length === 0) { alert("Inventario vacío."); return; }
             const btn = document.getElementById('btn-pdf');
-            btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-1"></i> Pre-cargando Lookbook...`;
+            btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-1"></i> Generando Lookbook V5.6...`;
 
             let htmlPrint = `
             <!DOCTYPE html>
@@ -519,7 +519,7 @@
                 <style>
                     @page {
                         size: A4 portrait;
-                        margin: 0; /* Suprime la cabecera del navegador */
+                        margin: 0;
                     }
                     * {
                         box-sizing: border-box;
@@ -534,7 +534,7 @@
                         print-color-adjust: exact;
                     }
                     
-                    /* ESTRUCTURA DE PÁGINA A4 FIJA */
+                    /* ESTRUCTURA A4 ESTRICTA */
                     .hoja-a4 {
                         width: 210mm;
                         height: 297mm;
@@ -550,7 +550,7 @@
                         overflow: hidden;
                     }
                     
-                    /* PORTADA LUXURY */
+                    /* PORTADA LUXURY LIMPIA */
                     .portada-a4 {
                         width: 210mm;
                         height: 297mm;
@@ -559,7 +559,7 @@
                         background: #09090b;
                         color: #ffffff;
                         border: 3.5mm solid #09090b;
-                        padding: 30mm 20mm 20mm 20mm;
+                        padding: 28mm 20mm 20mm 20mm;
                         display: flex;
                         flex-direction: column;
                         justify-content: space-between;
@@ -578,14 +578,23 @@
                         justify-content: space-between;
                         align-items: center;
                     }
-                    .portada-logo {
+                    .portada-logo-container {
                         width: 130px;
                         height: 130px;
                         border-radius: 50%;
                         border: 2px solid #d4af37;
-                        object-fit: cover;
+                        margin: 0 auto 20px auto;
+                        overflow: hidden;
                         background: #18181b;
-                        margin-bottom: 20px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+                    .portada-logo {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                        display: block;
                     }
                     .portada-marca {
                         font-size: 26px;
@@ -662,6 +671,13 @@
                         flex-grow: 1;
                         align-content: start;
                     }
+                    /* DISTRIBUCIÓN ESPECIAL PARA 2 O 3 PRENDAS */
+                    .grid-editorial.items-2 {
+                        grid-template-columns: repeat(2, 1fr);
+                        max-width: 140mm;
+                        margin: 0 auto;
+                        gap: 20px;
+                    }
                     .producto-tarjeta {
                         border: 1px solid #e7e5e4;
                         border-radius: 4px;
@@ -689,6 +705,7 @@
                         max-width: 95%;
                         max-height: 95%;
                         object-fit: contain;
+                        display: block;
                     }
                     .item-codigo {
                         display: inline-block;
@@ -735,7 +752,7 @@
                         letter-spacing: 0.5px;
                     }
 
-                    /* MAQUETACIÓN PIEZA HERO (Para categorías de 1 producto) */
+                    /* MAQUETACIÓN HERO (1 sola prenda) */
                     .hero-contenedor {
                         flex-grow: 1;
                         display: flex;
@@ -855,11 +872,13 @@
             </head>
             <body>
                 
-                <!-- PORTADA ULTRA LUXURY -->
+                <!-- PORTADA ULTRA LUXURY LIMPIA -->
                 <div class="portada-a4">
                     <div class="portada-marco-interior">
                         <div>
-                            <img src="https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/logo.png" onerror="this.src='https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/Laollaga_istmena_cutout(1).png'" class="portada-logo" alt="Logo">
+                            <div class="portada-logo-container">
+                                <img src="https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/logo.png" onerror="this.src='https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/Laollaga_istmena_cutout(1).png'" class="portada-logo" alt="Logo">
+                            </div>
                             <h1 class="portada-marca">Laollaga Istmeña</h1>
                             <div class="portada-lema">Arte tejido, tradición que se viste.</div>
                             <div class="portada-separador"></div>
@@ -867,21 +886,19 @@
                         </div>
                         <div class="portada-contacto">
                             Santiago Laollaga, Región del Istmo, Oaxaca<br>
-                            Apartados vía WhatsApp: <a href="https://wa.me/529711140709" target="_blank">971 114 0709</a><br>
-                            Catálogo Digital en Vivo: <a href="https://laollaga-istmena.vercel.app" target="_blank">laollaga-istmena.vercel.app</a>
+                            Apartados vía WhatsApp: <a href="https://wa.me/529711140709" target="_blank">971 114 0709</a> &bull; Catálogo Digital: <a href="https://laollaga-istmena.vercel.app" target="_blank">laollaga-istmena.vercel.app</a>
                         </div>
                     </div>
                 </div>
             `;
 
-            // MAQUETACIÓN POR HOJAS DETERMINÍSTICAS (MÁXIMO 6 PRENDAS POR HOJA)
             const MAX_POR_PAGINA = 6;
 
             for (const categoria in inventarioAdmin) {
                 const disponibles = inventarioAdmin[categoria].filter(p => p.estado === 'Disponible');
                 if (disponibles.length === 0) continue;
 
-                // CASO ESPECIAL: CATEGORÍA DE 1 PRENDA (HERO PIECE DE GALA)
+                // CASO 1: CATEGORÍA DE 1 PRENDA (HERO GALA)
                 if (disponibles.length === 1) {
                     const p = disponibles[0];
                     const imgUrl = p.imagen_url ? `https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${p.imagen_url}` : '';
@@ -921,11 +938,12 @@
                     continue;
                 }
 
-                // CASO GENERAL: DIVIDIR EN LOTES DE MÁXIMO 6 PRENDAS
+                // CASO 2: CATEGORÍAS REGULARES EN LOTES DE HASTA 6 PRENDAS
                 const totalLotes = Math.ceil(disponibles.length / MAX_POR_PAGINA);
                 for (let i = 0; i < totalLotes; i++) {
                     const lote = disponibles.slice(i * MAX_POR_PAGINA, (i + 1) * MAX_POR_PAGINA);
                     const subTituloLote = totalLotes > 1 ? ` &bull; Entrega ${i + 1} de ${totalLotes}` : '';
+                    const gridClase = lote.length === 2 ? 'grid-editorial items-2' : 'grid-editorial';
 
                     htmlPrint += `
                     <div class="hoja-a4">
@@ -936,7 +954,7 @@
                             </div>
                             <div class="categoria-header">${categoria}${subTituloLote}</div>
                         </div>
-                        <div class="grid-editorial">
+                        <div class="${gridClase}">
                     `;
 
                     lote.forEach(p => {
@@ -947,7 +965,7 @@
                             <div class="producto-tarjeta">
                                 <div>
                                     <div class="img-marco">
-                                        <img src="${imgUrl}" alt="${p.nombre_comercial}">
+                                        <img src="${imgUrl}" alt="${p.nombre_comercial}" loading="eager">
                                     </div>
                                     <span class="item-codigo">${p.codigo_interno}</span>
                                     <div class="item-nombre">${p.nombre_comercial}</div>
@@ -992,22 +1010,23 @@
             doc.write(htmlPrint);
             doc.close();
 
-            // PRE-CARGA ASÍNCRONA: Espera a que todas las imágenes terminen de descargar
+            // PRE-CARGA CON PROMESA ESTRICTA Y RETARDO TÉCNICO
             const imagenes = Array.from(doc.images);
             const promesasImagenes = imagenes.map(img => {
                 if (img.complete && img.naturalHeight !== 0) return Promise.resolve();
                 return new Promise(resolve => {
                     img.onload = () => resolve();
-                    img.onerror = () => resolve(); // Si alguna falla, no congela el proceso
+                    img.onerror = () => resolve();
                 });
             });
 
             Promise.all(promesasImagenes).then(() => {
+                // Margen de seguridad de 900ms para asegurar el renderizado de la página 10
                 setTimeout(() => {
                     btn.innerHTML = `<i class="fas fa-file-pdf mr-1 text-sm"></i> Catálogo PDF`;
                     iframe.contentWindow.focus();
                     iframe.contentWindow.print();
-                }, 500);
+                }, 900);
             });
         }
 
