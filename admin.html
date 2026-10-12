@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control Maestro V5.2 | Laollaga Istmeña</title>
+    <title>Control Maestro V5.3 | Laollaga Istmeña</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -17,7 +17,7 @@
 <body class="bg-[#f3f4f6] font-sans text-gray-800 pb-20">
     
     <div class="bg-black text-[#d4af37] p-5 flex justify-between items-center shadow-md border-b-2 border-[#d4af37] sticky top-0 z-50">
-        <h1 class="font-serif font-bold tracking-[0.2em] uppercase">Control Maestro V5.2</h1>
+        <h1 class="font-serif font-bold tracking-[0.2em] uppercase">Control Maestro V5.3</h1>
         <a href="index.html" class="text-white text-xs tracking-widest uppercase hover:text-[#d4af37] transition-colors bg-white/10 px-4 py-2 rounded">Ver Tienda <i class="fas fa-external-link-alt ml-1"></i></a>
     </div>
 
@@ -309,7 +309,6 @@
             const entrega = document.getElementById('ap-entrega').value;
 
             try {
-                // 1. Guardar en tabla apartados
                 const { error } = await supabase.from('apartados').insert([{
                     codigo_interno: codigo,
                     nombre_cliente: cliente,
@@ -319,7 +318,6 @@
                 }]);
                 if(error) throw new Error(error.message);
 
-                // 2. Marcar automáticamente la pieza como Agotado en la tienda
                 await supabase.from('productos').update({ estado: 'Agotado' }).eq('codigo_interno', codigo);
 
                 cerrarModalApartado();
@@ -508,27 +506,291 @@
             }
         }
 
+        // MOTOR EDITORIAL DE EXPORTACIÓN PDF PROFESIONAL V5.3
         function exportarCatalogoPDF_Nativo() {
             if (Object.keys(inventarioAdmin).length === 0) { alert("Inventario vacío."); return; }
             const btn = document.getElementById('btn-pdf');
-            btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-1"></i> Preparando...`;
-            let htmlPrint = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Catálogo</title><style>@page { size: A4 portrait; margin: 15mm; } body { font-family: Georgia, serif; color: #111; background: #fff; margin: 0; }</style></head><body><div style="text-align:center; border-bottom:2px solid #d4af37; padding-bottom:10px; margin-bottom:25px;"><h1>Laollaga Istmeña</h1><p>Catálogo Oficial</p></div>`;
+            btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-1"></i> Maquetando PDF...`;
+
+            let htmlPrint = `
+            <!DOCTYPE html>
+            <html lang="es">
+            <head>
+                <meta charset="UTF-8">
+                <title>Catálogo Oficial | Laollaga Istmeña</title>
+                <style>
+                    @page {
+                        size: A4 portrait;
+                        margin: 12mm 15mm 15mm 15mm;
+                    }
+                    body {
+                        font-family: 'Georgia', serif;
+                        color: #111;
+                        background: #fff;
+                        margin: 0;
+                        padding: 0;
+                        -webkit-print-color-adjust: exact;
+                        print-color-adjust: exact;
+                    }
+                    
+                    /* PORTADA EDITORIAL */
+                    .portada {
+                        height: 98vh;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+                        text-align: center;
+                        page-break-after: always;
+                        break-after: page;
+                        box-sizing: border-box;
+                        background: #000;
+                        color: #fff;
+                        border: 3px solid #d4af37;
+                        padding: 40px 20px;
+                        margin-bottom: 20px;
+                    }
+                    .portada-logo {
+                        width: 140px;
+                        height: 140px;
+                        border-radius: 50%;
+                        border: 2px solid #d4af37;
+                        margin-bottom: 30px;
+                        object-fit: cover;
+                        background: #111;
+                    }
+                    .portada h1 {
+                        font-size: 32px;
+                        letter-spacing: 6px;
+                        color: #d4af37;
+                        text-transform: uppercase;
+                        margin: 0 0 10px 0;
+                        font-weight: 700;
+                    }
+                    .portada .lema {
+                        font-size: 15px;
+                        font-style: italic;
+                        letter-spacing: 2px;
+                        color: #e5e5e5;
+                        margin-bottom: 40px;
+                    }
+                    .portada .separador {
+                        width: 70px;
+                        height: 2px;
+                        background: #d4af37;
+                        margin: 20px auto;
+                    }
+                    .portada .subtitulo {
+                        font-family: sans-serif;
+                        font-size: 11px;
+                        letter-spacing: 4px;
+                        color: #bbb;
+                        text-transform: uppercase;
+                    }
+                    .portada .contacto-box {
+                        margin-top: 50px;
+                        font-family: sans-serif;
+                        font-size: 10px;
+                        letter-spacing: 2px;
+                        color: #888;
+                        text-transform: uppercase;
+                    }
+                    
+                    /* ENCABEZADOS DE PÁGINA */
+                    .encabezado-hoja {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        border-bottom: 1.5px solid #d4af37;
+                        padding-bottom: 6px;
+                        margin-bottom: 18px;
+                        font-family: sans-serif;
+                        font-size: 9px;
+                        letter-spacing: 2px;
+                        text-transform: uppercase;
+                        color: #555;
+                    }
+
+                    /* ESTRUCTURA DE CATEGORÍAS */
+                    .categoria-bloque {
+                        margin-bottom: 25px;
+                        page-break-inside: auto;
+                    }
+                    .categoria-header {
+                        font-size: 14px;
+                        font-weight: bold;
+                        text-transform: uppercase;
+                        letter-spacing: 2.5px;
+                        color: #000;
+                        border-left: 3px solid #d4af37;
+                        padding-left: 10px;
+                        margin: 20px 0 12px 0;
+                        page-break-after: avoid;
+                        break-after: avoid;
+                    }
+
+                    /* CUADRÍCULA DE PRODUCTOS */
+                    .catalogo-grid {
+                        display: grid;
+                        grid-template-columns: repeat(3, 1fr);
+                        gap: 14px;
+                    }
+                    .producto-tarjeta {
+                        border: 1px solid #e5e7eb;
+                        border-radius: 6px;
+                        padding: 10px;
+                        background: #fff;
+                        text-align: center;
+                        page-break-inside: avoid;
+                        break-inside: avoid;
+                        box-sizing: border-box;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-between;
+                    }
+                    .img-marco {
+                        height: 175px;
+                        width: 100%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background: #fafaf9;
+                        border-radius: 4px;
+                        margin-bottom: 8px;
+                        overflow: hidden;
+                    }
+                    .img-marco img {
+                        max-width: 95%;
+                        max-height: 95%;
+                        object-fit: contain;
+                    }
+                    .item-codigo {
+                        display: inline-block;
+                        background: #f3f4f6;
+                        color: #4b5563;
+                        font-family: monospace;
+                        font-size: 9px;
+                        font-weight: bold;
+                        padding: 2px 6px;
+                        border-radius: 3px;
+                        margin-bottom: 4px;
+                    }
+                    .item-nombre {
+                        font-size: 11px;
+                        font-weight: bold;
+                        color: #111;
+                        margin-bottom: 4px;
+                        line-height: 1.25;
+                        height: 28px;
+                        overflow: hidden;
+                    }
+                    .item-precio {
+                        color: #b48a1e;
+                        font-size: 14px;
+                        font-weight: bold;
+                        margin-bottom: 2px;
+                    }
+                    .item-talla {
+                        font-family: sans-serif;
+                        font-size: 8.5px;
+                        color: #6b7280;
+                    }
+
+                    .catalogo-pie {
+                        text-align: center;
+                        margin-top: 30px;
+                        padding-top: 15px;
+                        border-top: 1px solid #e5e7eb;
+                        font-family: sans-serif;
+                        font-size: 9px;
+                        color: #666;
+                        page-break-inside: avoid;
+                        break-inside: avoid;
+                    }
+                </style>
+            </head>
+            <body>
+                
+                <!-- PORTADA DE LUJO -->
+                <div class="portada">
+                    <img src="https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/logo.png" onerror="this.src='https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/Laollaga_istmena_cutout(1).png'" class="portada-logo" alt="Logo">
+                    <h1>Laollaga Istmeña</h1>
+                    <div class="lema">Arte tejido, tradición que se viste.</div>
+                    <div class="separador"></div>
+                    <div class="subtitulo">Catálogo Oficial de Colecciones Exclusivas</div>
+                    <div class="contacto-box">
+                        Colección 2026 &bull; Santiago Laollaga, Oaxaca<br>
+                        Vía WhatsApp: 971 114 0709 &bull; laollaga-istmena.vercel.app
+                    </div>
+                </div>
+
+                <!-- PÁGINAS DE CONTENIDO -->
+                <div class="pagina-interior">
+                    <div class="encabezado-hoja">
+                        <span>Laollaga Istmeña &bull; Catálogo General</span>
+                        <span>Piezas de Arte Zapoteco</span>
+                    </div>
+            `;
+
             for (const categoria in inventarioAdmin) {
                 const disponibles = inventarioAdmin[categoria].filter(p => p.estado === 'Disponible');
                 if (disponibles.length > 0) {
-                    htmlPrint += `<h2>${categoria}</h2><div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:15px;">`;
+                    htmlPrint += `
+                        <div class="categoria-bloque">
+                            <div class="categoria-header">${categoria}</div>
+                            <div class="catalogo-grid">
+                    `;
                     disponibles.forEach(p => {
                         const imgUrl = p.imagen_url ? `https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${p.imagen_url}` : '';
-                        htmlPrint += `<div style="border:1px solid #eaeaza; padding:10px; text-align:center;"><img src="${imgUrl}" style="max-width:100%; height:150px; object-fit:contain;"><br><b>${p.codigo_interno}</b><br>${p.nombre_comercial}<br><span style="color:#d4af37">$${p.precio} MXN</span></div>`;
+                        htmlPrint += `
+                            <div class="producto-tarjeta">
+                                <div class="img-marco">
+                                    <img src="${imgUrl}" alt="${p.nombre_comercial}">
+                                </div>
+                                <span class="item-codigo">${p.codigo_interno}</span>
+                                <div class="item-nombre">${p.nombre_comercial}</div>
+                                <div class="item-precio">$${p.precio} MXN</div>
+                                <div class="item-talla">Talla: ${p.talla || 'Unitalla'}</div>
+                            </div>
+                        `;
                     });
-                    htmlPrint += `</div>`;
+                    htmlPrint += `</div></div>`;
                 }
             }
-            htmlPrint += `</body></html>`;
+
+            htmlPrint += `
+                    <div class="catalogo-pie">
+                        <p>Catálogo en vivo: <strong>laollaga-istmena.vercel.app</strong></p>
+                        <p>Para solicitar un apartado, envía el <strong>Código</strong> de la pieza por WhatsApp al <strong>971 114 0709</strong>.</p>
+                    </div>
+                </div>
+            </body>
+            </html>
+            `;
+
             let iframe = document.getElementById('print-iframe');
-            if (!iframe) { iframe = document.createElement('iframe'); iframe.id = 'print-iframe'; iframe.style.display = 'none'; document.body.appendChild(iframe); }
-            iframe.contentWindow.document.open(); iframe.contentWindow.document.write(htmlPrint); iframe.contentWindow.document.close();
-            iframe.onload = function() { setTimeout(() => { btn.innerHTML = `<i class="fas fa-file-pdf mr-1"></i> Catálogo PDF`; iframe.contentWindow.print(); }, 800); };
+            if (!iframe) {
+                iframe = document.createElement('iframe');
+                iframe.id = 'print-iframe';
+                iframe.style.position = 'absolute';
+                iframe.style.width = '0px';
+                iframe.style.height = '0px';
+                iframe.style.border = 'none';
+                document.body.appendChild(iframe);
+            }
+
+            const doc = iframe.contentWindow.document;
+            doc.open();
+            doc.write(htmlPrint);
+            doc.close();
+
+            iframe.onload = function() {
+                setTimeout(() => {
+                    btn.innerHTML = `<i class="fas fa-file-pdf mr-1 text-sm"></i> Catálogo PDF`;
+                    iframe.contentWindow.focus();
+                    iframe.contentWindow.print();
+                }, 800);
+            };
         }
 
         function exportarCatalogoWhatsApp() {
