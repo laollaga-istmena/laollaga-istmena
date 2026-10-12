@@ -89,15 +89,11 @@
         let supabaseClient = null;
 
         async function registrarVisita() {
-            try {
-                await supabaseClient.from('visitas').insert([{ tipo: 'visita_tienda', detalle: 'general' }]);
-            } catch(e) { console.error("Error registrando visita", e); }
+            try { await supabaseClient.from('visitas').insert([{ tipo: 'visita_tienda', detalle: 'general' }]); } catch(e){}
         }
 
         async function registrarClicProducto(codigo) {
-            try {
-                await supabaseClient.from('visitas').insert([{ tipo: 'clic_producto', detalle: codigo }]);
-            } catch(e) { console.error("Error registrando clic", e); }
+            try { await supabaseClient.from('visitas').insert([{ tipo: 'clic_producto', detalle: codigo }]); } catch(e){}
         }
 
         async function cargarCatalogo() {
@@ -106,7 +102,6 @@
                 if (typeof window.supabase === 'undefined') throw new Error('Librería no cargada.');
                 supabaseClient = window.supabase.createClient('https://dmpovogobkqxiuqiqdku.supabase.co', 'sb_publishable_vxjNB2Og59jiF0wazOFJBw_-Cj1-q1I');
                 
-                // Registrar visita de forma silenciosa al abrir
                 registrarVisita();
 
                 const { data, error } = await supabaseClient.from('productos').select('*').eq('estado', 'Disponible').order('codigo_interno', { ascending: true });
@@ -185,7 +180,7 @@
             const productosPagina = listaProductos.slice((paginaActual - 1) * itemsPorPagina, ((paginaActual - 1) * itemsPorPagina) + itemsPorPagina);
 
             if (productosPagina.length === 0) {
-                document.getElementById('catalogo').innerHTML = `<div class="text-center py-20 text-gray-400 font-serif italic text-lg fade-in">No se encontraron piezas.</div>`;
+                document.getElementById('catalogo').innerHTML = `<div class="text-center py-20 text-gray-400 font-serif italic text-lg fade-in">No se encontraron piezas disponibles.</div>`;
                 document.getElementById('paginacion').classList.add('hidden');
                 return;
             }
@@ -226,9 +221,7 @@
         }
 
         window.abrirDetalle = function(codigo) {
-            // Registrar clic en la prenda específica para estadísticas
             registrarClicProducto(codigo);
-
             const p = todosLosProductos.find(x => x.codigo_interno === codigo);
             const imgPath = p.imagen_url ? `https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${p.imagen_url}` : 'https://via.placeholder.com/600x800.png?text=Fotograf%C3%ADa+en+proceso';
             const fraseEmotiva = p.eslogan || "Lleva contigo un fragmento de nuestra historia. Cada puntada resguarda la elegancia ancestral de nuestra gente.";
