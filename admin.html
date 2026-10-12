@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control Maestro V5.4 | Laollaga Istmeña</title>
+    <title>Control Maestro V5.5 | Laollaga Istmeña</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         .tab-admin-activa { border-bottom: 3px solid #d4af37; color: #000; font-weight: bold; background-color: white; }
         .tab-admin-inactiva { border-bottom: 3px solid transparent; color: #6b7280; background-color: #f9fafb; }
@@ -17,7 +16,7 @@
 <body class="bg-[#f3f4f6] font-sans text-gray-800 pb-20">
     
     <div class="bg-black text-[#d4af37] p-5 flex justify-between items-center shadow-md border-b-2 border-[#d4af37] sticky top-0 z-50">
-        <h1 class="font-serif font-bold tracking-[0.2em] uppercase">Control Maestro V5.4</h1>
+        <h1 class="font-serif font-bold tracking-[0.2em] uppercase">Control Maestro V5.5</h1>
         <a href="index.html" class="text-white text-xs tracking-widest uppercase hover:text-[#d4af37] transition-colors bg-white/10 px-4 py-2 rounded">Ver Tienda <i class="fas fa-external-link-alt ml-1"></i></a>
     </div>
 
@@ -285,7 +284,7 @@
         document.getElementById('btn-actualizar').addEventListener('click', cargarTodo);
         document.getElementById('btn-cerrar-edicion').addEventListener('click', cerrarEdicion);
         document.getElementById('btn-whatsapp').addEventListener('click', exportarCatalogoWhatsApp);
-        document.getElementById('btn-pdf').addEventListener('click', exportarCatalogoPDF_Editorial);
+        document.getElementById('btn-pdf').addEventListener('click', exportarCatalogoPDF_V55);
 
         window.abrirModalApartado = function() {
             const m = document.getElementById('modal-apartado');
@@ -505,11 +504,11 @@
             }
         }
 
-        // MOTOR EDITORIAL V5.4: LOOKBOOK DE ALTA COSTURA
-        function exportarCatalogoPDF_Editorial() {
+        // MOTOR EDITORIAL V5.5 LOOKBOOK ULTRA-LUJO
+        function exportarCatalogoPDF_V55() {
             if (Object.keys(inventarioAdmin).length === 0) { alert("Inventario vacío."); return; }
             const btn = document.getElementById('btn-pdf');
-            btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-1"></i> Maquetando Lookbook...`;
+            btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-1"></i> Pre-cargando Lookbook...`;
 
             let htmlPrint = `
             <!DOCTYPE html>
@@ -520,7 +519,7 @@
                 <style>
                     @page {
                         size: A4 portrait;
-                        margin: 12mm 14mm 14mm 14mm;
+                        margin: 0; /* Suprime la cabecera del navegador */
                     }
                     * {
                         box-sizing: border-box;
@@ -535,40 +534,62 @@
                         print-color-adjust: exact;
                     }
                     
-                    /* PORTADA DE ALTA GAMA */
-                    .portada {
-                        height: 95vh;
+                    /* ESTRUCTURA DE PÁGINA A4 FIJA */
+                    .hoja-a4 {
+                        width: 210mm;
+                        height: 297mm;
+                        max-height: 297mm;
+                        padding: 14mm 16mm 12mm 16mm;
+                        page-break-after: always;
+                        break-after: page;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-between;
+                        position: relative;
+                        background: #ffffff;
+                        overflow: hidden;
+                    }
+                    
+                    /* PORTADA LUXURY */
+                    .portada-a4 {
+                        width: 210mm;
+                        height: 297mm;
+                        page-break-after: always;
+                        break-after: page;
+                        background: #09090b;
+                        color: #ffffff;
+                        border: 3.5mm solid #09090b;
+                        padding: 30mm 20mm 20mm 20mm;
                         display: flex;
                         flex-direction: column;
                         justify-content: space-between;
                         align-items: center;
                         text-align: center;
-                        page-break-after: always;
-                        break-after: page;
-                        background: #09090b;
-                        color: #ffffff;
-                        border: 2px solid #d4af37;
-                        outline: 1px solid #785e1e;
-                        outline-offset: -8px;
-                        padding: 60px 30px;
                     }
-                    .portada-top {
+                    .portada-marco-interior {
+                        width: 100%;
+                        height: 100%;
+                        border: 1px solid #d4af37;
+                        outline: 1px solid #785e1e;
+                        outline-offset: -5px;
+                        padding: 25px 20px;
                         display: flex;
                         flex-direction: column;
+                        justify-content: space-between;
                         align-items: center;
                     }
                     .portada-logo {
-                        width: 140px;
-                        height: 140px;
+                        width: 130px;
+                        height: 130px;
                         border-radius: 50%;
                         border: 2px solid #d4af37;
                         object-fit: cover;
                         background: #18181b;
-                        margin-bottom: 25px;
+                        margin-bottom: 20px;
                     }
                     .portada-marca {
-                        font-size: 30px;
-                        letter-spacing: 7px;
+                        font-size: 26px;
+                        letter-spacing: 6px;
                         color: #d4af37;
                         text-transform: uppercase;
                         margin: 0 0 10px 0;
@@ -581,86 +602,79 @@
                         color: #e4e4e7;
                     }
                     .portada-separador {
-                        width: 60px;
+                        width: 50px;
                         height: 1.5px;
                         background: #d4af37;
-                        margin: 25px auto;
+                        margin: 20px auto;
                     }
-                    .portada-titulo {
+                    .portada-subtitulo {
                         font-family: sans-serif;
-                        font-size: 11px;
+                        font-size: 10px;
                         letter-spacing: 4px;
                         color: #a1a1aa;
                         text-transform: uppercase;
                         font-weight: 600;
                     }
-                    .portada-bottom {
+                    .portada-contacto {
                         font-family: sans-serif;
-                        font-size: 9.5px;
-                        letter-spacing: 2px;
-                        color: #71717a;
+                        font-size: 9px;
+                        letter-spacing: 1.5px;
+                        color: #a1a1aa;
                         text-transform: uppercase;
                         line-height: 1.8;
                     }
-                    .portada-bottom strong {
+                    .portada-contacto a {
                         color: #d4af37;
+                        text-decoration: none;
+                        font-weight: bold;
                     }
 
-                    /* ENCABEZADOS DE PÁGINA */
+                    /* ENCABEZADOS DE PÁGINAS INTERIORES */
                     .encabezado-hoja {
                         display: flex;
                         justify-content: space-between;
                         align-items: center;
                         border-bottom: 1px solid #d4af37;
-                        padding-bottom: 5px;
-                        margin-bottom: 16px;
+                        padding-bottom: 4px;
+                        margin-bottom: 12px;
                         font-family: sans-serif;
-                        font-size: 8.5px;
+                        font-size: 8px;
                         letter-spacing: 2px;
                         text-transform: uppercase;
                         color: #71717a;
                     }
-
-                    /* CATEGORÍA CON SALTO DE PÁGINA OBLIGATORIO */
-                    .categoria-bloque {
-                        page-break-before: always;
-                        break-before: page;
-                        margin-bottom: 20px;
-                    }
                     .categoria-header {
-                        font-size: 15px;
+                        font-size: 14px;
                         font-weight: bold;
                         text-transform: uppercase;
-                        letter-spacing: 3px;
+                        letter-spacing: 2.5px;
                         color: #09090b;
                         border-left: 3px solid #d4af37;
                         padding-left: 10px;
-                        margin: 10px 0 16px 0;
-                        page-break-after: avoid;
-                        break-after: avoid;
+                        margin-bottom: 14px;
                     }
 
-                    /* CUADRÍCULA ESTRICTA */
-                    .catalogo-grid {
+                    /* CUADRÍCULA 3x2 (6 PRENDAS POR HOJA) */
+                    .grid-editorial {
                         display: grid;
                         grid-template-columns: repeat(3, 1fr);
-                        gap: 14px;
+                        gap: 12px;
+                        flex-grow: 1;
+                        align-content: start;
                     }
                     .producto-tarjeta {
                         border: 1px solid #e7e5e4;
                         border-radius: 4px;
-                        padding: 10px;
+                        padding: 8px;
                         background: #ffffff;
                         text-align: center;
-                        page-break-inside: avoid;
-                        break-inside: avoid;
                         display: flex;
                         flex-direction: column;
                         justify-content: space-between;
-                        min-height: 295px;
+                        height: 108mm;
                     }
                     .img-marco {
-                        height: 165px;
+                        height: 52mm;
                         width: 100%;
                         display: flex;
                         align-items: center;
@@ -668,7 +682,7 @@
                         background: #fafaf9;
                         border: 1px solid #f5f5f4;
                         border-radius: 3px;
-                        margin-bottom: 8px;
+                        margin-bottom: 6px;
                         overflow: hidden;
                     }
                     .img-marco img {
@@ -681,7 +695,7 @@
                         background: #f4f4f5;
                         color: #3f3f46;
                         font-family: monospace;
-                        font-size: 8.5px;
+                        font-size: 8px;
                         font-weight: bold;
                         padding: 2px 6px;
                         border-radius: 3px;
@@ -689,87 +703,246 @@
                         letter-spacing: 0.5px;
                     }
                     .item-nombre {
-                        font-size: 11px;
+                        font-size: 10.5px;
                         font-weight: bold;
                         color: #09090b;
                         margin-bottom: 3px;
-                        line-height: 1.25;
-                        height: 26px;
+                        line-height: 1.2;
+                        height: 24px;
                         overflow: hidden;
                     }
                     .item-material {
-                        font-family: sans-serif;
+                        font-family: 'Georgia', serif;
                         font-size: 8px;
                         color: #71717a;
                         margin-bottom: 4px;
-                        height: 20px;
+                        line-height: 1.25;
+                        height: 24px;
                         overflow: hidden;
-                        line-height: 1.2;
                         font-style: italic;
                     }
                     .item-precio {
                         color: #b48a1e;
-                        font-size: 14px;
+                        font-size: 13.5px;
                         font-weight: bold;
                         margin-bottom: 2px;
-                        letter-spacing: 0.5px;
                     }
                     .item-talla {
                         font-family: sans-serif;
-                        font-size: 8px;
+                        font-size: 7.5px;
                         color: #a1a1aa;
                         text-transform: uppercase;
                         letter-spacing: 0.5px;
                     }
 
+                    /* MAQUETACIÓN PIEZA HERO (Para categorías de 1 producto) */
+                    .hero-contenedor {
+                        flex-grow: 1;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+                        padding: 10px 0;
+                    }
+                    .hero-card {
+                        width: 100%;
+                        max-width: 170mm;
+                        border: 1.5px solid #d4af37;
+                        border-radius: 6px;
+                        padding: 20px;
+                        background: #ffffff;
+                        display: flex;
+                        gap: 24px;
+                        align-items: center;
+                        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+                    }
+                    .hero-img-box {
+                        width: 75mm;
+                        height: 110mm;
+                        background: #fafaf9;
+                        border: 1px solid #e7e5e4;
+                        border-radius: 4px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        overflow: hidden;
+                        flex-shrink: 0;
+                    }
+                    .hero-img-box img {
+                        max-width: 95%;
+                        max-height: 95%;
+                        object-fit: contain;
+                    }
+                    .hero-info {
+                        flex-grow: 1;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        text-align: left;
+                    }
+                    .hero-badge {
+                        display: inline-block;
+                        background: #000;
+                        color: #d4af37;
+                        font-family: sans-serif;
+                        font-size: 8px;
+                        font-weight: bold;
+                        letter-spacing: 2px;
+                        text-transform: uppercase;
+                        padding: 3px 8px;
+                        border-radius: 3px;
+                        margin-bottom: 8px;
+                        align-self: flex-start;
+                    }
+                    .hero-codigo {
+                        font-family: monospace;
+                        font-size: 9.5px;
+                        color: #71717a;
+                        margin-bottom: 4px;
+                    }
+                    .hero-titulo {
+                        font-size: 18px;
+                        font-weight: bold;
+                        color: #09090b;
+                        line-height: 1.2;
+                        margin: 0 0 10px 0;
+                    }
+                    .hero-eslogan {
+                        font-size: 11px;
+                        font-style: italic;
+                        color: #52525b;
+                        border-left: 2px solid #d4af37;
+                        padding-left: 8px;
+                        margin-bottom: 14px;
+                        line-height: 1.4;
+                    }
+                    .hero-spec {
+                        font-size: 9px;
+                        font-family: sans-serif;
+                        color: #444;
+                        margin-bottom: 5px;
+                        border-bottom: 1px dashed #eee;
+                        padding-bottom: 4px;
+                    }
+                    .hero-spec strong {
+                        color: #111;
+                        text-transform: uppercase;
+                        font-size: 8px;
+                        letter-spacing: 1px;
+                    }
+                    .hero-precio {
+                        color: #b48a1e;
+                        font-size: 20px;
+                        font-weight: bold;
+                        margin-top: 10px;
+                    }
+
+                    /* PIE DE PÁGINA INTERIOR */
                     .catalogo-pie {
                         text-align: center;
-                        margin-top: 25px;
-                        padding-top: 12px;
+                        padding-top: 8px;
                         border-top: 1px solid #e7e5e4;
                         font-family: sans-serif;
-                        font-size: 8.5px;
+                        font-size: 8px;
                         color: #71717a;
-                        page-break-inside: avoid;
-                        break-inside: avoid;
+                    }
+                    .catalogo-pie a {
+                        color: #b48a1e;
+                        font-weight: bold;
+                        text-decoration: underline;
                     }
                 </style>
             </head>
             <body>
                 
-                <!-- PORTADA DE ALTA GAMA -->
-                <div class="portada">
-                    <div class="portada-top">
-                        <img src="https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/logo.png" onerror="this.src='https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/Laollaga_istmena_cutout(1).png'" class="portada-logo" alt="Logo">
-                        <h1 class="portada-marca">Laollaga Istmeña</h1>
-                        <div class="portada-lema">Arte tejido, tradición que se viste.</div>
-                        <div class="portada-separador"></div>
-                        <div class="portada-titulo">Lookbook Oficial &bull; Colección Exclusiva</div>
-                    </div>
-                    <div class="portada-bottom">
-                        Santiago Laollaga, Región del Istmo, Oaxaca<br>
-                        Atención Personalizada WhatsApp: <strong>971 114 0709</strong><br>
-                        Catálogo Digital Interactivo: <strong>laollaga-istmena.vercel.app</strong>
+                <!-- PORTADA ULTRA LUXURY -->
+                <div class="portada-a4">
+                    <div class="portada-marco-interior">
+                        <div>
+                            <img src="https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/logo.png" onerror="this.src='https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/Laollaga_istmena_cutout(1).png'" class="portada-logo" alt="Logo">
+                            <h1 class="portada-marca">Laollaga Istmeña</h1>
+                            <div class="portada-lema">Arte tejido, tradición que se viste.</div>
+                            <div class="portada-separador"></div>
+                            <div class="portada-subtitulo">Lookbook Oficial &bull; Colección Exclusiva</div>
+                        </div>
+                        <div class="portada-contacto">
+                            Santiago Laollaga, Región del Istmo, Oaxaca<br>
+                            Apartados vía WhatsApp: <a href="https://wa.me/529711140709" target="_blank">971 114 0709</a><br>
+                            Catálogo Digital en Vivo: <a href="https://laollaga-istmena.vercel.app" target="_blank">laollaga-istmena.vercel.app</a>
+                        </div>
                     </div>
                 </div>
             `;
 
+            // MAQUETACIÓN POR HOJAS DETERMINÍSTICAS (MÁXIMO 6 PRENDAS POR HOJA)
+            const MAX_POR_PAGINA = 6;
+
             for (const categoria in inventarioAdmin) {
                 const disponibles = inventarioAdmin[categoria].filter(p => p.estado === 'Disponible');
-                if (disponibles.length > 0) {
+                if (disponibles.length === 0) continue;
+
+                // CASO ESPECIAL: CATEGORÍA DE 1 PRENDA (HERO PIECE DE GALA)
+                if (disponibles.length === 1) {
+                    const p = disponibles[0];
+                    const imgUrl = p.imagen_url ? `https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${p.imagen_url}` : '';
+                    
                     htmlPrint += `
-                        <div class="categoria-bloque">
+                    <div class="hoja-a4">
+                        <div>
                             <div class="encabezado-hoja">
                                 <span>Laollaga Istmeña &bull; Alta Artesanía Zapoteca</span>
                                 <span>Colección 2026</span>
                             </div>
-                            <div class="categoria-header">${categoria}</div>
-                            <div class="catalogo-grid">
+                            <div class="categoria-header">${categoria} &bull; Pieza de Gala</div>
+                        </div>
+                        <div class="hero-contenedor">
+                            <div class="hero-card">
+                                <div class="hero-img-box">
+                                    <img src="${imgUrl}" alt="${p.nombre_comercial}">
+                                </div>
+                                <div class="hero-info">
+                                    <span class="hero-badge"><i class="fas fa-gem"></i> Pieza Única de Gala</span>
+                                    <span class="hero-codigo">${p.codigo_interno}</span>
+                                    <h3 class="hero-titulo">${p.nombre_comercial}</h3>
+                                    <p class="hero-eslogan">"${p.eslogan || 'Elegancia y porte ancestral zapoteco en una pieza inigualable.'}"</p>
+                                    <div class="hero-spec"><strong>Material:</strong> ${p.material || 'Textil artesanal'}</div>
+                                    <div class="hero-spec"><strong>Medidas:</strong> ${p.medidas || 'Corte tradicional'}</div>
+                                    <div class="hero-spec"><strong>Talla:</strong> ${p.talla || 'Unitalla'}</div>
+                                    <div class="hero-spec"><strong>Cuidados:</strong> ${p.cuidados || 'Lavar a mano'}</div>
+                                    <div class="hero-precio">$${p.precio} MXN</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="catalogo-pie">
+                            Para apartar esta pieza única, haz clic aquí: <a href="https://wa.me/529711140709?text=Hola,%20deseo%20apartar%20la%20pieza%20${p.codigo_interno}" target="_blank">WhatsApp 971 114 0709</a>
+                        </div>
+                    </div>
                     `;
-                    disponibles.forEach(p => {
+                    continue;
+                }
+
+                // CASO GENERAL: DIVIDIR EN LOTES DE MÁXIMO 6 PRENDAS
+                const totalLotes = Math.ceil(disponibles.length / MAX_POR_PAGINA);
+                for (let i = 0; i < totalLotes; i++) {
+                    const lote = disponibles.slice(i * MAX_POR_PAGINA, (i + 1) * MAX_POR_PAGINA);
+                    const subTituloLote = totalLotes > 1 ? ` &bull; Entrega ${i + 1} de ${totalLotes}` : '';
+
+                    htmlPrint += `
+                    <div class="hoja-a4">
+                        <div>
+                            <div class="encabezado-hoja">
+                                <span>Laollaga Istmeña &bull; Alta Artesanía Zapoteca</span>
+                                <span>Colección 2026</span>
+                            </div>
+                            <div class="categoria-header">${categoria}${subTituloLote}</div>
+                        </div>
+                        <div class="grid-editorial">
+                    `;
+
+                    lote.forEach(p => {
                         const imgUrl = p.imagen_url ? `https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${p.imagen_url}` : '';
-                        const materialTxt = (p.material && p.material !== 'N/A') ? p.material : 'Textil artesanal de confección tradicional';
-                        
+                        const materialTxt = (p.material && p.material !== 'N/A') ? p.material : 'Textil tradicional hecho a mano';
+
                         htmlPrint += `
                             <div class="producto-tarjeta">
                                 <div>
@@ -787,12 +960,13 @@
                             </div>
                         `;
                     });
+
                     htmlPrint += `
-                            </div>
-                            <div class="catalogo-pie">
-                                Para apartar una pieza única, envía su código vía WhatsApp al <strong>971 114 0709</strong>.
-                            </div>
                         </div>
+                        <div class="catalogo-pie">
+                            Para apartar una pieza única, haz clic aquí: <a href="https://wa.me/529711140709" target="_blank">WhatsApp 971 114 0709</a> &bull; <a href="https://laollaga-istmena.vercel.app" target="_blank">laollaga-istmena.vercel.app</a>
+                        </div>
+                    </div>
                     `;
                 }
             }
@@ -818,13 +992,23 @@
             doc.write(htmlPrint);
             doc.close();
 
-            iframe.onload = function() {
+            // PRE-CARGA ASÍNCRONA: Espera a que todas las imágenes terminen de descargar
+            const imagenes = Array.from(doc.images);
+            const promesasImagenes = imagenes.map(img => {
+                if (img.complete && img.naturalHeight !== 0) return Promise.resolve();
+                return new Promise(resolve => {
+                    img.onload = () => resolve();
+                    img.onerror = () => resolve(); // Si alguna falla, no congela el proceso
+                });
+            });
+
+            Promise.all(promesasImagenes).then(() => {
                 setTimeout(() => {
                     btn.innerHTML = `<i class="fas fa-file-pdf mr-1 text-sm"></i> Catálogo PDF`;
                     iframe.contentWindow.focus();
                     iframe.contentWindow.print();
-                }, 800);
-            };
+                }, 500);
+            });
         }
 
         function exportarCatalogoWhatsApp() {
