@@ -3,10 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control Maestro V5.6 | Laollaga Istmeña</title>
+    <title>Control Maestro V5.7 | Laollaga Istmeña</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="robots" content="noindex,nofollow">
     <style>
+        [hidden] { display: none !important; }
+        #auth-screen, .auth-card, .auth-card * { box-sizing:border-box; }
+        body { margin:0; }
+        #auth-screen { min-height: 100svh; display:grid; place-items:center; padding:24px; background:#0b0b0b; }
+        .auth-card { width:min(100%,440px); padding:32px 26px; background:#fcfbf7; border:1px solid #b99335; border-radius:16px; box-shadow:0 24px 80px #0005; }
+        .auth-brand { color:#80621c; font-size:12px; letter-spacing:.2em; font-weight:700; margin-bottom:18px; }
+        .auth-card h1 { font:700 27px Georgia,serif; color:#161616; line-height:1.2; }
+        .auth-intro { color:#555; font-size:14px; margin:14px 0 24px; }
+        .auth-card label { display:block; margin:16px 0 7px; font-size:14px; font-weight:600; }
+        .auth-card input { width:100%; border:1px solid #aaa; border-radius:6px; padding:12px; background:white; font-size:16px; }
+        .auth-card input:focus { outline:2px solid #92701f; outline-offset:2px; }
+        #auth-submit { width:100%; margin-top:22px; background:#171717; color:#f1d47b; font-weight:700; padding:14px; border-radius:6px; }
+        #auth-submit:disabled { opacity:.65; cursor:wait; }
+        #auth-show { font-size:13px; text-decoration:underline; margin-top:10px; min-height:36px; }
+        #auth-message { font-size:14px; margin:18px 0; color:#633914; min-height:22px; }
+        .auth-help { font-size:12px; color:#666; margin:12px 0; }
+        .auth-card a { font-size:14px; text-decoration:underline; }
+
         .tab-admin-activa { border-bottom: 3px solid #d4af37; color: #000; font-weight: bold; background-color: white; }
         .tab-admin-inactiva { border-bottom: 3px solid transparent; color: #6b7280; background-color: #f9fafb; }
         input[type="file"]::file-selector-button { background: #000; color: #d4af37; border: none; padding: 8px 16px; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 10px; margin-right: 10px; transition: background .2s; }
@@ -14,12 +33,36 @@
     </style>
 </head>
 <body class="bg-[#f3f4f6] font-sans text-gray-800 pb-20">
-    
+    <section id="auth-screen" aria-labelledby="auth-title">
+      <div class="auth-card">
+        <p class="auth-brand">LAOLLAGA ISTMEÑA</p>
+        <h1 id="auth-title">Acceso al Panel Maestro</h1>
+        <p class="auth-intro">Administra tu tienda en un espacio exclusivo para ti.</p>
+        <form id="auth-form">
+          <label for="auth-email">Correo electrónico</label>
+          <input id="auth-email" type="email" autocomplete="username" required maxlength="254">
+          <label for="auth-password">Contraseña</label>
+          <input id="auth-password" type="password" autocomplete="current-password" required>
+          <button type="button" id="auth-show" aria-pressed="false">Mostrar contraseña</button>
+          <button id="auth-submit" type="submit" disabled>Verificando acceso…</button>
+        </form>
+        <p id="auth-message" role="status" aria-live="polite">Conectando con el servicio de acceso…</p>
+        <p class="auth-help">Si olvidaste tu contraseña, utiliza el procedimiento de recuperación del instructivo.</p>
+        <a href="index.html">Volver a la tienda</a>
+      </div>
+    </section>
+    <noscript>Activa JavaScript para iniciar sesión. La administración requiere autenticación.</noscript>
+    <div id="admin-app" hidden inert>
+
     <div class="bg-black text-[#d4af37] p-5 flex justify-between items-center shadow-md border-b-2 border-[#d4af37] sticky top-0 z-50">
-        <h1 class="font-serif font-bold tracking-[0.2em] uppercase">Control Maestro V5.6</h1>
+        <h1 class="font-serif font-bold tracking-[0.2em] uppercase">Control Maestro V5.7</h1>
         <a href="index.html" class="text-white text-xs tracking-widest uppercase hover:text-[#d4af37] transition-colors bg-white/10 px-4 py-2 rounded">Ver Tienda <i class="fas fa-external-link-alt ml-1"></i></a>
     </div>
 
+    <div class="max-w-6xl mx-auto px-4 pt-4 flex flex-wrap gap-3 items-center justify-between text-xs">
+      <span id="session-email" class="break-all"></span>
+      <button id="btn-logout" type="button" class="bg-black text-white rounded px-4 py-3">Cerrar sesión</button>
+    </div>
     <main class="max-w-6xl mx-auto p-4 md:p-6 space-y-6 mt-4">
 
         <!-- PANEL DE MÉTRICAS -->
@@ -267,15 +310,180 @@
         </div>
     </div>
 
+    </div><!-- /admin-app -->
     <script type="module">
-        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm'
         
         const supabaseUrl = 'https://dmpovogobkqxiuqiqdku.supabase.co';
         const supabaseKey = 'sb_publishable_vxjNB2Og59jiF0wazOFJBw_-Cj1-q1I';
-        const supabase = createClient(supabaseUrl, supabaseKey);
+        const supabase = createClient(supabaseUrl, supabaseKey, {
+            auth: { storage: window.sessionStorage, storageKey: 'laollaga-admin-v57',
+                persistSession: true, autoRefreshToken: true, detectSessionInUrl: false }
+        });
 
-        let inventarioAdmin = {};
+        let inventarioAdmin = Object.create(null);
         let categoriaActualAdmin = '';
+        // V5.7: la autorización real se aplica en Supabase, no en el HTML.
+        const authScreen = document.getElementById('auth-screen');
+        const adminApp = document.getElementById('admin-app');
+        const authMessage = document.getElementById('auth-message');
+        const authSubmit = document.getElementById('auth-submit');
+        let usuarioAutorizado = null;
+        let authRevision = 0;
+        let loginEnCurso = false;
+        let salidaEnCurso = false;
+
+        function escapeHtml(value) {
+            return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+        }
+        function cerrarVista(mensaje = 'Ingresa con tu correo y contraseña.') {
+            usuarioAutorizado = null;
+            adminApp.hidden = true;
+            adminApp.inert = true;
+            authScreen.hidden = false;
+            inventarioAdmin = Object.create(null);
+            categoriaActualAdmin = '';
+            document.getElementById('admin-grid').replaceChildren();
+            document.getElementById('tabla-apartados').replaceChildren();
+            document.getElementById('admin-tabs').replaceChildren();
+            document.getElementById('lista-categorias').replaceChildren();
+            document.getElementById('stat-visitas').textContent = '…';
+            document.getElementById('stat-popular').textContent = '…';
+            document.getElementById('session-email').textContent = '';
+            document.getElementById('mensaje').textContent = '';
+            document.querySelectorAll('#admin-app form').forEach(form => form.reset());
+            ['modal-editar','modal-apartado'].forEach(id => {
+                const modal = document.getElementById(id);
+                modal.classList.add('hidden'); modal.classList.remove('flex');
+            });
+            document.getElementById('print-iframe')?.remove();
+            document.getElementById('auth-password').value = '';
+            document.getElementById('auth-password').type = 'password';
+            document.getElementById('auth-show').textContent = 'Mostrar contraseña';
+            document.getElementById('auth-show').setAttribute('aria-pressed', 'false');
+            authMessage.textContent = mensaje;
+            authSubmit.disabled = false;
+            authSubmit.textContent = 'Entrar al panel';
+        }
+        function mensajeError(error) {
+            if (['42501','PGRST301','PGRST302'].includes(error?.code) || error?.status === 401 || error?.status === 403) {
+                return 'No se pudo completar la operación por permisos o sesión vencida. Vuelve a iniciar sesión y comprueba el resultado antes de reintentar.';
+            }
+            return error?.message || 'No se pudo completar la operación. Revisa tu conexión e inténtalo nuevamente.';
+        }
+        async function exigirAcceso() {
+            if (!usuarioAutorizado) throw new Error('Inicia sesión para continuar.');
+            const { data, error } = await supabase.rpc('laollaga_es_admin');
+            if (error) throw new Error(mensajeError(error));
+            if (data !== true) {
+                ++authRevision;
+                cerrarVista('Tu usuario ya no tiene acceso administrativo.');
+                throw new Error('Acceso administrativo no autorizado.');
+            }
+        }
+        async function verificarSesion(session) {
+            const revision = ++authRevision;
+            if (!session?.user) { cerrarVista(); return; }
+            // Se oculta antes de verificar, incluso tras restaurar una pestaña.
+            usuarioAutorizado = null;
+            adminApp.hidden = true; adminApp.inert = true;
+            authScreen.hidden = false;
+            authSubmit.disabled = true;
+            authMessage.textContent = 'Verificando permisos…';
+            try {
+                const { data, error } = await supabase.rpc('laollaga_es_admin');
+                if (revision !== authRevision) return;
+                if (error) throw error;
+                if (data !== true) {
+                    cerrarVista('Esta cuenta no tiene acceso al Panel Maestro.');
+                    await supabase.auth.signOut({ scope: 'local' });
+                    return;
+                }
+                usuarioAutorizado = session.user.id;
+                document.getElementById('session-email').textContent = session.user.email || '';
+                authScreen.hidden = true;
+                adminApp.hidden = false; adminApp.inert = false;
+                document.getElementById('auth-password').value = '';
+                authSubmit.disabled = false; authSubmit.textContent = 'Entrar al panel';
+                await cargarTodo();
+            } catch (err) {
+                if (revision === authRevision) cerrarVista('No pudimos verificar tu acceso. Comprueba tu conexión y que las reglas SQL estén instaladas.');
+            }
+        }
+        document.getElementById('auth-show').addEventListener('click', e => {
+            const input = document.getElementById('auth-password');
+            const visible = input.type === 'password';
+            input.type = visible ? 'text' : 'password';
+            e.currentTarget.textContent = visible ? 'Ocultar contraseña' : 'Mostrar contraseña';
+            e.currentTarget.setAttribute('aria-pressed', String(visible));
+        });
+        document.getElementById('auth-form').addEventListener('submit', async e => {
+            e.preventDefault();
+            if (loginEnCurso) return;
+            loginEnCurso = true;
+            authSubmit.disabled = true; authSubmit.textContent = 'Ingresando…';
+            authMessage.textContent = '';
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: document.getElementById('auth-email').value.trim(),
+                    password: document.getElementById('auth-password').value
+                });
+                if (error) throw error;
+                await verificarSesion(data.session);
+            } catch (err) {
+                cerrarVista('No se pudo iniciar sesión. Revisa tu correo, contraseña y conexión.');
+            } finally {
+                loginEnCurso = false;
+                authSubmit.disabled = false; authSubmit.textContent = 'Entrar al panel';
+            }
+        });
+        document.getElementById('btn-logout').addEventListener('click', async () => {
+            salidaEnCurso = true;
+            ++authRevision;
+            cerrarVista('Cerrando sesión…');
+            authSubmit.disabled = true;
+            try {
+                const { error } = await supabase.auth.signOut({ scope: 'local' });
+                if (error) throw error;
+                cerrarVista('Sesión cerrada en este navegador.');
+            } catch (err) {
+                // Bloquea la vista aunque el servidor no responda. Elimina sólo el token propio.
+                sessionStorage.removeItem('laollaga-admin-v57');
+                cerrarVista('El panel quedó bloqueado. No pudimos confirmar el cierre con el servidor.');
+                location.replace(location.pathname);
+            } finally { salidaEnCurso = false; }
+        });
+        supabase.auth.onAuthStateChange((event, session) => {
+            // No llamar métodos asíncronos de Supabase dentro del callback de Auth.
+            if (event === 'SIGNED_OUT') {
+                ++authRevision;
+                cerrarVista(salidaEnCurso ? 'Cerrando sesión…' : 'La sesión terminó. Vuelve a ingresar.');
+            } else if (!loginEnCurso && !salidaEnCurso && ['INITIAL_SESSION','SIGNED_IN','TOKEN_REFRESHED','USER_UPDATED'].includes(event)) {
+                setTimeout(() => verificarSesion(session), 0);
+            }
+        });
+        window.addEventListener('pageshow', event => {
+            if (event.persisted) location.reload();
+        });
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible' && usuarioAutorizado && !loginEnCurso && !salidaEnCurso) {
+                supabase.auth.getSession().then(({ data, error }) => {
+                    if (error) { ++authRevision; cerrarVista('Vuelve a ingresar para verificar tu sesión.'); }
+                    else verificarSesion(data.session);
+                }).catch(() => cerrarVista('No pudimos recuperar tu sesión. Vuelve a ingresar.'));
+            }
+        });
+        // Los errores no controlados nunca se presentan como operaciones exitosas.
+        window.addEventListener('unhandledrejection', event => {
+            event.preventDefault();
+            alert(mensajeError(event.reason));
+        });
+        setTimeout(() => {
+            if (authSubmit.disabled && !loginEnCurso && !usuarioAutorizado) {
+                cerrarVista('Comprueba tu conexión e intenta iniciar sesión.');
+            }
+        }, 12000);
+
 
         document.getElementById('btn-toggle-registro').addEventListener('click', () => {
             document.getElementById('panel-registro').classList.toggle('hidden');
@@ -287,6 +495,7 @@
         document.getElementById('btn-pdf').addEventListener('click', exportarCatalogoPDF_V56);
 
         window.abrirModalApartado = function() {
+            if (!usuarioAutorizado) return;
             const m = document.getElementById('modal-apartado');
             m.classList.remove('hidden'); m.classList.add('flex');
             setTimeout(() => m.classList.remove('opacity-0'), 10);
@@ -300,6 +509,10 @@
 
         document.getElementById('form-apartado').addEventListener('submit', async (e) => {
             e.preventDefault();
+            try { await exigirAcceso(); } catch(err) { alert(mensajeError(err)); return; }
+            const botonApartado = e.target.querySelector('button[type=submit]');
+            if (botonApartado.disabled) return;
+            botonApartado.disabled = true;
             const codigo = document.getElementById('ap-codigo').value.trim().toUpperCase();
             const cliente = document.getElementById('ap-cliente').value;
             const tel = document.getElementById('ap-telefono').value;
@@ -307,34 +520,35 @@
             const entrega = document.getElementById('ap-entrega').value;
 
             try {
-                const { error } = await supabase.from('apartados').insert([{
-                    codigo_interno: codigo,
-                    nombre_cliente: cliente,
-                    telefono: tel,
-                    estado_pago: pago,
-                    estado_entrega: entrega
-                }]);
-                if(error) throw new Error(error.message);
-
-                await supabase.from('productos').update({ estado: 'Agotado' }).eq('codigo_interno', codigo);
+                const { error } = await supabase.rpc('laollaga_registrar_apartado', {
+                    p_codigo: codigo, p_cliente: cliente, p_telefono: tel,
+                    p_pago: pago, p_entrega: entrega
+                });
+                if (error) throw error;
 
                 cerrarModalApartado();
                 e.target.reset();
                 await cargarTodo();
                 alert("Apartado registrado y pieza marcada como Agotada.");
             } catch(err) {
-                alert("Error: " + err.message);
-            }
+                alert("Error: " + mensajeError(err));
+            } finally { botonApartado.disabled = false; }
         });
 
         async function cargarEstadisticas() {
+            if (!usuarioAutorizado) return;
+            const revisionLectura = authRevision;
             try {
-                const { count } = await supabase.from('visitas').select('*', { count: 'exact', head: true }).eq('tipo', 'visita_tienda');
+                const { count, error: errorVisitas } = await supabase.from('visitas').select('*', { count: 'exact', head: true }).eq('tipo', 'visita_tienda');
+                if (revisionLectura !== authRevision || !usuarioAutorizado) return;
+                if (errorVisitas) throw errorVisitas;
                 document.getElementById('stat-visitas').innerText = count || 0;
 
-                const { data } = await supabase.from('visitas').select('detalle').eq('tipo', 'clic_producto');
+                const { data, error: errorClics } = await supabase.from('visitas').select('detalle').eq('tipo', 'clic_producto');
+                if (revisionLectura !== authRevision || !usuarioAutorizado) return;
+                if (errorClics) throw errorClics;
                 if(data && data.length > 0) {
-                    const conteo = {};
+                    const conteo = Object.create(null);
                     data.forEach(v => { conteo[v.detalle] = (conteo[v.detalle] || 0) + 1; });
                     const masPopular = Object.keys(conteo).reduce((a, b) => conteo[a] > conteo[b] ? a : b);
                     document.getElementById('stat-popular').innerText = `${masPopular} (${conteo[masPopular]} clics)`;
@@ -342,41 +556,52 @@
                     document.getElementById('stat-popular').innerText = "Sin registros";
                 }
             } catch(e) {
-                document.getElementById('stat-visitas').innerText = "0";
+                document.getElementById('stat-visitas').innerText = 'No disponible';
+                document.getElementById('stat-popular').innerText = 'No disponible';
             }
         }
 
         async function cargarApartados() {
+            if (!usuarioAutorizado) return;
+            const revisionLectura = authRevision;
             const tbody = document.getElementById('tabla-apartados');
             const { data, error } = await supabase.from('apartados').select('*').order('id', { ascending: false });
-            if(error || !data || data.length === 0) {
+            if (revisionLectura !== authRevision || !usuarioAutorizado) return;
+            if (error) { tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-red-700">No se pudieron cargar los apartados. Comprueba tu acceso y conexión.</td></tr>'; return; }
+            if(!data || data.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-gray-400">No hay apartados registrados.</td></tr>`;
                 return;
             }
 
             tbody.innerHTML = data.map(ap => `
                 <tr class="hover:bg-gray-50 border-b border-gray-100">
-                    <td class="p-3 font-mono font-bold">${ap.codigo_interno}</td>
-                    <td class="p-3 font-medium">${ap.nombre_cliente}</td>
-                    <td class="p-3 text-gray-500">${ap.telefono || 'N/A'}</td>
-                    <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${ap.estado_pago === 'Pagado' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">${ap.estado_pago}</span></td>
-                    <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${ap.estado_entrega === 'Entregado' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-700'}">${ap.estado_entrega}</span></td>
+                    <td class="p-3 font-mono font-bold">${escapeHtml(ap.codigo_interno)}</td>
+                    <td class="p-3 font-medium">${escapeHtml(ap.nombre_cliente)}</td>
+                    <td class="p-3 text-gray-500">${escapeHtml(ap.telefono || 'N/A')}</td>
+                    <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${ap.estado_pago === 'Pagado' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">${escapeHtml(ap.estado_pago)}</span></td>
+                    <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${ap.estado_entrega === 'Entregado' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-700'}">${escapeHtml(ap.estado_entrega)}</span></td>
                     <td class="p-3 text-center">
-                        <button onclick="eliminarApartado(${ap.id})" class="text-red-500 hover:text-red-700 px-2 py-1"><i class="fas fa-trash-alt"></i></button>
+                        <button onclick="eliminarApartado(${escapeHtml(ap.id)})" class="text-red-500 hover:text-red-700 px-2 py-1"><i class="fas fa-trash-alt"></i></button>
                     </td>
                 </tr>
             `).join('');
         }
 
         window.eliminarApartado = async function(id) {
+            await exigirAcceso();
             if(confirm("¿Eliminar este registro de apartado?")) {
-                await supabase.from('apartados').delete().eq('id', id);
+                const { data, error } = await supabase.from('apartados').delete().eq('id', id).select('id');
+                if (error) throw new Error(mensajeError(error));
+                if (!data?.length) throw new Error('No se eliminó el apartado. Comprueba que exista y que tengas permisos.');
                 cargarApartados();
             }
         }
 
         async function subirArchivoSupabase(archivoFile, codigoInterno) {
-            const extension = archivoFile.name.split('.').pop();
+            await exigirAcceso();
+            if (!/^[-A-Za-z0-9_]{1,64}$/.test(codigoInterno.trim())) throw new Error('El código debe usar sólo letras, números, guiones o guion bajo (máximo 64).');
+            const extension = archivoFile.name.split('.').pop().toLowerCase();
+            if (!['jpg','jpeg','png','webp','avif','gif'].includes(extension) || !archivoFile.type.startsWith('image/')) throw new Error('Selecciona una fotografía JPG, PNG, WebP, AVIF o GIF.');
             const nombreArchivoFinal = `${codigoInterno.trim()}.${extension}`;
             const { error } = await supabase.storage.from('catalogo').upload(nombreArchivoFinal, archivoFile, { cacheControl: '3600', upsert: true });
             if (error) throw new Error("Error subiendo foto: " + error.message);
@@ -385,13 +610,16 @@
 
         document.getElementById('form-producto').addEventListener('submit', async (e) => {
             e.preventDefault();
+            try { await exigirAcceso(); } catch(err) { alert(mensajeError(err)); return; }
             const btn = document.getElementById('btn-guardar-nuevo');
             const txtOriginal = btn.innerHTML;
+            if (btn.disabled) return;
+            btn.disabled = true;
             const msj = document.getElementById('mensaje');
             const codigo = document.getElementById('codigo').value;
             const archivoFile = document.getElementById('archivo-foto').files[0];
 
-            if (!archivoFile) { msj.innerHTML = `<span class="text-red-600">Selecciona una fotografía.</span>`; return; }
+            if (!archivoFile) { btn.disabled = false; msj.innerHTML = `<span class="text-red-600">Selecciona una fotografía.</span>`; return; }
 
             try {
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Subiendo...';
@@ -421,16 +649,20 @@
                 await cargarTodo();
                 setTimeout(() => { document.getElementById('panel-registro').classList.add('hidden'); document.getElementById('icono-acordeon').classList.remove('rotate-180'); msj.innerHTML = ''; }, 2000);
             } catch (err) {
-                msj.innerHTML = `<span class="text-red-600">${err.message}</span>`;
+                msj.innerHTML = `<span class="text-red-600">${escapeHtml(err.message)}</span>`;
             } finally {
                 btn.innerHTML = txtOriginal;
+                btn.disabled = false;
             }
         });
 
         document.getElementById('form-editar').addEventListener('submit', async (e) => {
             e.preventDefault();
+            try { await exigirAcceso(); } catch(err) { alert(mensajeError(err)); return; }
             const btn = document.getElementById('btn-guardar-edicion');
             const txtOriginal = btn.innerHTML;
+            if (btn.disabled) return;
+            btn.disabled = true;
             const codigo = document.getElementById('edit-codigo').value;
             const archivoInput = document.getElementById('edit-archivo-foto');
             let nombreArchivoDefinitivo = document.getElementById('edit-imagen-actual').value;
@@ -452,18 +684,21 @@
                     eslogan: document.getElementById('edit-eslogan').value,
                     imagen_url: nombreArchivoDefinitivo
                 };
-                const { error } = await supabase.from('productos').update(datosActualizados).eq('codigo_interno', codigo);
-                if (error) throw new Error(error.message);
+                const { data, error } = await supabase.from('productos').update(datosActualizados).eq('codigo_interno', codigo).select('id');
+                if (error) throw new Error(mensajeError(error));
+                if (!data?.length) throw new Error('No se guardaron los cambios. Comprueba tu acceso.');
                 await cargarTodo();
                 cerrarEdicion();
             } catch (err) {
                 alert("Error: " + err.message);
             } finally {
                 btn.innerHTML = txtOriginal;
+                btn.disabled = false;
             }
         });
 
         function abrirEdicion(codigo) {
+            if (!usuarioAutorizado) return;
             let producto = null;
             for(let cat in inventarioAdmin) {
                 let found = inventarioAdmin[cat].find(x => x.codigo_interno === codigo);
@@ -493,19 +728,26 @@
         }
 
         async function cambiarEstado(codigo, nuevoEstado) {
-            await supabase.from('productos').update({ estado: nuevoEstado }).eq('codigo_interno', codigo);
+            await exigirAcceso();
+            const { data, error } = await supabase.from('productos').update({ estado: nuevoEstado }).eq('codigo_interno', codigo).select('id');
+            if (error) throw new Error(mensajeError(error));
+            if (!data?.length) throw new Error('No se actualizó la pieza. Comprueba tu acceso.');
             await cargarTodo();
         }
 
         async function eliminarPieza(codigo) {
+            await exigirAcceso();
             if (confirm(`⚠️ ¿Eliminar permanentemente "${codigo}"?`)) {
-                await supabase.from('productos').delete().eq('codigo_interno', codigo);
+                const { data, error } = await supabase.from('productos').delete().eq('codigo_interno', codigo).select('id');
+                if (error) throw new Error(mensajeError(error));
+                if (!data?.length) throw new Error('No se eliminó la pieza. Comprueba tu acceso.');
                 await cargarTodo();
             }
         }
 
         // MOTOR EDITORIAL V5.6 LOOKBOOK ULTRA-LUJO (BLINDADO)
         function exportarCatalogoPDF_V56() {
+            if (!usuarioAutorizado) return;
             if (Object.keys(inventarioAdmin).length === 0) { alert("Inventario vacío."); return; }
             const btn = document.getElementById('btn-pdf');
             btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-1"></i> Generando Lookbook V5.6...`;
@@ -901,7 +1143,7 @@
                 // CASO 1: CATEGORÍA DE 1 PRENDA (HERO GALA)
                 if (disponibles.length === 1) {
                     const p = disponibles[0];
-                    const imgUrl = p.imagen_url ? `https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${p.imagen_url}` : '';
+                    const imgUrl = p.imagen_url ? `https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${escapeHtml(p.imagen_url)}` : '';
                     
                     htmlPrint += `
                     <div class="hoja-a4">
@@ -910,28 +1152,28 @@
                                 <span>Laollaga Istmeña &bull; Alta Artesanía Zapoteca</span>
                                 <span>Colección 2026</span>
                             </div>
-                            <div class="categoria-header">${categoria} &bull; Pieza de Gala</div>
+                            <div class="categoria-header">${escapeHtml(categoria)} &bull; Pieza de Gala</div>
                         </div>
                         <div class="hero-contenedor">
                             <div class="hero-card">
                                 <div class="hero-img-box">
-                                    <img src="${imgUrl}" alt="${p.nombre_comercial}">
+                                    <img src="${imgUrl}" alt="${escapeHtml(p.nombre_comercial)}">
                                 </div>
                                 <div class="hero-info">
                                     <span class="hero-badge"><i class="fas fa-gem"></i> Pieza Única de Gala</span>
-                                    <span class="hero-codigo">${p.codigo_interno}</span>
-                                    <h3 class="hero-titulo">${p.nombre_comercial}</h3>
-                                    <p class="hero-eslogan">"${p.eslogan || 'Elegancia y porte ancestral zapoteco en una pieza inigualable.'}"</p>
-                                    <div class="hero-spec"><strong>Material:</strong> ${p.material || 'Textil artesanal'}</div>
-                                    <div class="hero-spec"><strong>Medidas:</strong> ${p.medidas || 'Corte tradicional'}</div>
-                                    <div class="hero-spec"><strong>Talla:</strong> ${p.talla || 'Unitalla'}</div>
-                                    <div class="hero-spec"><strong>Cuidados:</strong> ${p.cuidados || 'Lavar a mano'}</div>
-                                    <div class="hero-precio">$${p.precio} MXN</div>
+                                    <span class="hero-codigo">${escapeHtml(p.codigo_interno)}</span>
+                                    <h3 class="hero-titulo">${escapeHtml(p.nombre_comercial)}</h3>
+                                    <p class="hero-eslogan">"${escapeHtml(p.eslogan || 'Elegancia y porte ancestral zapoteco en una pieza inigualable.')}"</p>
+                                    <div class="hero-spec"><strong>Material:</strong> ${escapeHtml(p.material || 'Textil artesanal')}</div>
+                                    <div class="hero-spec"><strong>Medidas:</strong> ${escapeHtml(p.medidas || 'Corte tradicional')}</div>
+                                    <div class="hero-spec"><strong>Talla:</strong> ${escapeHtml(p.talla || 'Unitalla')}</div>
+                                    <div class="hero-spec"><strong>Cuidados:</strong> ${escapeHtml(p.cuidados || 'Lavar a mano')}</div>
+                                    <div class="hero-precio">$${escapeHtml(p.precio)} MXN</div>
                                 </div>
                             </div>
                         </div>
                         <div class="catalogo-pie">
-                            Para apartar esta pieza única, haz clic aquí: <a href="https://wa.me/529711140709?text=Hola,%20deseo%20apartar%20la%20pieza%20${p.codigo_interno}" target="_blank">WhatsApp 971 114 0709</a>
+                            Para apartar esta pieza única, haz clic aquí: <a href="https://wa.me/529711140709?text=Hola,%20deseo%20apartar%20la%20pieza%20${escapeHtml(p.codigo_interno)}" target="_blank">WhatsApp 971 114 0709</a>
                         </div>
                     </div>
                     `;
@@ -952,28 +1194,28 @@
                                 <span>Laollaga Istmeña &bull; Alta Artesanía Zapoteca</span>
                                 <span>Colección 2026</span>
                             </div>
-                            <div class="categoria-header">${categoria}${subTituloLote}</div>
+                            <div class="categoria-header">${escapeHtml(categoria)}${subTituloLote}</div>
                         </div>
                         <div class="${gridClase}">
                     `;
 
                     lote.forEach(p => {
-                        const imgUrl = p.imagen_url ? `https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${p.imagen_url}` : '';
+                        const imgUrl = p.imagen_url ? `https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${escapeHtml(p.imagen_url)}` : '';
                         const materialTxt = (p.material && p.material !== 'N/A') ? p.material : 'Textil tradicional hecho a mano';
 
                         htmlPrint += `
                             <div class="producto-tarjeta">
                                 <div>
                                     <div class="img-marco">
-                                        <img src="${imgUrl}" alt="${p.nombre_comercial}" loading="eager">
+                                        <img src="${imgUrl}" alt="${escapeHtml(p.nombre_comercial)}" loading="eager">
                                     </div>
-                                    <span class="item-codigo">${p.codigo_interno}</span>
-                                    <div class="item-nombre">${p.nombre_comercial}</div>
-                                    <div class="item-material">${materialTxt}</div>
+                                    <span class="item-codigo">${escapeHtml(p.codigo_interno)}</span>
+                                    <div class="item-nombre">${escapeHtml(p.nombre_comercial)}</div>
+                                    <div class="item-material">${escapeHtml(materialTxt)}</div>
                                 </div>
                                 <div>
-                                    <div class="item-precio">$${p.precio} MXN</div>
-                                    <div class="item-talla">Talla: ${p.talla || 'Unitalla'}</div>
+                                    <div class="item-precio">$${escapeHtml(p.precio)} MXN</div>
+                                    <div class="item-talla">Talla: ${escapeHtml(p.talla || 'Unitalla')}</div>
                                 </div>
                             </div>
                         `;
@@ -1031,6 +1273,7 @@
         }
 
         function exportarCatalogoWhatsApp() {
+            if (!usuarioAutorizado) return;
             let texto = "✨ *CATÁLOGO OFICIAL | LAOLLAGA ISTMEÑA* ✨\n\n";
             for (const categoria in inventarioAdmin) {
                 const disponibles = inventarioAdmin[categoria].filter(p => p.estado === 'Disponible');
@@ -1044,13 +1287,16 @@
         }
 
         async function cargarTodo() {
+            if (!usuarioAutorizado) return;
+            const revisionCarga = authRevision;
             await cargarEstadisticas();
             await cargarApartados();
             const grid = document.getElementById('admin-grid');
             try {
                 const { data, error } = await supabase.from('productos').select('*').order('codigo_interno', { ascending: true });
-                if (error) throw new Error(error.message);
-                inventarioAdmin = {};
+                if (revisionCarga !== authRevision || !usuarioAutorizado) return;
+                if (error) throw new Error(mensajeError(error));
+                inventarioAdmin = Object.create(null);
                 const categoriasUnicas = new Set();
                 data.forEach(p => {
                     categoriasUnicas.add(p.categoria);
@@ -1059,14 +1305,14 @@
                 });
                 const datalist = document.getElementById('lista-categorias');
                 datalist.innerHTML = '';
-                categoriasUnicas.forEach(cat => { datalist.innerHTML += `<option value="${cat}">`; });
+                categoriasUnicas.forEach(cat => { datalist.innerHTML += `<option value="${escapeHtml(cat)}">`; });
                 renderizarTabsAdmin(Array.from(categoriasUnicas));
                 if(!categoriaActualAdmin && Array.from(categoriasUnicas).length > 0) categoriaActualAdmin = Array.from(categoriasUnicas)[0];
                 if(categoriaActualAdmin && inventarioAdmin[categoriaActualAdmin]) mostrarInventario(categoriaActualAdmin);
                 else if (Array.from(categoriasUnicas).length > 0) mostrarInventario(Array.from(categoriasUnicas)[0]);
                 else grid.innerHTML = `<div class="text-center py-10 text-gray-500 text-xs col-span-full">Inventario vacío.</div>`;
             } catch (err) {
-                grid.innerHTML = `<div class="text-red-600 p-6 text-center col-span-full font-bold">Error: ${err.message}</div>`;
+                grid.innerHTML = `<div class="text-red-600 p-6 text-center col-span-full font-bold">Error: ${escapeHtml(err.message)}</div>`;
             }
         }
 
@@ -1074,7 +1320,7 @@
             let html = '';
             categorias.forEach(cat => {
                 const idTab = `tab-adm-${cat.replace(/\s+/g, '')}`;
-                html += `<button id="${idTab}" class="px-6 py-4 whitespace-nowrap transition-colors focus:outline-none tab-admin-inactiva">${cat}</button>`;
+                html += `<button id="${escapeHtml(idTab)}" class="px-6 py-4 whitespace-nowrap transition-colors focus:outline-none tab-admin-inactiva">${escapeHtml(cat)}</button>`;
             });
             document.getElementById('admin-tabs').innerHTML = html;
             categorias.forEach(cat => {
@@ -1083,6 +1329,7 @@
         }
 
         function mostrarInventario(cat) {
+            if (!usuarioAutorizado) return;
             categoriaActualAdmin = cat;
             for (const categoria in inventarioAdmin) {
                 const btn = document.getElementById(`tab-adm-${categoria.replace(/\s+/g, '')}`);
@@ -1091,23 +1338,23 @@
             const productos = inventarioAdmin[cat] || [];
             let html = '';
             productos.forEach(p => {
-                const imgPath = p.imagen_url ? `https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${p.imagen_url}` : 'https://via.placeholder.com/150';
+                const imgPath = p.imagen_url ? `https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${escapeHtml(p.imagen_url)}` : 'https://via.placeholder.com/150';
                 const isDisponible = p.estado === 'Disponible';
                 const btnEstado = isDisponible 
-                    ? `<button id="btn-est-${p.codigo_interno}" data-codigo="${p.codigo_interno}" data-nuevo="Agotado" class="flex-grow bg-green-100 text-green-800 border border-green-300 py-1.5 rounded text-[10px] font-bold uppercase tracking-widest hover:bg-green-200 transition">Disp.</button>`
-                    : `<button id="btn-est-${p.codigo_interno}" data-codigo="${p.codigo_interno}" data-nuevo="Disponible" class="flex-grow bg-gray-100 text-gray-700 border border-gray-300 py-1.5 rounded text-[10px] font-bold uppercase tracking-widest hover:bg-gray-200 transition">Agotado</button>`;
+                    ? `<button id="btn-est-${escapeHtml(p.codigo_interno)}" data-codigo="${escapeHtml(p.codigo_interno)}" data-nuevo="Agotado" class="flex-grow bg-green-100 text-green-800 border border-green-300 py-1.5 rounded text-[10px] font-bold uppercase tracking-widest hover:bg-green-200 transition">Disp.</button>`
+                    : `<button id="btn-est-${escapeHtml(p.codigo_interno)}" data-codigo="${escapeHtml(p.codigo_interno)}" data-nuevo="Disponible" class="flex-grow bg-gray-100 text-gray-700 border border-gray-300 py-1.5 rounded text-[10px] font-bold uppercase tracking-widest hover:bg-gray-200 transition">Agotado</button>`;
 
                 html += `
                 <div class="bg-white border border-gray-200 p-3 flex flex-row gap-3 items-center shadow-sm rounded-lg overflow-hidden">
                     <img src="${imgPath}" class="w-16 h-20 object-cover rounded bg-gray-100 border border-gray-200 flex-shrink-0">
                     <div class="flex-grow min-w-0">
-                        <span class="text-[10px] text-gray-500 font-mono tracking-widest bg-gray-100 px-1 rounded">${p.codigo_interno}</span>
-                        <h4 class="font-serif font-bold text-sm leading-tight mt-1 text-black truncate">${p.nombre_comercial}</h4>
-                        <p class="text-[#d4af37] text-xs font-bold mt-1">$${p.precio}</p>
+                        <span class="text-[10px] text-gray-500 font-mono tracking-widest bg-gray-100 px-1 rounded">${escapeHtml(p.codigo_interno)}</span>
+                        <h4 class="font-serif font-bold text-sm leading-tight mt-1 text-black truncate">${escapeHtml(p.nombre_comercial)}</h4>
+                        <p class="text-[#d4af37] text-xs font-bold mt-1">$${escapeHtml(p.precio)}</p>
                         <div class="flex gap-1.5 mt-2">
                             ${btnEstado}
-                            <button id="btn-edi-${p.codigo_interno}" data-codigo="${p.codigo_interno}" class="bg-blue-600 text-white px-3 py-1.5 rounded border border-blue-700 hover:bg-blue-800 transition shadow-sm text-xs"><i class="fas fa-pen"></i></button>
-                            <button id="btn-eli-${p.codigo_interno}" data-codigo="${p.codigo_interno}" class="bg-red-600 text-white px-3 py-1.5 rounded border border-red-700 hover:bg-red-800 transition shadow-sm text-xs"><i class="fas fa-trash-alt"></i></button>
+                            <button id="btn-edi-${escapeHtml(p.codigo_interno)}" data-codigo="${escapeHtml(p.codigo_interno)}" class="bg-blue-600 text-white px-3 py-1.5 rounded border border-blue-700 hover:bg-blue-800 transition shadow-sm text-xs"><i class="fas fa-pen"></i></button>
+                            <button id="btn-eli-${escapeHtml(p.codigo_interno)}" data-codigo="${escapeHtml(p.codigo_interno)}" class="bg-red-600 text-white px-3 py-1.5 rounded border border-red-700 hover:bg-red-800 transition shadow-sm text-xs"><i class="fas fa-trash-alt"></i></button>
                         </div>
                     </div>
                 </div>`;
@@ -1120,7 +1367,15 @@
             });
         }
 
-        cargarTodo();
+        // Auth habilita la carga únicamente después de comprobar permisos.
+    </script>
+    <script>
+      setTimeout(() => {
+        const message = document.getElementById('auth-message');
+        if (message && message.textContent === 'Conectando con el servicio de acceso…') {
+          message.textContent = 'No se pudo cargar el servicio de acceso. Revisa tu conexión y recarga la página.';
+        }
+      }, 15000);
     </script>
 </body>
 </html>
