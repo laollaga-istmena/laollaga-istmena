@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control Maestro V5.7 | Laollaga Istmeña</title>
+    <title>Control Maestro V5.9 | Laollaga Istmeña</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <meta name="robots" content="noindex,nofollow">
@@ -30,7 +30,9 @@
         .tab-admin-inactiva { border-bottom: 3px solid transparent; color: #6b7280; background-color: #f9fafb; }
         input[type="file"]::file-selector-button { background: #000; color: #d4af37; border: none; padding: 8px 16px; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 10px; margin-right: 10px; transition: background .2s; }
         input[type="file"]::file-selector-button:hover { background: #333; }
-    </style>
+    .ed-shell{background:#fff;border:1px solid #dce0d2;border-radius:8px;overflow:hidden}.ed-shell summary{padding:20px;background:#141b13;color:#d8c27b;cursor:pointer;list-style-position:inside}.ed-shell summary>span{font:700 17px Georgia,serif;letter-spacing:.08em}.ed-shell summary small{display:block;font-size:11px;color:#c6cbbd;margin-top:8px;letter-spacing:.02em}.ed-body{padding:24px;background:#fafaf5}.ed-help{font-size:12px;color:#626956;line-height:1.65;margin:0 0 17px}.ed-status{font-size:13px;line-height:1.6;padding:12px 15px;background:#eeefe5;border:1px solid #d7dccb;border-radius:4px;margin:0 0 20px;white-space:pre-line}.ed-status[data-error=true]{background:#fff2e9;border-color:#e6c5ae;color:#834224}.ed-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:24px}.ed-tabs button{font-size:12px;padding:12px 8px;border:1px solid #d5d9cb;border-radius:4px;background:white;min-height:44px}.ed-tabs [aria-selected=true]{background:#222d20;color:white;border-color:#222d20}.ed-form{display:grid;gap:17px;max-width:800px}.ed-form label,.ed-choose{display:block;font-size:12px;color:#46523c;font-weight:600}.ed-form input:not([type=checkbox]),.ed-form textarea,.ed-form select,.ed-choose select{display:block;width:100%;padding:11px;border:1px solid #c7cdbb;background:#fff;color:#192316;border-radius:4px;margin-top:7px;font:14px system-ui,sans-serif;min-height:43px}.ed-form input[type=file]{font-size:12px!important}.ed-form .ed-check{display:flex;align-items:center;gap:9px;font-weight:400}.ed-check input{width:17px;height:17px}.ed-save{background:#283b26;color:white;border:1px solid #283b26;border-radius:4px;padding:13px 18px;font-size:13px;font-weight:600;min-height:46px;justify-self:start}.ed-save:disabled{opacity:.5;cursor:wait}.ed-choose{margin-bottom:24px;max-width:800px}.ed-category-row{display:grid;grid-template-columns:minmax(130px,1fr) minmax(130px,1fr) auto;gap:12px;align-items:center;padding:15px 0;border-bottom:1px solid #dde1d3;font-size:13px}.ed-category-row select{width:100%;border:1px solid #ccd1c0;padding:10px;background:white;border-radius:4px;font-size:13px;min-height:42px}.ed-category-row button{background:#fff;border:1px solid #abb49b;padding:11px 14px;border-radius:4px;font-size:12px}.ed-feature-list{display:grid;gap:8px;max-height:460px;overflow:auto}.ed-feature-row{display:grid;grid-template-columns:20px 42px 1fr 64px;align-items:center;gap:12px;border:1px solid #dee2d3;background:white;padding:11px;border-radius:5px;font-size:12px}.ed-feature-row input[type=checkbox]{width:17px;height:17px}.ed-feature-row img{width:42px;height:55px;object-fit:contain;background:#efefe7}.ed-feature-row input[type=number]{margin:0;padding:8px}.ed-feature-row small{display:block;color:#78816b;margin-top:5px;font-size:10px}.ed-product-department{border:1px solid #c9d1bc;background:#f2f5eb;padding:13px;border-radius:4px;margin-bottom:15px;font-size:12px}.ed-product-department select{display:block;width:100%;margin-top:7px;padding:10px;background:white;border:1px solid #bdc6ad;border-radius:4px;min-height:42px}.ed-product-department small{display:block;color:#647153;font-size:10px;margin-top:6px}.ed-body button:focus-visible,.ed-body input:focus-visible,.ed-body select:focus-visible,.ed-body textarea:focus-visible{outline:2px solid #8e7838;outline-offset:3px}@media(max-width:600px){.ed-body{padding:18px}.ed-tabs{grid-template-columns:repeat(2,1fr)}.ed-category-row{grid-template-columns:1fr auto;gap:9px}.ed-category-row>span{grid-column:1/-1}.ed-feature-row{gap:8px;grid-template-columns:19px 32px 1fr 54px}.ed-feature-row img{width:32px;height:46px}.ed-save{width:100%}.ed-form input:not([type=checkbox]),.ed-form select,.ed-form textarea,.ed-choose select{font-size:16px}}
+
+</style>
 </head>
 <body class="bg-[#f3f4f6] font-sans text-gray-800 pb-20">
     <section id="auth-screen" aria-labelledby="auth-title">
@@ -55,7 +57,7 @@
     <div id="admin-app" hidden inert>
 
     <div class="bg-black text-[#d4af37] p-5 flex justify-between items-center shadow-md border-b-2 border-[#d4af37] sticky top-0 z-50">
-        <h1 class="font-serif font-bold tracking-[0.2em] uppercase">Control Maestro V5.7</h1>
+        <h1 class="font-serif font-bold tracking-[0.2em] uppercase">Control Maestro V5.9</h1>
         <a href="index.html" class="text-white text-xs tracking-widest uppercase hover:text-[#d4af37] transition-colors bg-white/10 px-4 py-2 rounded">Ver Tienda <i class="fas fa-external-link-alt ml-1"></i></a>
     </div>
 
@@ -64,6 +66,34 @@
       <button id="btn-logout" type="button" class="bg-black text-white rounded px-4 py-3">Cerrar sesión</button>
     </div>
     <main class="max-w-6xl mx-auto p-4 md:p-6 space-y-6 mt-4">
+
+<section class="ed-shell" aria-labelledby="ed-title">
+ <details id="ed-details"><summary><span id="ed-title">✦ Escaparate editorial</span><small>Portada · Departamentos · Categorías · Destacados</small></summary>
+ <div class="ed-body"><p class="ed-help">Organiza la tienda desde aquí. Los departamentos aparecen al tener piezas disponibles. Los cambios se ven al actualizar la tienda o volver a su pestaña.</p>
+ <p id="ed-status" class="ed-status" role="status" aria-live="polite">Inicia sesión para administrar el escaparate.</p>
+ <div class="ed-tabs" role="tablist" aria-label="Ajustes del escaparate"><button type="button" role="tab" id="ed-tab-cover" aria-controls="ed-cover" aria-selected="true">Portada</button><button type="button" role="tab" id="ed-tab-depts" aria-controls="ed-depts" aria-selected="false">Departamentos</button><button type="button" role="tab" id="ed-tab-cats" aria-controls="ed-cats" aria-selected="false">Categorías</button><button type="button" role="tab" id="ed-tab-featured" aria-controls="ed-featured" aria-selected="false">Destacados</button></div>
+ <div id="ed-cover" role="tabpanel" aria-labelledby="ed-tab-cover"><form id="ed-cover-form" class="ed-form">
+ <label for="ed-cover-title">Título de portada<input id="ed-cover-title" required maxlength="100" placeholder="Tradición que se lleva."></label>
+ <label for="ed-cover-subtitle">Texto breve<textarea id="ed-cover-subtitle" maxlength="240" rows="2"></textarea></label>
+ <label for="ed-cover-product">Pieza protagonista<select id="ed-cover-product"></select></label>
+ <p class="ed-help">La fotografía se muestra completa. Si la pieza deja de estar disponible, se usa otra disponible. También puedes subir una fotografía editorial propia.</p>
+ <label for="ed-cover-file">Fotografía editorial opcional<input type="file" id="ed-cover-file" accept="image/jpeg,image/png,image/webp,image/avif,image/gif"></label>
+ <label class="ed-check"><input type="checkbox" id="ed-cover-clear">Quitar la fotografía editorial y usar la pieza protagonista</label>
+ <input type="hidden" id="ed-cover-image"><button class="ed-save" type="submit">Guardar portada</button></form></div>
+ <div id="ed-depts" role="tabpanel" aria-labelledby="ed-tab-depts" hidden><label class="ed-choose" for="ed-dept-select">Departamento a editar<select id="ed-dept-select"></select></label><form id="ed-dept-form" class="ed-form">
+ <input type="hidden" id="ed-dept-id"><input type="hidden" id="ed-dept-image">
+ <label for="ed-dept-name">Nombre del departamento<input id="ed-dept-name" required maxlength="80" placeholder="Bolsos"></label>
+ <label for="ed-dept-description">Descripción breve<textarea id="ed-dept-description" maxlength="220" rows="2"></textarea></label>
+ <label for="ed-dept-order">Orden de aparición (primero el número menor)<input type="number" id="ed-dept-order" min="0" max="999" step="1" required value="50"></label>
+ <label for="ed-dept-photo-product">Fotografía desde tu inventario<select id="ed-dept-photo-product"></select></label>
+ <label for="ed-dept-file">O subir una fotografía propia<input type="file" id="ed-dept-file" accept="image/jpeg,image/png,image/webp,image/avif,image/gif"></label>
+ <p class="ed-help">La fotografía nueva prevalece sobre la selección de inventario. Un departamento sin piezas disponibles no aparece al público. Para ocultarlo, traslada sus categorías a otro departamento; no se eliminan prendas.</p>
+ <button class="ed-save" type="submit">Guardar departamento</button></form></div>
+ <div id="ed-cats" role="tabpanel" aria-labelledby="ed-tab-cats" hidden><p class="ed-help">Cada categoría pertenece a un departamento. Al moverla, todas sus piezas se mostrarán dentro del departamento elegido.</p><div id="ed-category-list" class="ed-category-list"></div></div>
+ <div id="ed-featured" role="tabpanel" aria-labelledby="ed-tab-featured" hidden><form id="ed-featured-form" class="ed-form"><p class="ed-help">Elige hasta cinco piezas. Las agotadas se ocultan automáticamente de la tienda. El número indica el orden; la primera tiene más protagonismo.</p>
+ <label for="ed-feature-search">Buscar una pieza<input id="ed-feature-search" type="search" placeholder="Nombre o código"></label><p id="ed-feature-count" class="ed-help"></p><div id="ed-feature-list" class="ed-feature-list"></div><button class="ed-save" type="submit">Guardar destacados</button></form></div>
+ </div></details>
+</section>
 
         <!-- PANEL DE MÉTRICAS -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -122,7 +152,7 @@
             </button>
             
             <div id="panel-registro" class="hidden p-6 md:p-8 bg-[#fcfbf9]">
-                <form id="form-producto" class="space-y-5 text-sm">
+                <form id="form-producto" class="space-y-5 text-sm"><label class="ed-product-department" for="departamento">Departamento<select id="departamento" required><option value="">Cargando departamentos…</option></select><small>Las categorías existentes conservan su departamento. Para trasladarlas usa Escaparate → Categorías.</small></label>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-1">Código Interno</label>
@@ -150,7 +180,7 @@
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-1">Medidas</label>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-1">Medidas / presentación</label>
                             <input type="text" id="medidas" class="w-full border border-gray-300 rounded p-3 focus:border-black focus:outline-none">
                         </div>
                         <div>
@@ -256,7 +286,7 @@
                 <button id="btn-cerrar-edicion" class="text-blue-200 hover:text-white"><i class="fas fa-times text-xl"></i></button>
             </div>
             <div class="p-6 overflow-y-auto flex-grow bg-[#fcfbf9]">
-                <form id="form-editar" class="space-y-4 text-sm">
+                <form id="form-editar" class="space-y-4 text-sm"><label class="ed-product-department" for="edit-departamento">Departamento<select id="edit-departamento" required><option value="">Cargando departamentos…</option></select><small>Las categorías existentes conservan su departamento. Para trasladarlas usa Escaparate → Categorías.</small></label>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-1">Código (No editable)</label>
@@ -281,7 +311,7 @@
                             <input type="text" id="edit-talla" class="w-full border border-gray-300 rounded p-2 focus:border-blue-500 focus:outline-none">
                         </div>
                         <div>
-                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-1">Medidas</label>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-1">Medidas / presentación</label>
                             <input type="text" id="edit-medidas" class="w-full border border-gray-300 rounded p-2 focus:border-blue-500 focus:outline-none">
                         </div>
                     </div>
@@ -323,6 +353,121 @@
 
         let inventarioAdmin = Object.create(null);
         let categoriaActualAdmin = '';
+        // Escaparate V5.9: la autorización se verifica también en RLS/RPC.
+        let editorialState={departments:[],assignments:[],cover:{},featured:[],ready:false};
+        let editorialLoadSerial=0;
+        const ed=id=>document.getElementById(id);
+        function edNode(tag,className,text){const n=document.createElement(tag);if(className)n.className=className;if(text!==undefined)n.textContent=String(text);return n;}
+        function edStatus(text,error=false){ed('ed-status').textContent=text;ed('ed-status').dataset.error=String(error);}
+        function edProducts(){return Object.values(inventarioAdmin).flat();}
+        function edImage(path){return supabaseUrl+'/storage/v1/object/public/catalogo/'+String(path).split('/').map(encodeURIComponent).join('/');}
+        function edOptions(select,options,chosen=''){select.replaceChildren();for(const [value,label] of options){const o=edNode('option','',label);o.value=value;select.append(o);}select.value=chosen;}
+        function edDepartmentOptions(){return editorialState.departments.map(d=>[d.id,d.nombre]);}
+        async function edRead(table,order){const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),15000);try{let rows=[];for(let offset=0;;offset+=500){const{data,error}=await supabase.from(table).select('*').order(order,{ascending:true}).abortSignal(controller.signal).range(offset,offset+499);if(error)throw error;if(!Array.isArray(data))throw new Error('Respuesta no válida del escaparate.');rows.push(...data);if(data.length<500)return rows;}}finally{clearTimeout(timer);}}
+        async function cargarEscaparate(){
+            if(!usuarioAutorizado)return;const revision=authRevision,serial=++editorialLoadSerial;
+            try{
+                const[departments,assignments,cover,featured]=await Promise.all([edRead('li_departamentos','orden'),edRead('li_categorias_departamento','categoria'),edRead('li_portada','id'),edRead('li_destacados','orden')]);
+                if(revision!==authRevision||serial!==editorialLoadSerial||!usuarioAutorizado)return;
+                if(!departments.length)throw new Error('No hay departamentos configurados.');
+                const selectedDept=ed('ed-dept-id').value||ed('ed-dept-select').value;
+                editorialState={departments,assignments,cover:cover.find(c=>c.id===1)||{},featured,ready:true};
+                renderEscaparate(selectedDept);edStatus('Escaparate listo. Los cambios se guardan por sección.');
+            }catch(error){if(revision!==authRevision||!usuarioAutorizado)return;editorialState.ready=false;edStatus('No se pudo cargar el escaparate. Comprueba que ejecutaste el SQL V5.9 y actualiza el panel. '+(error.message||''),true);}
+        }
+        function renderEscaparate(departmentId=''){
+            const all=edProducts(),available=all.filter(p=>p.estado==='Disponible');
+            ed('ed-cover-title').value=editorialState.cover.titulo||'Tradición que se lleva.';
+            ed('ed-cover-subtitle').value=editorialState.cover.subtitulo||'';
+            ed('ed-cover-image').value=editorialState.cover.imagen_url||'';
+            ed('ed-cover-file').value='';ed('ed-cover-clear').checked=false;
+            edOptions(ed('ed-cover-product'),[['','Automática: una prenda disponible'],...available.map(p=>[p.id,p.codigo_interno+' · '+p.nombre_comercial])],editorialState.cover.producto_id||'');
+            edOptions(ed('ed-dept-select'),[['','+ Crear nuevo departamento'],...edDepartmentOptions()],editorialState.departments.some(d=>d.id===departmentId)?departmentId:'');
+            edLoadDepartment(ed('ed-dept-select').value);
+            renderEdCategories();renderEdFeatured();syncProductDepartment('');syncProductDepartment('edit-');
+        }
+        function edLoadDepartment(id){
+            const d=editorialState.departments.find(d=>d.id===id);
+            ed('ed-dept-id').value=d?.id||'';ed('ed-dept-name').value=d?.nombre||'';ed('ed-dept-description').value=d?.descripcion||'';ed('ed-dept-order').value=d?.orden??50;
+            ed('ed-dept-image').value=d?.imagen_url||'';ed('ed-dept-file').value='';
+            edOptions(ed('ed-dept-photo-product'),[['','Conservar fotografía actual'],['__auto','Automática: primera pieza disponible'],...edProducts().filter(p=>p.imagen_url).map(p=>[p.imagen_url,p.codigo_interno+' · '+p.nombre_comercial])],'');
+        }
+        function renderEdCategories(){
+            const map=new Map(editorialState.assignments.map(a=>[a.categoria,a.departamento_id]));
+            const categories=[...new Set([...Object.keys(inventarioAdmin),...map.keys()])].sort((a,b)=>a.localeCompare(b,'es'));
+            const box=ed('ed-category-list');box.replaceChildren();
+            for(const cat of categories){const row=edNode('div','ed-category-row');row.append(edNode('span','',cat));
+                const select=edNode('select');select.setAttribute('aria-label','Departamento de '+cat);edOptions(select,edDepartmentOptions(),map.get(cat)||'otros');
+                const save=edNode('button','','Guardar');save.type='button';save.addEventListener('click',()=>edSave(save,async()=>{
+                    const{data,error}=await supabase.from('li_categorias_departamento').upsert({categoria:cat,departamento_id:select.value}).select('categoria').single();
+                    if(error)throw error;if(!data)throw new Error('No se guardó la categoría.');
+                },'Categoría trasladada. Todas sus piezas se mostrarán en ese departamento.'));
+                row.append(select,save);box.append(row);
+            }
+        }
+        function renderEdFeatured(){
+            const selected=new Map(editorialState.featured.map(f=>[f.producto_id,f.orden]));const box=ed('ed-feature-list');box.replaceChildren();
+            const products=edProducts().filter(p=>p.estado==='Disponible'||selected.has(p.id));
+            for(const p of products){const row=edNode('div','ed-feature-row');row.dataset.search=(p.codigo_interno+' '+p.nombre_comercial).toLowerCase();
+                const check=edNode('input');check.type='checkbox';check.value=p.id;check.checked=selected.has(p.id);check.setAttribute('aria-label','Destacar '+p.nombre_comercial);
+                const img=edNode('img');img.alt='';if(p.imagen_url)img.src=edImage(p.imagen_url);
+                const name=edNode('div','',p.nombre_comercial);name.append(edNode('small','',p.codigo_interno+' · '+p.estado));
+                const order=edNode('input');order.type='number';order.min='0';order.max='999';order.value=selected.get(p.id)||0;order.setAttribute('aria-label','Orden de '+p.nombre_comercial);
+                check.addEventListener('change',()=>{if(ed('ed-feature-list').querySelectorAll('input[type=checkbox]:checked').length>5){check.checked=false;edStatus('Elige como máximo cinco piezas destacadas.',true);}edFeatureCount();});
+                row.append(check,img,name,order);box.append(row);
+            }edFeatureCount();ed('ed-feature-search').value='';
+        }
+        function edFeatureCount(){ed('ed-feature-count').textContent=ed('ed-feature-list').querySelectorAll('input[type=checkbox]:checked').length+' de 5 piezas elegidas';}
+        function syncProductDepartment(prefix){
+            const select=ed(prefix+'departamento');if(!select)return;
+            const previous=select.value,category=ed(prefix+'categoria').value;
+            const assigned=editorialState.assignments.find(a=>a.categoria===category);
+            edOptions(select,editorialState.ready?edDepartmentOptions():[['','Primero instala el SQL V5.9']],assigned?.departamento_id||previous||'ropa');
+            select.disabled=Boolean(assigned)||!editorialState.ready;
+        }
+        async function edUpload(file){
+            if(!file)return null;
+            const ext=file.name.split('.').pop().toLowerCase();
+            if(!['jpg','jpeg','png','webp','avif','gif'].includes(ext)||!file.type.startsWith('image/'))throw new Error('Selecciona una fotografía JPG, PNG, WebP, AVIF o GIF.');
+            if(file.size>8*1024*1024)throw new Error('La fotografía debe pesar como máximo 8 MB.');
+            const name='escaparate/'+crypto.randomUUID()+'.'+ext;
+            const{error}=await supabase.storage.from('catalogo').upload(name,file,{upsert:false,cacheControl:'3600'});if(error)throw error;return name;
+        }
+        async function edSave(btn,operation,message){
+            if(btn.disabled)return;btn.disabled=true;const text=btn.textContent;btn.textContent='Guardando…';
+            try{await exigirAcceso();if(!editorialState.ready)throw new Error('Primero carga el escaparate con el SQL V5.9 instalado.');await operation();await cargarEscaparate();if(usuarioAutorizado)edStatus(editorialState.ready?message:'El cambio se guardó, pero no pudimos recargar la configuración. Actualiza el panel.',!editorialState.ready);}
+            catch(error){edStatus(mensajeError(error),true);}finally{btn.disabled=false;btn.textContent=text;}
+        }
+        ed('ed-dept-select').addEventListener('change',e=>edLoadDepartment(e.target.value));
+        ed('ed-feature-search').addEventListener('input',e=>{const term=e.target.value.trim().toLowerCase();ed('ed-feature-list').querySelectorAll('.ed-feature-row').forEach(row=>row.hidden=!row.dataset.search.includes(term));});
+        ed('ed-cover-form').addEventListener('submit',e=>{e.preventDefault();edSave(e.submitter||e.target.querySelector('button'),async()=>{
+            const uploaded=await edUpload(ed('ed-cover-file').files[0]);const image=uploaded||(ed('ed-cover-clear').checked?'':ed('ed-cover-image').value);
+            const{data,error}=await supabase.from('li_portada').upsert({id:1,titulo:ed('ed-cover-title').value.trim(),subtitulo:ed('ed-cover-subtitle').value.trim(),producto_id:ed('ed-cover-product').value||null,imagen_url:image}).select('id').single();if(error)throw error;if(!data)throw new Error('No se guardó la portada.');
+        },'Portada guardada. Abre la tienda o actualízala para verla.');});
+        ed('ed-dept-form').addEventListener('submit',e=>{e.preventDefault();edSave(e.submitter||e.target.querySelector('button'),async()=>{
+            const uploaded=await edUpload(ed('ed-dept-file').files[0]);const chosen=ed('ed-dept-photo-product').value;
+            const image=uploaded||(chosen==='__auto'?'':chosen||ed('ed-dept-image').value);
+            const id=ed('ed-dept-id').value||'d-'+crypto.randomUUID();
+            const{data,error}=await supabase.from('li_departamentos').upsert({id,nombre:ed('ed-dept-name').value.trim(),descripcion:ed('ed-dept-description').value.trim(),imagen_url:image,orden:Number(ed('ed-dept-order').value)}).select('id').single();if(error)throw error;if(!data)throw new Error('No se guardó el departamento.');
+            ed('ed-dept-id').value=id;
+        },'Departamento guardado. Se mostrará al tener productos disponibles.');});
+        ed('ed-featured-form').addEventListener('submit',e=>{e.preventDefault();edSave(e.submitter||e.target.querySelector('button'),async()=>{
+            const ids=[...ed('ed-feature-list').querySelectorAll('.ed-feature-row')].filter(row=>row.querySelector('input[type=checkbox]').checked).sort((a,b)=>Number(a.querySelector('input[type=number]').value)-Number(b.querySelector('input[type=number]').value)).map(row=>row.querySelector('input[type=checkbox]').value);
+            const{error}=await supabase.rpc('li_guardar_destacados',{p_ids:ids});if(error)throw error;
+        },'Selección destacada guardada. Las piezas agotadas se ocultan al público.');});
+        for(const tab of ['cover','depts','cats','featured'])ed('ed-tab-'+tab).addEventListener('click',()=>{
+            for(const key of ['cover','depts','cats','featured']){ed('ed-'+key).hidden=key!==tab;ed('ed-tab-'+key).setAttribute('aria-selected',String(key===tab));ed('ed-tab-'+key).tabIndex=key===tab?0:-1;}
+        });
+        for(const prefix of ['','edit-'])ed(prefix+'categoria').addEventListener('input',()=>syncProductDepartment(prefix));
+
+        ['cover','depts','cats','featured'].forEach((tab,index,list)=>{const node=ed('ed-tab-'+tab);node.tabIndex=index===0?0:-1;node.addEventListener('keydown',event=>{let next=index;if(event.key==='ArrowRight')next=(index+1)%list.length;else if(event.key==='ArrowLeft')next=(index+list.length-1)%list.length;else if(event.key==='Home')next=0;else if(event.key==='End')next=list.length-1;else return;event.preventDefault();ed('ed-tab-'+list[next]).click();ed('ed-tab-'+list[next]).focus();});});
+        function adaptarNuevaPieza(){
+            const departamento=ed('departamento').value;
+            if(departamento&&departamento!=='ropa'&&departamento!=='accesorios'&&ed('talla').value==='Unitalla')ed('talla').value='';
+        }
+        ed('departamento').addEventListener('change',adaptarNuevaPieza);
+        ed('categoria').addEventListener('input',adaptarNuevaPieza);
+
         // V5.7: la autorización real se aplica en Supabase, no en el HTML.
         const authScreen = document.getElementById('auth-screen');
         const adminApp = document.getElementById('admin-app');
@@ -342,6 +487,8 @@
             adminApp.inert = true;
             authScreen.hidden = false;
             inventarioAdmin = Object.create(null);
+            editorialLoadSerial++;editorialState={departments:[],assignments:[],cover:{},featured:[],ready:false};
+            ed('ed-category-list').replaceChildren();ed('ed-feature-list').replaceChildren();
             categoriaActualAdmin = '';
             document.getElementById('admin-grid').replaceChildren();
             document.getElementById('tabla-apartados').replaceChildren();
@@ -602,21 +749,21 @@
             if (!/^[-A-Za-z0-9_]{1,64}$/.test(codigoInterno.trim())) throw new Error('El código debe usar sólo letras, números, guiones o guion bajo (máximo 64).');
             const extension = archivoFile.name.split('.').pop().toLowerCase();
             if (!['jpg','jpeg','png','webp','avif','gif'].includes(extension) || !archivoFile.type.startsWith('image/')) throw new Error('Selecciona una fotografía JPG, PNG, WebP, AVIF o GIF.');
-            const nombreArchivoFinal = `${codigoInterno.trim()}.${extension}`;
-            const { error } = await supabase.storage.from('catalogo').upload(nombreArchivoFinal, archivoFile, { cacheControl: '3600', upsert: true });
+            const nombreArchivoFinal = `piezas/${codigoInterno.trim()}-${crypto.randomUUID()}.${extension}`;
+            const { error } = await supabase.storage.from('catalogo').upload(nombreArchivoFinal, archivoFile, { cacheControl: '3600', upsert: false });
             if (error) throw new Error("Error subiendo foto: " + error.message);
             return nombreArchivoFinal;
         }
 
         document.getElementById('form-producto').addEventListener('submit', async (e) => {
             e.preventDefault();
-            try { await exigirAcceso(); } catch(err) { alert(mensajeError(err)); return; }
+            try { await exigirAcceso();if(!editorialState.ready)throw new Error('Primero instala el SQL V5.9 y actualiza el panel.'); } catch(err) { alert(mensajeError(err)); return; }
             const btn = document.getElementById('btn-guardar-nuevo');
             const txtOriginal = btn.innerHTML;
             if (btn.disabled) return;
             btn.disabled = true;
             const msj = document.getElementById('mensaje');
-            const codigo = document.getElementById('codigo').value;
+            const codigo = document.getElementById('codigo').value.trim().toUpperCase();
             const archivoFile = document.getElementById('archivo-foto').files[0];
 
             if (!archivoFile) { btn.disabled = false; msj.innerHTML = `<span class="text-red-600">Selecciona una fotografía.</span>`; return; }
@@ -631,7 +778,7 @@
                     nombre_comercial: document.getElementById('nombre').value,
                     categoria: document.getElementById('categoria').value,
                     precio: document.getElementById('precio').value,
-                    talla: document.getElementById('talla').value || 'Unitalla',
+                    talla: document.getElementById('talla').value || null,
                     medidas: document.getElementById('medidas').value || 'N/A',
                     material: document.getElementById('material').value || 'N/A',
                     cuidados: document.getElementById('cuidados').value || 'N/A',
@@ -640,7 +787,7 @@
                     estado: 'Disponible'
                 };
 
-                const { error } = await supabase.from('productos').insert([nuevo]);
+                const { error } = await supabase.rpc('li_guardar_producto',{p_producto:nuevo,p_departamento:document.getElementById('departamento').value,p_nuevo:true});
                 if (error) throw new Error(error.message);
 
                 msj.innerHTML = `<span class="text-green-600"><i class="fas fa-check-circle"></i> Éxito.</span>`;
@@ -658,7 +805,7 @@
 
         document.getElementById('form-editar').addEventListener('submit', async (e) => {
             e.preventDefault();
-            try { await exigirAcceso(); } catch(err) { alert(mensajeError(err)); return; }
+            try { await exigirAcceso();if(!editorialState.ready)throw new Error('Primero instala el SQL V5.9 y actualiza el panel.'); } catch(err) { alert(mensajeError(err)); return; }
             const btn = document.getElementById('btn-guardar-edicion');
             const txtOriginal = btn.innerHTML;
             if (btn.disabled) return;
@@ -677,16 +824,15 @@
                     nombre_comercial: document.getElementById('edit-nombre').value,
                     categoria: document.getElementById('edit-categoria').value,
                     precio: document.getElementById('edit-precio').value,
-                    talla: document.getElementById('edit-talla').value || 'Unitalla',
+                    talla: document.getElementById('edit-talla').value || null,
                     medidas: document.getElementById('edit-medidas').value || 'N/A',
                     material: document.getElementById('edit-material').value || 'N/A',
                     cuidados: document.getElementById('edit-cuidados').value || 'N/A',
                     eslogan: document.getElementById('edit-eslogan').value,
                     imagen_url: nombreArchivoDefinitivo
                 };
-                const { data, error } = await supabase.from('productos').update(datosActualizados).eq('codigo_interno', codigo).select('id');
+                const { error } = await supabase.rpc('li_guardar_producto',{p_producto:{...datosActualizados,codigo_interno:codigo},p_departamento:document.getElementById('edit-departamento').value,p_nuevo:false});
                 if (error) throw new Error(mensajeError(error));
-                if (!data?.length) throw new Error('No se guardaron los cambios. Comprueba tu acceso.');
                 await cargarTodo();
                 cerrarEdicion();
             } catch (err) {
@@ -708,6 +854,7 @@
             document.getElementById('edit-codigo').value = producto.codigo_interno;
             document.getElementById('edit-nombre').value = producto.nombre_comercial;
             document.getElementById('edit-categoria').value = producto.categoria;
+            syncProductDepartment('edit-');
             document.getElementById('edit-precio').value = producto.precio;
             document.getElementById('edit-talla').value = producto.talla || '';
             document.getElementById('edit-medidas').value = producto.medidas || '';
@@ -1124,7 +1271,7 @@
                             <h1 class="portada-marca">Laollaga Istmeña</h1>
                             <div class="portada-lema">Arte tejido, tradición que se viste.</div>
                             <div class="portada-separador"></div>
-                            <div class="portada-subtitulo">Lookbook Oficial &bull; Colección Exclusiva</div>
+                            <div class="portada-subtitulo">Catálogo Oficial &bull; Colección Disponible</div>
                         </div>
                         <div class="portada-contacto">
                             Santiago Laollaga, Región del Istmo, Oaxaca<br>
@@ -1149,10 +1296,10 @@
                     <div class="hoja-a4">
                         <div>
                             <div class="encabezado-hoja">
-                                <span>Laollaga Istmeña &bull; Alta Artesanía Zapoteca</span>
+                                <span>Laollaga Istmeña &bull; Colección Oficial</span>
                                 <span>Colección 2026</span>
                             </div>
-                            <div class="categoria-header">${escapeHtml(categoria)} &bull; Pieza de Gala</div>
+                            <div class="categoria-header">${escapeHtml(categoria)} &bull; Detalle de Pieza</div>
                         </div>
                         <div class="hero-contenedor">
                             <div class="hero-card">
@@ -1160,14 +1307,14 @@
                                     <img src="${imgUrl}" alt="${escapeHtml(p.nombre_comercial)}">
                                 </div>
                                 <div class="hero-info">
-                                    <span class="hero-badge"><i class="fas fa-gem"></i> Pieza Única de Gala</span>
+                                    <span class="hero-badge"><i class="fas fa-gem"></i> Pieza de la Colección</span>
                                     <span class="hero-codigo">${escapeHtml(p.codigo_interno)}</span>
                                     <h3 class="hero-titulo">${escapeHtml(p.nombre_comercial)}</h3>
-                                    <p class="hero-eslogan">"${escapeHtml(p.eslogan || 'Elegancia y porte ancestral zapoteco en una pieza inigualable.')}"</p>
-                                    <div class="hero-spec"><strong>Material:</strong> ${escapeHtml(p.material || 'Textil artesanal')}</div>
-                                    <div class="hero-spec"><strong>Medidas:</strong> ${escapeHtml(p.medidas || 'Corte tradicional')}</div>
-                                    <div class="hero-spec"><strong>Talla:</strong> ${escapeHtml(p.talla || 'Unitalla')}</div>
-                                    <div class="hero-spec"><strong>Cuidados:</strong> ${escapeHtml(p.cuidados || 'Lavar a mano')}</div>
+                                    <p class="hero-eslogan">"${escapeHtml(p.eslogan || 'Descubre los detalles de esta pieza de nuestra colección.')}"</p>
+                                    <div class="hero-spec"><strong>Material:</strong> ${escapeHtml(p.material || 'Consultar características')}</div>
+                                    <div class="hero-spec"><strong>Medidas:</strong> ${escapeHtml(p.medidas || 'Consultar')}</div>
+                                    ${p.talla && p.talla !== 'N/A' ? `<div class="hero-spec"><strong>Talla:</strong> ${escapeHtml(p.talla)}</div>` : ''}
+                                    <div class="hero-spec"><strong>Cuidados:</strong> ${escapeHtml((p.cuidados && p.cuidados !== 'N/A') ? p.cuidados : 'Consultar cuidados')}</div>
                                     <div class="hero-precio">$${escapeHtml(p.precio)} MXN</div>
                                 </div>
                             </div>
@@ -1191,7 +1338,7 @@
                     <div class="hoja-a4">
                         <div>
                             <div class="encabezado-hoja">
-                                <span>Laollaga Istmeña &bull; Alta Artesanía Zapoteca</span>
+                                <span>Laollaga Istmeña &bull; Colección Oficial</span>
                                 <span>Colección 2026</span>
                             </div>
                             <div class="categoria-header">${escapeHtml(categoria)}${subTituloLote}</div>
@@ -1201,7 +1348,7 @@
 
                     lote.forEach(p => {
                         const imgUrl = p.imagen_url ? `https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${escapeHtml(p.imagen_url)}` : '';
-                        const materialTxt = (p.material && p.material !== 'N/A') ? p.material : 'Textil tradicional hecho a mano';
+                        const materialTxt = (p.material && p.material !== 'N/A') ? p.material : 'Consulta sus características';
 
                         htmlPrint += `
                             <div class="producto-tarjeta">
@@ -1215,7 +1362,7 @@
                                 </div>
                                 <div>
                                     <div class="item-precio">$${escapeHtml(p.precio)} MXN</div>
-                                    <div class="item-talla">Talla: ${escapeHtml(p.talla || 'Unitalla')}</div>
+                                    ${p.talla && p.talla !== 'N/A' ? `<div class="item-talla">Talla: ${escapeHtml(p.talla)}</div>` : ''}
                                 </div>
                             </div>
                         `;
@@ -1311,6 +1458,7 @@
                 if(categoriaActualAdmin && inventarioAdmin[categoriaActualAdmin]) mostrarInventario(categoriaActualAdmin);
                 else if (Array.from(categoriasUnicas).length > 0) mostrarInventario(Array.from(categoriasUnicas)[0]);
                 else grid.innerHTML = `<div class="text-center py-10 text-gray-500 text-xs col-span-full">Inventario vacío.</div>`;
+                await cargarEscaparate();
             } catch (err) {
                 grid.innerHTML = `<div class="text-red-600 p-6 text-center col-span-full font-bold">Error: ${escapeHtml(err.message)}</div>`;
             }
