@@ -1,381 +1,387 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laollaga Istmeña | Catálogo Oficial</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .oro { color: #d4af37; }
-        .bg-textura { background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png'); }
-        .tab-activa { background-color: #000 !important; color: #d4af37 !important; border-color: #000 !important; font-weight: bold; }
-        .tab-inactiva { background-color: #fff !important; color: #6b7280 !important; border-color: #e5e7eb !important; }
-        .zoom-activo { transform: scale(1.8); cursor: zoom-out !important; }
-        .zoom-normal { transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); cursor: zoom-in; }
-        .fade-in { animation: fadeIn 0.4s ease-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#111310">
+<meta name="description" content="Explora la colección de prendas y accesorios de Laollaga Istmeña. Elige tus piezas y consulta disponibilidad por WhatsApp.">
+<title>Laollaga Istmeña | Colección oficial</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0"></script>
+<style>
+:root{--ink:#20251f;--night:#111310;--gold:#c4a24e;--muted:#65695f;--paper:#f7f5ef;--line:#dedfd5;--white:#fff;--serif:Georgia,'Times New Roman',serif;--sans:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:24px}body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.5}body.modal-open{overflow:hidden}button,input,a{-webkit-tap-highlight-color:transparent}button,input{font:inherit}button,a{touch-action:manipulation}button{cursor:pointer}a{color:inherit}button:disabled{cursor:default;opacity:.55}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #a3822b;outline-offset:4px}button{color:inherit}img{display:block;max-width:100%}[hidden]{display:none!important}.wrap{width:min(1240px,calc(100% - 64px));margin-inline:auto}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.skip{position:fixed;top:8px;left:8px;background:white;padding:12px;z-index:300;transform:translateY(-200%)}.skip:focus{transform:none}.eyebrow{font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-weight:650}.icon{width:20px;height:20px;flex-shrink:0;vertical-align:middle}.nav{height:80px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #ffffff20}.brand{display:flex;gap:11px;align-items:center;text-decoration:none}.brand img{width:38px;height:38px;border-radius:50%}.brand span{font:16px var(--serif);letter-spacing:.09em;color:#f1e6c9}.nav-right{display:flex;align-items:center;gap:28px}.nav-link{font-size:12px;text-decoration:none;color:#e6e6dc}.nav-bag{display:flex;gap:10px;align-items:center;border:1px solid #ffffff45;background:transparent;color:white;padding:10px 15px;border-radius:4px;font-size:12px}.count{background:#c4a24e;color:#121510;min-width:20px;border-radius:50%;font-size:10px;line-height:20px;text-align:center;font-weight:700}.hero{background:var(--night);color:#f3f0e6;position:relative;overflow:hidden}.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 76% 42%,#b49a3c17,transparent 48%);pointer-events:none}.hero-inner{position:relative;display:flex;align-items:center;justify-content:space-between;padding:52px 0 54px;gap:40px}.hero-copy{max-width:700px}.hero .eyebrow{color:#cbb477;display:flex;align-items:center;gap:12px}.hero .eyebrow::before{content:'';width:30px;height:1px;background:#cbb477}.hero h1{font:normal clamp(38px,4.7vw,64px)/1.08 var(--serif);margin:20px 0 15px;letter-spacing:-.025em}.hero .motto{font:italic 20px/1.4 var(--serif);color:#d5c395;margin:0}.hero-foot{color:#a8afa0;font-size:12px;margin:26px 0 0;display:flex;gap:10px;align-items:center}.hero-foot i{width:5px;height:5px;border-radius:50%;background:var(--gold)}.hero-logo{position:relative;width:196px;height:196px;padding:14px;flex-shrink:0}.hero-logo::before,.hero-logo::after{content:'';position:absolute;inset:0;border:1px solid #c4a24e70;border-radius:50%}.hero-logo::after{inset:-14px;border-color:#c4a24e20}.logo-fallback{display:grid;place-items:center;width:100%;height:100%;border-radius:50%;font:normal 30px var(--serif);color:var(--gold)}.brand .logo-fallback{width:38px;height:38px;font-size:18px}.hero-logo img{width:100%;height:100%;object-fit:contain;border-radius:50%}.gold-line{height:3px;background:linear-gradient(90deg,#635326,#c5a351,#635326)}.intro{padding:40px 0 28px;display:flex;align-items:end;justify-content:space-between;gap:24px}.intro h2{font:normal 34px/1.15 var(--serif);margin:8px 0 0}.intro .eyebrow{color:#7b6530}.intro p{font-size:13px;color:var(--muted);margin:0;max-width:340px}.search-row{display:flex;align-items:center;gap:12px}.search{position:relative;flex:1}.search>.icon{position:absolute;left:17px;top:17px;color:#777c70}.search input{background:#fff;border:1px solid var(--line);border-radius:5px;padding:15px 48px;width:100%;color:var(--ink);font-size:14px;min-height:54px}.search input::placeholder{color:#73786c}.clear{position:absolute;right:10px;top:8px;background:none;border:0;padding:9px;font-size:20px;line-height:20px}.refresh{display:flex;align-items:center;gap:8px;min-height:54px;background:transparent;border:1px solid var(--line);border-radius:5px;padding:12px 17px;font-size:12px}.chips{display:flex;gap:8px;overflow:auto;padding:20px 2px 17px;scrollbar-width:thin;scrollbar-color:#c7c8bb transparent}.chip{flex-shrink:0;border:1px solid var(--line);border-radius:4px;background:transparent;padding:10px 14px;min-height:42px;font-size:11px;transition:background .2s}.chip[aria-pressed=true]{background:var(--ink);color:white;border-color:var(--ink)}.chip small{font:inherit;opacity:.6;margin-left:8px}.catalog-top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0 22px;font-size:12px;color:var(--muted)}.last-update{font-size:11px}.notice{background:#eeeee3;border:1px solid #d7d9c8;padding:14px 17px;font-size:13px;border-radius:5px;margin-bottom:20px}.notice.error{background:#fff3ee;border-color:#e2c9b9;color:#813b24}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:30px 24px}.card{background:white;border:1px solid #e4e5dc;border-radius:6px;overflow:hidden;transition:box-shadow .25s,transform .25s}.card:hover{box-shadow:0 12px 32px #20251f0c;transform:translateY(-3px)}.card-open{display:block;width:100%;padding:0;background:none;border:0;text-align:left}.photo{position:relative;aspect-ratio:1/1.12;background:#eeeee9;overflow:hidden;display:grid;place-items:center}.photo img{width:100%;height:100%;object-fit:contain;transition:transform .5s}.card:hover .photo img{transform:scale(1.035)}.photo .placeholder{font:italic 17px var(--serif);color:#72796b;padding:30px;text-align:center}.badge{position:absolute;left:14px;top:14px;background:#fffefaee;padding:5px 9px;border-radius:3px;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#45513b;display:flex;gap:6px;align-items:center}.badge::before{content:'';width:5px;height:5px;border-radius:50%;background:#71865b}.card-info{padding:19px 20px 18px}.card-code{font-size:10px;letter-spacing:.14em;color:#767c70}.card h3{font:normal 22px/1.2 var(--serif);margin:8px 0 12px;overflow-wrap:anywhere}.card-category{font-size:11px;color:#767c70;margin:0 0 14px}.card-bottom{display:flex;justify-content:space-between;align-items:center;border-top:1px solid #eeeeE6;padding-top:14px;gap:8px}.price{font-size:17px;font-weight:600;letter-spacing:-.02em}.price small{font-size:9px;font-weight:400;letter-spacing:.07em;margin-left:3px;color:#777c70}.view{font-size:10px;display:flex;align-items:center;gap:7px}.selected-flag{font-size:10px;color:#47613c;background:#ecf2e8;padding:3px 6px;border-radius:3px;margin-top:10px;display:inline-block}.pagination{display:flex;justify-content:center;align-items:center;gap:18px;padding:36px 0 8px}.pagination button{border:1px solid var(--line);background:white;padding:10px 16px;border-radius:4px;font-size:12px;min-height:44px}.pagination span{font-size:12px;color:var(--muted)}.empty{grid-column:1/-1;text-align:center;border:1px solid var(--line);border-radius:6px;padding:60px 20px;background:#ffffff65}.empty h3{font:28px var(--serif);margin:0 0 12px}.empty p{font-size:14px;color:var(--muted)}.button{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:13px 20px;border-radius:4px;background:var(--ink);border:1px solid var(--ink);color:white;font-size:12px;font-weight:600;text-decoration:none}.button.light{background:transparent;color:var(--ink);border-color:#caccbd}.button.wa{background:#294431;border-color:#294431}.full{width:100%}.help-band{margin:56px auto 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);display:grid;grid-template-columns:repeat(3,1fr);padding:26px 0;gap:32px}.help-band h3{font:19px var(--serif);margin:0 0 7px}.help-band p{font-size:12px;color:var(--muted);margin:0}.help-num{font:italic 16px var(--serif);color:#8e763d;display:block;margin-bottom:9px}.footer{padding:38px 0 105px;display:flex;justify-content:space-between;align-items:center;gap:20px}.footer .footer-brand{font:18px var(--serif);margin:0 0 6px}.footer p,.footer a{font-size:11px;color:var(--muted);margin:0}.floating-bag{position:fixed;bottom:22px;right:24px;z-index:20;border:1px solid #ad914c;border-radius:7px;box-shadow:0 8px 28px #0002;background:#20251f;color:white;padding:13px 17px;display:flex;align-items:center;gap:11px;font-size:12px;min-height:50px}.toast{position:fixed;bottom:88px;right:24px;z-index:200;background:#fffefa;border:1px solid #b9bea9;border-radius:5px;box-shadow:0 8px 24px #0001;padding:13px 18px;max-width:min(400px,calc(100vw - 32px));font-size:13px}.skeleton{height:360px;border-radius:6px;background:linear-gradient(90deg,#e9eae2 25%,#f2f3eb 50%,#e9eae2 75%);background-size:200% 100%;animation:shimmer 1.4s infinite}@keyframes shimmer{to{background-position:-200% 0}}
+dialog{border:1px solid #d9dbc9;border-radius:9px;padding:0;background:var(--paper);color:var(--ink);max-height:92dvh;max-width:calc(100vw - 32px);box-shadow:0 30px 100px #0006}dialog::backdrop{background:#111710ba;backdrop-filter:blur(5px)}.dialog-head{position:sticky;top:0;background:#f7f5eff5;z-index:2;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:15px 20px;gap:12px}.dialog-head h2{font:23px var(--serif);margin:0}.close-dialog{display:flex;align-items:center;gap:6px;border:0;background:none;padding:8px;min-height:40px;font-size:12px}.close-dialog .icon{width:17px;height:17px}#product-dialog{width:1050px}.product-layout{display:grid;grid-template-columns:1.1fr 1fr}.product-image{background:#e8e9e2;padding:20px;display:grid;place-items:center;min-height:450px;overflow:hidden}.zoom-btn{border:0;background:none;width:100%;height:100%;padding:0;cursor:zoom-in;overflow:hidden;min-height:300px}.zoom-btn[aria-pressed=true]{cursor:zoom-out}.zoom-btn img{width:100%;height:100%;max-height:66dvh;object-fit:contain;transition:transform .25s}.zoom-btn[aria-pressed=true] img{transform:scale(1.7)}.product-info{padding:32px;min-width:0}.product-meta{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:11px;color:#747969}.copy{font-size:11px;background:none;border:1px solid var(--line);padding:8px 10px;border-radius:4px}.product-title{font:normal 35px/1.12 var(--serif);margin:20px 0 14px;overflow-wrap:anywhere}.product-slogan{font:italic 16px/1.6 var(--serif);color:#6d705d;border-left:2px solid var(--gold);padding-left:14px;margin:0 0 24px}.product-price{font-size:28px;font-weight:500;margin:0 0 27px}.product-price small{font:11px var(--sans);color:var(--muted);margin-left:5px}.details-title{font-size:10px;letter-spacing:.12em;text-transform:uppercase;margin:0 0 13px;color:#7b6530}.details{margin:0 0 26px}.details>div{border-bottom:1px solid var(--line);padding:12px 0;display:grid;grid-template-columns:95px 1fr;gap:12px;font-size:12px}.details dt{color:var(--muted)}.details dd{margin:0;overflow-wrap:anywhere}.micro{font-size:11px;color:var(--muted);line-height:1.6;margin:12px 0 0}.product-actions{display:grid;gap:9px}#cart-dialog{width:570px}.cart-body{padding:23px}.cart-intro{font-size:12px;color:var(--muted);margin:0 0 20px}.cart-list{list-style:none;padding:0;margin:0}.cart-item{display:grid;grid-template-columns:65px 1fr 36px;gap:14px;padding:18px 0;border-bottom:1px solid var(--line);align-items:center}.cart-item img{width:65px;height:82px;object-fit:contain;background:#e9ebe2;border-radius:4px}.cart-placeholder{width:65px;height:82px;background:#e9ebe2;border-radius:4px;display:grid;place-items:center;font-size:11px;color:var(--muted)}.cart-item h3{font:20px/1.2 var(--serif);margin:5px 0 7px;overflow-wrap:anywhere}.cart-item .item-code{font-size:10px;color:var(--muted);letter-spacing:.06em}.cart-item .item-price{font-size:13px;margin:0}.remove{background:transparent;border:0;width:36px;height:44px;display:grid;place-items:center}.item-warning{font-size:11px;color:#8a4629;margin:7px 0 0}.cart-total{display:flex;justify-content:space-between;align-items:baseline;padding:24px 0 19px;gap:16px}.cart-total span{font-size:12px;color:var(--muted)}.cart-total strong{font-size:25px;font-weight:500}.cart-bottom{display:grid;gap:10px}.review{background:#fff5e7;border:1px solid #dfc9a6;border-radius:5px;padding:15px;margin:0 0 18px;font-size:12px}.review ul{padding-left:18px;margin:8px 0 15px}.ready{background:#e9f0e7;border:1px solid #c6d3bd;border-radius:5px;padding:13px;font-size:12px;margin:0 0 12px}.cart-empty{text-align:center;padding:30px 15px 40px}.cart-empty h3{font:26px var(--serif);margin:0 0 12px}.cart-empty p{font-size:13px;color:var(--muted)}
+@media(min-width:1400px){.hero-inner{padding-block:64px}}@media(max-width:850px){.wrap{width:calc(100% - 40px)}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 16px}.hero-logo{width:160px;height:160px}.hero h1{font-size:46px}.intro p{max-width:260px}.product-layout{grid-template-columns:1fr 1fr}.product-info{padding:24px}.product-title{font-size:29px}.product-image{min-height:350px}}@media(max-width:600px){.wrap{width:calc(100% - 32px)}.nav{height:65px}.brand span{font-size:12px;letter-spacing:.06em}.brand img{width:30px;height:30px}.nav-right{gap:10px}.nav-link{display:none}.nav-bag{padding:9px 11px}.nav-bag .bag-label{display:none}.hero-inner{padding:32px 0 36px;gap:12px}.hero-copy{max-width:100%}.hero h1{font-size:39px;margin:17px 0 12px;max-width:290px}.hero .motto{font-size:17px;max-width:245px}.hero-logo{width:80px;height:80px;padding:6px;position:absolute;right:0;top:24px;opacity:.95}.hero-logo::after{inset:-6px}.hero .eyebrow{font-size:9px;max-width:220px}.hero-foot{font-size:10px;margin-top:23px;gap:8px}.intro{padding:29px 0 21px;display:block}.intro h2{font-size:29px}.intro p{max-width:100%;margin-top:10px;font-size:12px}.intro .eyebrow{font-size:9px}.refresh{padding:12px;min-width:48px;justify-content:center}.refresh span{display:none}.search input{font-size:16px;padding-left:43px}.chips{padding-top:15px;padding-bottom:13px}.chip{font-size:10px;padding:9px 11px}.catalog-top{align-items:start;padding-bottom:17px}.last-update{font-size:9px;text-align:right;max-width:125px}.grid{gap:17px 11px}.card{border-radius:5px}.card-info{padding:12px 11px}.card h3{font-size:18px;margin:7px 0 9px}.card-category{font-size:9px;margin-bottom:11px}.card-code{font-size:9px}.badge{top:9px;left:9px;font-size:7px;padding:4px 6px;letter-spacing:.07em}.card-bottom{align-items:start;flex-direction:column;gap:10px;padding-top:10px}.price{font-size:16px}.view{font-size:9px}.selected-flag{font-size:9px}.help-band{grid-template-columns:1fr;gap:23px;margin-top:36px;padding:25px 0}.help-band>div{padding-left:37px;position:relative}.help-num{position:absolute;left:0;top:2px}.help-band h3{font-size:18px}.footer{display:block;padding:26px 0 100px}.footer>div+div{margin-top:15px}.floating-bag{bottom:16px;right:16px;padding:12px 15px;font-size:11px}.toast{bottom:80px;right:16px}dialog{max-width:calc(100vw - 20px);max-height:94dvh;border-radius:7px}.dialog-head{padding:10px 13px}.dialog-head h2{font-size:20px}.product-layout{grid-template-columns:1fr}.product-image{min-height:0;padding:12px}.zoom-btn{min-height:0;height:280px}.zoom-btn img{height:280px;max-height:45dvh}.product-info{padding:23px 20px}.product-title{font-size:29px;margin-top:16px}.product-price{font-size:26px;margin-bottom:22px}.product-slogan{font-size:15px}.cart-body{padding:18px}.cart-item{gap:11px;grid-template-columns:55px 1fr 32px}.cart-item img,.cart-placeholder{width:55px;height:72px}.cart-item h3{font-size:18px}.pagination{gap:12px}.pagination button{padding:10px 12px}.notice{font-size:12px}.empty{padding:42px 16px}.empty h3{font-size:24px}}@media(max-width:360px){.hero h1{font-size:34px;max-width:225px}.hero-logo{width:64px;height:64px}.brand span{font-size:11px}.card h3{font-size:16px}.card-info{padding:11px 9px}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
+
+@media(min-width:601px){.hero-inner{padding:34px 0 36px}.hero h1{font-size:clamp(38px,4.3vw,58px);margin:17px 0 12px}.hero-logo{width:164px;height:164px}.hero-foot{margin-top:20px}.intro{padding-top:30px;padding-bottom:23px}}
+@media(max-width:600px){.hero-inner{padding:26px 0 29px}.hero h1{font-size:36px;max-width:245px}.hero-logo{width:72px;height:72px;top:20px}.hero .eyebrow{max-width:245px;font-size:8.5px;letter-spacing:.15em;gap:8px}.hero .eyebrow::before{width:20px}.hero-foot{margin-top:19px}.intro{padding:24px 0 17px}.intro .eyebrow{display:none}.intro h2{margin:0}}
+</style>
 </head>
-<body class="bg-[#fcfbf9] bg-textura bg-fixed text-gray-800 font-sans antialiased selection:bg-black selection:text-white">
-    
-    <header class="bg-[#0a0a0a] text-center py-12 md:py-16 px-4 shadow-2xl relative overflow-hidden bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]">
-        <div class="max-w-[180px] md:max-w-[220px] mx-auto mb-6 relative z-10">
-            <div class="w-36 h-36 md:w-44 md:h-44 mx-auto rounded-full p-1 bg-black shadow-[0_0_50px_rgba(212,175,55,0.4)] border-2 border-[#d4af37] flex items-center justify-center overflow-hidden">
-                <img src="https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/logo.png" alt="Laollaga Istmeña" class="w-full h-full object-cover rounded-full" onerror="this.src='https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/Laollaga_istmena_cutout(1).png'">
-            </div>
-        </div>
-        <h1 class="text-3xl md:text-5xl font-serif oro tracking-widest uppercase relative z-10 drop-shadow-md mb-2">Laollaga Istmeña</h1>
-        <p class="font-serif italic text-gray-300 text-sm md:text-lg tracking-[0.2em] relative z-10 opacity-90">Arte tejido, tradición que se viste.</p>
-        <div class="absolute bottom-0 left-0 w-full h-1.5 bg-gradient-to-r from-yellow-700 via-yellow-400 to-yellow-700"></div>
-    </header>
+<body>
+<a class="skip" href="#coleccion">Ir a la colección</a>
+<header class="hero">
+ <nav class="nav wrap" aria-label="Navegación principal">
+  <a class="brand" href="#inicio"><img data-logo alt="" width="38" height="38"><span>LAOLLAGA ISTMEÑA</span></a>
+  <div class="nav-right"><a class="nav-link" href="#coleccion">Explorar colección</a><button class="nav-bag" type="button" data-open-cart aria-label="Abrir mi selección"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 7h14l1 14H4L5 7Z"/><path d="M8 8V6a4 4 0 0 1 8 0v2"/></svg><span class="bag-label">Mi selección</span><span class="count" data-cart-count>0</span></button></div>
+ </nav>
+ <div class="hero-inner wrap" id="inicio"><div class="hero-copy"><div class="eyebrow">Prendas y accesorios del Istmo</div><h1>Laollaga Istmeña</h1><p class="motto">Arte tejido, tradición que se viste.</p><p class="hero-foot"><span>Encuentra tu próxima pieza</span><i aria-hidden="true"></i><span>Solicítala por WhatsApp</span></p></div><div class="hero-logo"><img data-logo alt="Emblema de Laollaga Istmeña" width="168" height="168"></div></div><div class="gold-line"></div>
+</header>
+<main id="coleccion" class="wrap">
+ <div class="intro"><div><div class="eyebrow">Elige con calma. Viste con identidad.</div><h2>La colección</h2></div><p>Explora las piezas disponibles, revisa sus detalles y reúne tus favoritas en una sola selección.</p></div>
+ <div class="search-row"><div class="search"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><label for="search" class="sr-only">Buscar piezas por nombre, código o material</label><input id="search" type="search" placeholder="Buscar nombre, código o material…" autocomplete="off"><button id="clear-search" class="clear" type="button" aria-label="Borrar búsqueda" hidden>×</button></div><button id="refresh" class="refresh" type="button" aria-label="Actualizar colección"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20 10a8 8 0 1 0-1 8M20 4v6h-6"/></svg><span>Actualizar</span></button></div>
+ <div id="categories" class="chips" role="group" aria-label="Filtrar por categoría"></div>
+ <div class="catalog-top"><span id="results" role="status" aria-live="polite">Preparando la colección…</span><span id="updated" class="last-update"></span></div>
+ <div id="catalog-notice" class="notice" role="status" hidden></div>
+ <div id="catalog" class="grid" aria-busy="true"><div class="skeleton" aria-hidden="true"></div><div class="skeleton" aria-hidden="true"></div><div class="skeleton" aria-hidden="true"></div></div>
+ <nav id="pagination" class="pagination" aria-label="Páginas de la colección" hidden></nav>
+ <section class="help-band" aria-label="Cómo solicitar tus piezas"><div><span class="help-num">01</span><h3>Descubre tu pieza</h3><p>Consulta fotografías, medidas, material y cuidados antes de elegir.</p></div><div><span class="help-num">02</span><h3>Reúne tus favoritas</h3><p>Tu selección se conserva hasta 24 horas en este navegador.</p></div><div><span class="help-num">03</span><h3>Conversemos por WhatsApp</h3><p>Envía tu solicitud. El apartado se confirma contigo por WhatsApp.</p></div></section>
+</main>
+<footer class="footer wrap"><div><p class="footer-brand">Laollaga Istmeña</p><p>Arte tejido, tradición que se viste.</p></div><div><p>© 2026 Laollaga Istmeña · Catálogo oficial</p><a href="https://wa.me/529711140709" target="_blank" rel="noopener noreferrer">Atención por WhatsApp · 971 114 0709</a></div></footer>
+<button class="floating-bag" type="button" data-open-cart aria-label="Abrir mi selección"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 7h14l1 14H4L5 7Z"/><path d="M8 8V6a4 4 0 0 1 8 0v2"/></svg><span>Mi selección</span><span class="count" data-cart-count>0</span></button>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<dialog id="product-dialog" aria-labelledby="product-heading"><div class="dialog-head"><span class="eyebrow">Conoce la pieza</span><button class="close-dialog" type="button" data-close-dialog><span aria-hidden="true">←</span> Volver a la colección</button></div><div id="product-content"></div></dialog>
+<dialog id="cart-dialog" aria-labelledby="cart-heading"><div class="dialog-head"><h2 id="cart-heading">Mi selección</h2><button class="close-dialog" type="button" data-close-dialog aria-label="Cerrar mi selección">Cerrar <span aria-hidden="true">×</span></button></div><div class="cart-body"><p class="cart-intro">Revisaremos precio y disponibilidad antes de preparar tu solicitud.</p><div id="cart-content"></div></div></dialog>
+<noscript><p class="wrap notice">Activa JavaScript para consultar la colección y preparar tu selección. También puedes contactarnos por WhatsApp al 971 114 0709.</p></noscript>
+<script>
+(() => {
+'use strict';
+// Laollaga Istmeña V5.8. Sólo catálogo público: no contiene permisos administrativos.
+const CONFIG = Object.freeze({
+ url: 'https://dmpovogobkqxiuqiqdku.supabase.co',
+ key: 'sb_publishable_vxjNB2Og59jiF0wazOFJBw_-Cj1-q1I',
+ phone: '529711140709', storageKey: 'laollaga-seleccion-v58',
+ ttl: 24 * 60 * 60 * 1000, readyTtl: 15000, pageSize: 12
+});
+const $ = id => document.getElementById(id);
+const money = cents => new Intl.NumberFormat('es-MX', { style:'currency',currency:'MXN',minimumFractionDigits:0,maximumFractionDigits:2 }).format(cents / 100);
+const normal = value => String(value ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+const clean = value => {
+ const text = String(value ?? '').trim();
+ return !text || /^(n\/?a|null|undefined)$/i.test(text) ? '' : text;
+};
+const el = (tag, className, text) => {
+ const node = document.createElement(tag);
+ if (className) node.className = className;
+ if (text !== undefined) node.textContent = String(text);
+ return node;
+};
+const button = (text, className, action) => {
+ const node = el('button',className,text);node.type='button';
+ if(action) node.addEventListener('click',action);return node;
+};
+const state = { products:[],byCode:new Map(),category:'',search:'',page:1,selection:new Map(),
+ selectedAt:0,selectionRevision:0,loaded:false,loading:false,fetchRevision:0,
+ checkoutBusy:false,cartMessage:'',readyAt:0,readyRevision:-1,reviewNeeded:false,productCode:null };
+let client,toastTimer,previousFocus,previousFocusCode,refreshPromise;
+let storageUsable = true;
+const asset = name => CONFIG.url + '/storage/v1/object/public/catalogo/' + String(name).split('/').map(encodeURIComponent).join('/');
+document.querySelectorAll('[data-logo]').forEach(img => {
+ img.src=asset('logo.png');
+ img.addEventListener('error',()=>{if(!img.dataset.fallback){img.dataset.fallback='1';img.src=asset('Laollaga_istmena_cutout(1).png');}else{const mark=el('span','logo-fallback','LI');mark.setAttribute('role','img');mark.setAttribute('aria-label','Laollaga Istmeña');img.replaceWith(mark);}});
+});
+function toast(text) {
+ clearTimeout(toastTimer);$('toast').textContent=text;$('toast').hidden=false;
+ toastTimer=setTimeout(()=>{$('toast').hidden=true;},4500);
+}
+function notice(text,error=false) {
+ const node=$('catalog-notice');node.textContent=text;node.className='notice'+(error?' error':'');node.hidden=!text;
+}
+function imageFor(product,className='') {
+ if(!product?.image) return el('span',className || 'placeholder','Fotografía en preparación');
+ const img=document.createElement('img');img.src=asset(product.image);img.alt=product.name;
+ img.loading='lazy';img.decoding='async';if(className)img.className=className;
+ img.addEventListener('error',()=>{img.replaceWith(el('span',className || 'placeholder','Fotografía no disponible'));},{once:true});return img;
+}
+function normalizeProduct(raw) {
+ // Conservar el identificador EXACTO almacenado, incluidos espacios existentes.
+ const code=String(raw.codigo_interno ?? '');
+ const value=typeof raw.precio==='number' ? raw.precio : Number(String(raw.precio ?? '').trim());
+ const valid=raw.precio!==null && raw.precio!==undefined && String(raw.precio).trim()!=='' && Number.isFinite(value) && value>=0 && value<=1e10;
+ return {code,name:clean(raw.nombre_comercial)||code||'Pieza de la colección',
+ category:clean(raw.categoria)||'Otras piezas',cents:valid?Math.round(value*100):null,
+ material:clean(raw.material),size:clean(raw.talla),measures:clean(raw.medidas),care:clean(raw.cuidados),
+ slogan:clean(raw.eslogan),image:clean(raw.imagen_url)};
+}
+async function readProducts(codes=null) {
+ // Consultas públicas: RLS restringe la lectura a Disponible.
+ const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),15000);
+ let rows=[];let offset=0;
+ try {
+ do {
+  let query=client.from('productos').select('id,codigo_interno,nombre_comercial,categoria,precio,estado,talla,medidas,material,cuidados,imagen_url,eslogan')
+   .eq('estado','Disponible').order('codigo_interno',{ascending:true}).order('id',{ascending:true});
+  if(codes){
+   // PostgREST requiere comillas para conservar espacios y caracteres reservados.
+   const quoted=codes.map(code=>'"'+String(code).replace(/\\/g,'\\\\').replace(/"/g,'\\"')+'"').join(',');
+   query=query.filter('codigo_interno','in','('+quoted+')');
+  }
+  query=query.abortSignal(controller.signal);
+  const {data,error}=await query.range(offset,offset+499);
+  if(error || !Array.isArray(data))throw new Error('No se pudo consultar la colección.');
+  rows.push(...data);if(data.length<500)break;offset+=500;
+ }while(true);
+ const products=rows.map(normalizeProduct).filter(p=>p.code.trim());
+ if(new Set(products.map(p=>p.code)).size!==products.length)throw new Error('Hay códigos de producto repetidos.');
+ return products;
+ }finally{clearTimeout(timeout);}
+}
+async function track(type,detail) {
+ // Compatibilidad con las estadísticas actuales. No representa ventas confirmadas.
+ try {await client.from('visitas').insert([{tipo:type,detalle:String(detail).slice(0,200)}]);} catch(_) {}
+}
+function loadSelection() {
+ try {
+  const raw=JSON.parse(localStorage.getItem(CONFIG.storageKey)||'null');
+  if(!raw)return;
+  if(raw.version!==1 || !Number.isFinite(raw.updatedAt) || raw.updatedAt>Date.now()+60000 || Date.now()-raw.updatedAt>CONFIG.ttl || !Array.isArray(raw.items)) {
+   localStorage.removeItem(CONFIG.storageKey);return;
+  }
+  state.selectedAt=raw.updatedAt;
+  raw.items.slice(0,200).forEach(item=>{
+   if(typeof item.code==='string' && item.code.length>0 && item.code.length<=200 && Number.isSafeInteger(item.cents) && item.cents>=0)
+    state.selection.set(item.code,{cents:item.cents});
+  });
+ }catch(_){storageUsable=false;}
+}
+function persistSelection() {
+ state.selectedAt=Date.now();
+ try {
+  if(!state.selection.size)localStorage.removeItem(CONFIG.storageKey);
+  else localStorage.setItem(CONFIG.storageKey,JSON.stringify({version:1,updatedAt:state.selectedAt,
+   items:[...state.selection].map(([code,item])=>({code,cents:item.cents}))}));
+ }catch(_){storageUsable=false;toast('Tu selección funciona en esta pestaña, pero este navegador no permite conservarla al cerrar.');}
+}
+function expireSelection() {
+ if(state.selection.size && Date.now()-state.selectedAt>CONFIG.ttl) {
+  state.selection.clear();state.selectionRevision++;state.readyAt=0;state.reviewNeeded=false;
+  try{localStorage.removeItem(CONFIG.storageKey);}catch(_){}
+  updateCounts();if(state.loaded)renderCatalog();toast('Tu selección anterior venció después de 24 horas. Puedes comenzar una nueva.');return true;
+ }return false;
+}
+function changes() {
+ if(!state.loaded)return [];
+ return [...state.selection].flatMap(([code,item])=>{
+  const p=state.byCode.get(code);
+  if(!p || p.cents===null)return[{code,text:`${p?.name||code}: ya no está disponible para solicitar.`,unavailable:true}];
+  if(p.cents!==item.cents)return[{code,text:`${p.name}: de ${money(item.cents)} a ${money(p.cents)} MXN.`,unavailable:false}];
+  return[];
+ });
+}
+function invalidateReady() {state.readyAt=0;state.readyRevision=-1;}
+function updateCounts() {
+ document.querySelectorAll('[data-cart-count]').forEach(node=>{node.textContent=state.selection.size;});
+ document.querySelectorAll('[data-open-cart]').forEach(node=>node.setAttribute('aria-label',`Abrir mi selección: ${state.selection.size} ${state.selection.size===1?'pieza':'piezas'}`));
+}
+function changeSelection(code) {
+ const selectedBefore=state.selection.has(code);
+ if(expireSelection()&&selectedBefore){if($('product-dialog').open)renderProduct(code,false);if($('cart-dialog').open)renderCart();return;}
+ const p=state.byCode.get(code);
+ if(state.selection.has(code)){state.selection.delete(code);toast('Pieza retirada de tu selección.');}
+ else {
+  if(!p || p.cents===null){toast('Esta pieza no está disponible para añadir. Actualiza la colección.');return;}
+  if(state.selection.size>=200){toast('Tu selección alcanzó su límite. Envía esta solicitud antes de añadir más piezas.');return;}
+  state.selection.set(code,{cents:p.cents});toast('Pieza añadida a tu selección.');
+ }
+ state.selectionRevision++;invalidateReady();state.reviewNeeded=false;state.cartMessage='';
+ persistSelection();updateCounts();renderCatalog();
+ if($('product-dialog').open)renderProduct(code,false);
+ if($('cart-dialog').open)renderCart();
+}
+function renderCategories() {
+ const counts=new Map();state.products.forEach(p=>counts.set(p.category,(counts.get(p.category)||0)+1));
+ if(state.category&&!counts.has(state.category))state.category='';
+ const fragment=document.createDocumentFragment();
+ const add=(name,category,count)=>{
+  const node=button(name,'chip',()=>{state.category=category;state.page=1;renderCategories();renderCatalog();});
+  const counter=el('small','',count);counter.setAttribute('aria-hidden','true');node.append(counter);
+  node.setAttribute('aria-pressed',String(state.category===category));fragment.append(node);
+ };
+ add('Toda la colección','',state.products.length);
+ [...counts].sort(([a],[b])=>a.localeCompare(b,'es')).forEach(([name,count])=>add(name,name,count));
+ $('categories').replaceChildren(fragment);
+}
+function visibleProducts() {
+ const term=normal(state.search);
+ return state.products.filter(p=>(!state.category||p.category===state.category)&&(!term||normal([p.name,p.code,p.material,p.category].join(' ')).includes(term)));
+}
+function renderCatalog() {
+ if(!state.loaded)return;
+ const products=visibleProducts();const pages=Math.ceil(products.length/CONFIG.pageSize);
+ state.page=Math.max(1,Math.min(state.page,pages||1));
+ $('results').textContent=`${products.length} ${products.length===1?'pieza':'piezas'}${state.search?' para tu búsqueda':state.category?' en esta categoría':' disponibles'}`;
+ const fragment=document.createDocumentFragment();
+ if(!products.length){
+  const box=el('div','empty');box.append(el('h3','',state.search?'No encontramos esa pieza':'Aún no hay piezas disponibles'),el('p','',state.search?'Prueba otro nombre, código o material, o explora toda la colección.':'Vuelve pronto o consulta con nosotros por WhatsApp.'));
+  if(state.search||state.category)box.append(button('Ver toda la colección','button light',resetFilters));
+  fragment.append(box);
+ }
+ products.slice((state.page-1)*CONFIG.pageSize,state.page*CONFIG.pageSize).forEach((p,i)=>{
+  const article=el('article','card');const open=button('','card-open',()=>openProduct(p.code));
+  open.dataset.productCode=p.code;
+  open.setAttribute('aria-label',`Ver ${p.name}, ${p.cents===null?'precio por consultar':money(p.cents)+' MXN'}`);
+  const photo=el('div','photo');const img=imageFor(p);if(i<2&&img.tagName==='IMG')img.loading='eager';photo.append(img,el('span','badge','Disponible'));
+  const info=el('div','card-info');info.append(el('div','card-code',p.code),el('h3','',p.name),el('p','card-category',p.category));
+  const bottom=el('div','card-bottom');const price=el('span','price',p.cents===null?'Consultar precio':money(p.cents));
+  if(p.cents!==null)price.append(el('small','','MXN'));bottom.append(price,el('span','view','Ver pieza  ↗'));info.append(bottom);
+  if(state.selection.has(p.code))info.append(el('span','selected-flag','✓ En tu selección'));
+  open.append(photo,info);article.append(open);fragment.append(article);
+ });
+ $('catalog').replaceChildren(fragment);$('catalog').setAttribute('aria-busy','false');
+ const pagination=$('pagination');pagination.hidden=pages<=1;pagination.replaceChildren();
+ if(pages>1){
+  const go=delta=>{state.page+=delta;renderCatalog();$('coleccion').scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});};
+  const prev=button('← Anterior','',()=>go(-1));prev.disabled=state.page===1;
+  const next=button('Siguiente →','',()=>go(1));next.disabled=state.page===pages;
+  pagination.append(prev,el('span','',`${state.page} de ${pages}`),next);
+ }
+}
+function resetFilters() {state.search='';state.category='';state.page=1;$('search').value='';$('clear-search').hidden=true;renderCategories();renderCatalog();}
+function openDialog(dialog) {
+ if(dialog.open)return;
+ const old=document.querySelector('dialog[open]');
+ if(!old){previousFocus=document.activeElement;previousFocusCode=previousFocus?.dataset?.productCode;}
+ if(old)old.close();
+ dialog.showModal();document.body.classList.add('modal-open');
+}
+function closeDialog(dialog) {if(dialog.open)dialog.close();}
+document.querySelectorAll('dialog').forEach(dialog=>{
+ dialog.querySelector('[data-close-dialog]').addEventListener('click',()=>closeDialog(dialog));
+ dialog.addEventListener('close',()=>{
+  if(!document.querySelector('dialog[open]')){
+   document.body.classList.remove('modal-open');
+   if(previousFocus?.isConnected)previousFocus.focus({preventScroll:true});
+   else if(previousFocusCode)[...document.querySelectorAll('[data-product-code]')].find(node=>node.dataset.productCode===previousFocusCode)?.focus({preventScroll:true});
+  }
+ });
+ dialog.addEventListener('click',event=>{if(event.target===dialog){const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)closeDialog(dialog);}});
+});
+function renderProduct(code,resetZoom=true) {
+ const p=state.byCode.get(code);if(!p){$('product-content').replaceChildren(el('div','empty','Esta pieza ya no está disponible.'));return;}
+ const priorZoom=!resetZoom&&$('product-content').querySelector('.zoom-btn')?.getAttribute('aria-pressed')==='true';
+ const layout=el('div','product-layout');const photo=el('div','product-image');
+ if(p.image){const zoom=button('','zoom-btn');zoom.setAttribute('aria-label','Ampliar fotografía');zoom.setAttribute('aria-pressed',String(priorZoom));zoom.append(imageFor(p));zoom.addEventListener('click',()=>{const active=zoom.getAttribute('aria-pressed')==='true';zoom.setAttribute('aria-pressed',String(!active));zoom.setAttribute('aria-label',active?'Ampliar fotografía':'Reducir fotografía');});photo.append(zoom);}else photo.append(imageFor(p));
+ const info=el('div','product-info');const meta=el('div','product-meta');meta.append(el('span','',p.code),button('Copiar código','copy',async()=>{
+  try {await navigator.clipboard.writeText(p.code);toast('Código copiado.');}catch(_){toast(`El código es ${p.code}. Puedes seleccionarlo y copiarlo.`);}
+ }));
+ const title=el('h2','product-title',p.name);title.id='product-heading';info.append(meta,title);
+ if(p.slogan)info.append(el('p','product-slogan',p.slogan));
+ const price=el('p','product-price',p.cents===null?'Consultar precio':money(p.cents));if(p.cents!==null)price.append(el('small','','MXN'));info.append(price,el('h3','details-title','Detalles de la pieza'));
+ const details=el('dl','details');
+ const rows=[['Talla',p.size],['Medidas',p.measures],['Material',p.material],['Cuidados',p.care]];
+ rows.filter(([,value])=>value).forEach(([name,value])=>{const row=el('div');row.append(el('dt','',name),el('dd','',value));details.append(row);});
+ if(!details.children.length)details.append(el('div','micro','Consulta las medidas y características de esta pieza por WhatsApp.'));
+ info.append(details);const actions=el('div','product-actions');const selected=state.selection.has(code);
+ const toggle=button(selected?'✓ Retirar de mi selección':'+ Añadir a mi selección','button full',()=>changeSelection(code));toggle.id='product-add';toggle.disabled=p.cents===null;
+ actions.append(toggle,button('Ver mi selección','button light full',openCart));info.append(actions,el('p','micro','Añadir una pieza no la reserva. Confirmaremos el apartado contigo por WhatsApp.'));
+ layout.append(photo,info);$('product-content').replaceChildren(layout);
+}
+function openProduct(code) {state.productCode=code;renderProduct(code);openDialog($('product-dialog'));void track('clic_producto',code);}
+function openCart() {expireSelection();renderCart();openDialog($('cart-dialog'));}
+function renderCart() {
+ updateCounts();const container=$('cart-content');const fragment=document.createDocumentFragment();
+ if(!state.selection.size){const box=el('div','cart-empty');box.append(el('h3','','Tu selección comienza aquí'),el('p','','Explora la colección y añade las piezas que te gusten.'),button('Seguir explorando','button light',()=>closeDialog($('cart-dialog'))));container.replaceChildren(box);return;}
+ const deltas=changes();
+ if(deltas.length){
+  const review=el('section','review');review.setAttribute('aria-label','Cambios en tu selección');review.append(el('strong','','Tu selección necesita una revisión'));
+  const ul=el('ul');deltas.forEach(item=>ul.append(el('li','',item.text)));review.append(ul,button('Aceptar cambios y actualizar selección','button light full',()=>{
+   for(const [code,item] of state.selection){const p=state.byCode.get(code);if(!p||p.cents===null)state.selection.delete(code);else item.cents=p.cents;}
+   state.selectionRevision++;invalidateReady();state.reviewNeeded=false;persistSelection();updateCounts();renderCart();renderCatalog();
+  }));fragment.append(review);
+ }
+ const list=el('ul','cart-list');let total=0;
+ for(const [code,item] of state.selection){
+  const p=state.byCode.get(code);const row=el('li','cart-item');
+  if(p?.image)row.append(imageFor(p));else row.append(el('div','cart-placeholder','Sin foto'));
+  const info=el('div');info.append(el('span','item-code',code),el('h3','',p?.name||(state.loaded?'Pieza no disponible':'Consultando pieza…')));
+  if(p&&p.cents!==null){total+=p.cents;info.append(el('p','item-price',money(p.cents)+' MXN'));}
+  else if(!state.loaded){total+=item.cents;info.append(el('p','item-price',money(item.cents)+' MXN'),el('p','item-warning','Último precio guardado; pendiente de verificación.'));}
+  else info.append(el('p','item-warning','Esta pieza no se incluirá hasta que actualices tu selección.'));
+  const remove=button('×','remove',()=>changeSelection(code));remove.setAttribute('aria-label',`Retirar ${p?.name||code}`);row.append(info,remove);list.append(row);
+ }
+ fragment.append(list);const totalRow=el('div','cart-total');totalRow.append(el('span','','Total estimado'),el('strong','',money(total)+' MXN'));fragment.append(totalRow);
+ const bottom=el('div','cart-bottom');
+ if(state.cartMessage){const msg=el('p','notice error',state.cartMessage);msg.setAttribute('role','status');bottom.append(msg);}
+ const ready=state.readyAt>0 && Date.now()-state.readyAt<=CONFIG.readyTtl && state.readyRevision===state.selectionRevision && !deltas.length;
+ if(ready){
+  bottom.append(el('p','ready','Tu solicitud está lista. Continúa a WhatsApp para enviarla y confirmar el apartado.'));
+  const link=el('a','button wa full','Continuar en WhatsApp ↗');link.id='whatsapp-ready';link.href=whatsappUrl();link.target='_blank';link.rel='noopener noreferrer';
+  link.addEventListener('click',event=>{
+   if(expireSelection()||state.readyRevision!==state.selectionRevision||Date.now()-state.readyAt>CONFIG.readyTtl){event.preventDefault();invalidateReady();void prepareRequest();}
+  });bottom.append(link);
+ }else{
+  const checkout=button(state.checkoutBusy?'Verificando colección…':'Verificar y continuar a WhatsApp','button wa full',prepareRequest);checkout.id='checkout';checkout.disabled=state.checkoutBusy||deltas.length>0||!state.loaded;bottom.append(checkout);
+ }
+ bottom.append(button('Seguir explorando','button light full',()=>closeDialog($('cart-dialog'))),el('p','micro','Enviar la solicitud no confirma el apartado. Te confirmaremos disponibilidad y condiciones por WhatsApp.'));
+ if(!storageUsable)bottom.append(el('p','micro','Este navegador no permite conservar tu selección al cerrar.'));
+ fragment.append(bottom);container.replaceChildren(fragment);
+}
+function whatsappUrl() {
+ let text='Hola Laollaga Istmeña, me gustaría consultar el apartado de estas piezas:\n\n';let total=0;
+ for(const [code] of state.selection){const p=state.byCode.get(code);if(!p||p.cents===null)continue;total+=p.cents;text+=`• [${code}] ${p.name} — ${money(p.cents)} MXN\n`;}
+ text+=`\nTotal estimado: ${money(total)} MXN.\n\n¿Me confirman disponibilidad y condiciones para apartar?`;
+ return 'https://wa.me/'+CONFIG.phone+'?text='+encodeURIComponent(text);
+}
+async function prepareRequest() {
+ if(state.checkoutBusy)return;
+ if(expireSelection()||!state.selection.size){renderCart();return;}
+ if(changes().length){renderCart();return;}
+ const revision=state.selectionRevision;const codes=[...state.selection.keys()];
+ state.checkoutBusy=true;state.cartMessage='';invalidateReady();renderCart();
+ try {
+  if(refreshPromise)await refreshPromise;
+  if(revision!==state.selectionRevision)return;
+  const fresh=await readProducts(codes);
+  if(revision!==state.selectionRevision)return;
+  codes.forEach(code=>state.byCode.delete(code));fresh.forEach(p=>state.byCode.set(p.code,p));
+  // Reflejar precios/retiros también en las tarjetas que estaban cargadas.
+  state.products=state.products.flatMap(p=>codes.includes(p.code)?(state.byCode.has(p.code)?[state.byCode.get(p.code)]:[]):[p]);
+  renderCategories();renderCatalog();
+  if(changes().length){state.reviewNeeded=true;toast('Hubo cambios. Revísalos antes de continuar.');}
+  else {state.readyAt=Date.now();state.readyRevision=revision;}
+ }catch(_){state.cartMessage='No pudimos verificar precio y disponibilidad. Conservamos tu selección; revisa tu conexión y vuelve a intentar.';}
+ finally{state.checkoutBusy=false;renderCart();if(state.readyAt)$('whatsapp-ready')?.focus({preventScroll:true});}
+}
+async function refreshCatalog(initial=false) {
+ if(state.checkoutBusy)return;
+ if(refreshPromise)return refreshPromise;
+ const revision=++state.fetchRevision;state.loading=true;$('refresh').disabled=true;
+ if(initial)$('catalog').setAttribute('aria-busy','true');
+ refreshPromise=(async()=>{
+  try {
+   const data=await readProducts();if(revision!==state.fetchRevision)return;
+   const expired=expireSelection();state.cartMessage='';state.products=data;state.byCode=new Map(data.map(p=>[p.code,p]));state.loaded=true;
+   invalidateReady();renderCategories();renderCatalog();
+   const now=new Date();$('updated').textContent='Actualizado '+new Intl.DateTimeFormat('es-MX',{hour:'2-digit',minute:'2-digit'}).format(now);
+   if(state.selection.size&&changes().length)notice('Hay cambios en tu selección. Abre “Mi selección” para revisarlos.');
+   else if(initial&&state.selection.size)notice('Recuperamos tu selección anterior. Puedes seguir explorando o abrir “Mi selección”.');
+   else if(!expired)notice('');
+   if($('cart-dialog').open)renderCart();
+   if($('product-dialog').open&&state.productCode)renderProduct(state.productCode,false);
+  }catch(_){
+   invalidateReady();
+   state.cartMessage='No pudimos actualizar la colección. Conservamos tu selección; comprueba la conexión e intenta actualizar nuevamente.';
+   notice(state.loaded?'No pudimos actualizar la colección. La información visible puede haber cambiado; intentaremos verificarla antes de preparar tu solicitud.':'No pudimos cargar la colección. Comprueba tu conexión y pulsa “Actualizar”.',true);
+   if(!state.loaded){$('catalog').replaceChildren(el('div','empty','La colección estará disponible cuando recuperemos la conexión.'));$('results').textContent='Colección pendiente de carga';}
+   if($('cart-dialog').open)renderCart();
+  }finally{state.loading=false;refreshPromise=null;$('refresh').disabled=false;$('catalog').setAttribute('aria-busy','false');}
+ })();return refreshPromise;
+}
+$('search').addEventListener('input',event=>{state.search=event.target.value;state.page=1;$('clear-search').hidden=!state.search;renderCatalog();});
+$('clear-search').addEventListener('click',()=>{state.search='';$('search').value='';$('clear-search').hidden=true;state.page=1;renderCatalog();$('search').focus();});
+$('refresh').addEventListener('click',()=>refreshCatalog());
+document.querySelectorAll('[data-open-cart]').forEach(node=>node.addEventListener('click',openCart));
+// No se permite una actualización simultánea durante la verificación de una solicitud.
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&client&&!state.checkoutBusy){expireSelection();void refreshCatalog();}});
+// Un cambio en otra pestaña invalida cualquier mensaje preparado aquí.
+window.addEventListener('storage',event=>{if(event.key===CONFIG.storageKey){state.selection.clear();loadSelection();state.selectionRevision++;invalidateReady();updateCounts();renderCatalog();if($('cart-dialog').open)renderCart();}});
+loadSelection();updateCounts();
+try {
+ if(!window.supabase?.createClient)throw new Error('Servicio no disponible');
+ client=window.supabase.createClient(CONFIG.url,CONFIG.key,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});
+ void track('visita_tienda','general');void refreshCatalog(true);
+}catch(_){notice('No pudimos conectar con la colección. Revisa tu conexión y recarga la página.',true);$('results').textContent='Sin conexión con la colección';$('catalog').replaceChildren();$('catalog').setAttribute('aria-busy','false');$('refresh').disabled=true;}
+})();
 
-    <main class="max-w-7xl mx-auto p-3 md:p-10 min-h-screen relative">
-        <div class="max-w-md mx-auto mb-8 relative">
-            <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400"><i class="fas fa-search"></i></span>
-            <input type="text" id="buscador" oninput="filtrarProductos()" placeholder="Buscar por nombre, código o material..." class="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-full text-sm shadow-sm focus:outline-none focus:border-black transition-all">
-        </div>
-
-        <div class="flex flex-wrap justify-center gap-2 md:gap-3 mb-8 md:mb-12" id="tabs-container"></div>
-        
-        <div id="catalogo"><div class="text-center py-20 text-gray-400 font-bold uppercase tracking-widest text-sm animate-pulse">Cargando colección exclusiva...</div></div>
-        <div id="paginacion" class="flex justify-center items-center gap-4 mt-16 hidden"></div>
-    </main>
-
-    <button id="btn-carrito" onclick="abrirCarrito()" class="fixed bottom-6 right-6 bg-[#b91c1c] text-white p-4 rounded-full shadow-2xl z-40 hover:scale-110 transition-transform border-2 border-[#d4af37] fade-in">
-        <i class="fas fa-shopping-bag text-xl"></i>
-        <span id="contador-carrito" class="absolute -top-2 -right-2 bg-black text-[#d4af37] text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center border border-[#d4af37]">0</span>
-    </button>
-
-    <div id="modal-carrito" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex-col items-center justify-center p-4 transition-opacity duration-300 opacity-0">
-        <div class="bg-[#fcfbf9] w-full max-w-lg rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
-            <div class="bg-black text-white p-5 flex justify-between items-center border-b-2 border-[#d4af37]">
-                <h3 class="font-serif text-xl tracking-widest uppercase oro">Mi Selección</h3>
-                <button onclick="cerrarCarrito()" class="text-gray-400 hover:text-white"><i class="fas fa-times text-xl"></i></button>
-            </div>
-            <div id="lista-carrito" class="p-6 overflow-y-auto flex-grow space-y-4"></div>
-            <div class="p-6 bg-white border-t border-gray-200">
-                <div class="flex justify-between items-end mb-5">
-                    <span class="text-xs uppercase tracking-widest text-gray-500 font-bold">Total Estimado</span>
-                    <span id="total-carrito" class="text-3xl font-light text-[#d4af37]">$0 <span class="text-xs text-gray-400 font-sans">MXN</span></span>
-                </div>
-                <button onclick="enviarPedidoWhatsApp()" class="w-full bg-black hover:bg-[#b91c1c] text-white font-bold py-4 rounded-sm uppercase text-sm tracking-widest shadow-xl transition-colors">
-                    <i class="fab fa-whatsapp text-lg mr-2"></i> Solicitar Apartado
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <div id="modal-producto" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-md hidden flex-col overflow-y-auto transition-opacity duration-300 opacity-0">
-        <div class="min-h-screen w-full flex flex-col md:flex-row bg-[#fcfbf9] relative shadow-2xl">
-            <button onclick="cerrarDetalle()" class="absolute top-4 left-4 md:top-8 md:left-8 z-30 bg-black/80 hover:bg-black text-white px-5 py-2.5 rounded-full font-bold uppercase text-xs tracking-widest transition-all shadow-xl backdrop-blur-sm flex items-center gap-2">
-                <i class="fas fa-arrow-left"></i> Volver
-            </button>
-            <div id="modal-content" class="flex flex-col md:flex-row w-full min-h-screen"></div>
-        </div>
-    </div>
-
-    <footer class="bg-black text-center py-8 border-t-2 border-[#d4af37] mt-10 text-gray-400 text-xs tracking-[0.2em] uppercase">&copy; 2026 Laollaga Istmeña.</footer>
-
-    <script>
-        let datosInventario = {};
-        let todosLosProductos = [];
-        let categoriaActual = '';
-        let paginaActual = 1;
-        const itemsPorPagina = 6;
-        let terminoBusqueda = '';
-        let carrito = []; 
-        let supabaseClient = null;
-
-        async function registrarVisita() {
-            try { await supabaseClient.from('visitas').insert([{ tipo: 'visita_tienda', detalle: 'general' }]); } catch(e){}
-        }
-
-        async function registrarClicProducto(codigo) {
-            try { await supabaseClient.from('visitas').insert([{ tipo: 'clic_producto', detalle: codigo }]); } catch(e){}
-        }
-
-        async function cargarCatalogo() {
-            const contenedor = document.getElementById('catalogo');
-            try {
-                if (typeof window.supabase === 'undefined') throw new Error('Librería no cargada.');
-                supabaseClient = window.supabase.createClient('https://dmpovogobkqxiuqiqdku.supabase.co', 'sb_publishable_vxjNB2Og59jiF0wazOFJBw_-Cj1-q1I');
-                
-                registrarVisita();
-
-                const { data, error } = await supabaseClient.from('productos').select('*').eq('estado', 'Disponible').order('codigo_interno', { ascending: true });
-                if (error) throw new Error(error.message);
-                
-                todosLosProductos = data;
-                organizarDatos(data);
-                generarPestañas();
-                categoriaActual = Object.keys(datosInventario)[0] || '';
-                mostrarCategoria(categoriaActual, 1);
-            } catch (err) {
-                contenedor.innerHTML = `<div class="bg-red-50 text-red-900 p-6 shadow-sm border border-red-200 text-center"><p class="font-bold">Error: ${err.message}</p></div>`;
-            }
-        }
-
-        function organizarDatos(productos) {
-            datosInventario = {};
-            productos.forEach(item => {
-                if(!datosInventario[item.categoria]) datosInventario[item.categoria] = [];
-                datosInventario[item.categoria].push(item);
-            });
-        }
-
-        function generarPestañas() {
-            let html = '';
-            for (const cat in datosInventario) {
-                html += `<button onclick="cambiarCategoria('${cat}')" id="tab-${cat.replace(/\s+/g, '')}" class="px-5 py-2 md:px-6 md:py-2.5 text-[10px] md:text-xs uppercase tracking-widest transition-all rounded-full border shadow-sm focus:outline-none tab-inactiva hover:border-black hover:text-black">${cat}</button>`;
-            }
-            document.getElementById('tabs-container').innerHTML = html;
-        }
-
-        window.cambiarCategoria = function(cat) {
-            document.getElementById('buscador').value = '';
-            terminoBusqueda = '';
-            mostrarCategoria(cat, 1);
-        }
-
-        window.filtrarProductos = function() {
-            terminoBusqueda = document.getElementById('buscador').value.toLowerCase().trim();
-            for (const cat in datosInventario) {
-                const btn = document.getElementById(`tab-${cat.replace(/\s+/g, '')}`);
-                if(btn) btn.classList.remove('tab-activa');
-            }
-            if(terminoBusqueda === '') marcarPestañaActiva(categoriaActual);
-            mostrarCategoria(categoriaActual, 1);
-        }
-
-        function marcarPestañaActiva(catActiva) {
-            for (const cat in datosInventario) {
-                const btn = document.getElementById(`tab-${cat.replace(/\s+/g, '')}`);
-                if(!btn) continue;
-                if(cat === catActiva && terminoBusqueda === '') {
-                    btn.classList.remove('tab-inactiva'); btn.classList.add('tab-activa');
-                } else {
-                    btn.classList.remove('tab-activa'); btn.classList.add('tab-inactiva');
-                }
-            }
-        }
-
-        window.mostrarCategoria = function(categoriaSeleccionada, paginaObjetivo) {
-            categoriaActual = categoriaSeleccionada;
-            paginaActual = paginaObjetivo;
-            if(terminoBusqueda === '') marcarPestañaActiva(categoriaActual);
-
-            let listaProductos = datosInventario[categoriaActual] || [];
-            if (terminoBusqueda !== '') {
-                listaProductos = todosLosProductos.filter(p => 
-                    p.nombre_comercial.toLowerCase().includes(terminoBusqueda) ||
-                    p.codigo_interno.toLowerCase().includes(terminoBusqueda) ||
-                    p.material.toLowerCase().includes(terminoBusqueda)
-                );
-            }
-
-            const totalPaginas = Math.ceil(listaProductos.length / itemsPorPagina);
-            if(paginaActual > totalPaginas && totalPaginas > 0) paginaActual = totalPaginas;
-            const productosPagina = listaProductos.slice((paginaActual - 1) * itemsPorPagina, ((paginaActual - 1) * itemsPorPagina) + itemsPorPagina);
-
-            if (productosPagina.length === 0) {
-                document.getElementById('catalogo').innerHTML = `<div class="text-center py-20 text-gray-400 font-serif italic text-lg fade-in">No se encontraron piezas disponibles.</div>`;
-                document.getElementById('paginacion').classList.add('hidden');
-                return;
-            }
-
-            let html = `<div class="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-12 fade-in">`;
-            
-            productosPagina.forEach(p => {
-                const imgPath = p.imagen_url ? `https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${p.imagen_url}` : 'https://via.placeholder.com/600x800.png?text=Fotograf%C3%ADa+en+proceso';
-                const badgeExclusivo = `<span class="absolute top-3 left-3 bg-[#d4af37] text-black text-[9px] md:text-xs font-bold px-2.5 py-1 rounded shadow-md tracking-widest uppercase z-10"><i class="fas fa-gem mr-1"></i> Pieza Única</span>`;
-
-                html += `
-                <div class="bg-white shadow-sm hover:shadow-2xl border border-gray-100 flex flex-col overflow-hidden transition-all duration-500 cursor-pointer group rounded-sm" onclick="abrirDetalle('${p.codigo_interno}')">
-                    <div class="relative h-[250px] sm:h-[350px] md:h-[450px] bg-[#fcfbf9] flex items-center justify-center p-4 md:p-8 overflow-hidden">
-                        <img src="${imgPath}" alt="${p.nombre_comercial}" class="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-700 drop-shadow-sm">
-                        ${badgeExclusivo}
-                    </div>
-                    <div class="p-3 md:p-6 text-center bg-white flex-grow flex flex-col justify-center border-t border-gray-50">
-                        <span class="text-[10px] text-gray-400 font-mono mb-1">${p.codigo_interno}</span>
-                        <h3 class="text-xs sm:text-lg md:text-xl font-serif font-bold text-gray-900 mb-1 md:mb-2 tracking-wide leading-tight">${p.nombre_comercial}</h3>
-                        <p class="text-sm sm:text-base md:text-lg font-light text-[#d4af37] tracking-widest">$${p.precio} <span class="text-[10px] md:text-xs text-gray-400">MXN</span></p>
-                    </div>
-                </div>`;
-            });
-            html += `</div>`;
-            document.getElementById('catalogo').innerHTML = html;
-            renderizarPaginacion(totalPaginas);
-        }
-
-        function renderizarPaginacion(totalPaginas) {
-            const contPaginacion = document.getElementById('paginacion');
-            if (totalPaginas <= 1) { contPaginacion.classList.add('hidden'); return; }
-            contPaginacion.classList.remove('hidden');
-            let htmlPag = `<button onclick="mostrarCategoria('${categoriaActual}', ${paginaActual - 1})" class="px-5 py-2.5 border border-gray-300 hover:border-black text-gray-400 hover:text-black uppercase text-xs tracking-widest transition-colors ${paginaActual === 1 ? 'opacity-30 pointer-events-none' : ''}">Anterior</button>`;
-            htmlPag += `<span class="text-xs tracking-widest font-mono text-gray-500 px-4">${paginaActual} / ${totalPaginas}</span>`;
-            htmlPag += `<button onclick="mostrarCategoria('${categoriaActual}', ${paginaActual + 1})" class="px-5 py-2.5 border border-gray-300 hover:border-black text-gray-400 hover:text-black uppercase text-xs tracking-widest transition-colors ${paginaActual === totalPaginas ? 'opacity-30 pointer-events-none' : ''}">Siguiente</button>`;
-            contPaginacion.innerHTML = htmlPag;
-            if(paginaActual > 1 && terminoBusqueda === '') document.getElementById('tabs-container').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        window.abrirDetalle = function(codigo) {
-            registrarClicProducto(codigo);
-            const p = todosLosProductos.find(x => x.codigo_interno === codigo);
-            const imgPath = p.imagen_url ? `https://dmpovogobkqxiuqiqdku.supabase.co/storage/v1/object/public/catalogo/${p.imagen_url}` : 'https://via.placeholder.com/600x800.png?text=Fotograf%C3%ADa+en+proceso';
-            const fraseEmotiva = p.eslogan || "Lleva contigo un fragmento de nuestra historia. Cada puntada resguarda la elegancia ancestral de nuestra gente.";
-            const enCarrito = carrito.some(item => item.codigo_interno === p.codigo_interno);
-            
-            const textoBoton = enCarrito ? `<i class="fas fa-check mr-2"></i> Añadido a tu Selección` : `<i class="fas fa-plus mr-2"></i> Añadir a mi Selección`;
-            const colorBoton = enCarrito ? `bg-green-700 hover:bg-green-800` : `bg-black hover:bg-[#b91c1c]`;
-
-            document.getElementById('modal-content').innerHTML = `
-                <div class="w-full md:w-3/5 bg-black flex items-center justify-center relative min-h-[40vh] md:min-h-screen p-4 overflow-hidden fade-in">
-                    <img id="img-zoomable" src="${imgPath}" class="zoom-normal w-full h-full object-contain max-h-[70vh] md:max-h-[90vh] cursor-zoom-in" onclick="toggleZoom(this)">
-                </div>
-                <div class="w-full md:w-2/5 p-6 md:p-14 flex flex-col justify-center bg-[#fcfbf9] overflow-y-auto max-h-screen fade-in border-l border-gray-200 shadow-[-10px_0_30px_rgba(0,0,0,0.05)]">
-                    <div class="flex justify-between items-center mb-4">
-                        <span class="text-[10px] text-gray-400 font-mono tracking-[0.2em] uppercase border border-gray-300 px-2 py-1 rounded">${p.codigo_interno}</span>
-                        <button onclick="copiarCodigo('${p.codigo_interno}')" class="text-[10px] uppercase tracking-wider text-gray-500 hover:text-black bg-gray-100 px-3 py-1.5 rounded transition-colors">
-                            <i class="fas fa-copy mr-1"></i> Copiar
-                        </button>
-                    </div>
-                    <h2 class="text-3xl md:text-5xl font-serif font-bold text-gray-900 leading-tight mb-2">${p.nombre_comercial}</h2>
-                    <p class="text-sm font-serif italic text-gray-500 mb-6 leading-relaxed border-l-2 border-[#d4af37] pl-3 py-1 bg-gradient-to-r from-yellow-50 to-transparent">"${fraseEmotiva}"</p>
-                    <p class="text-3xl font-light text-[#d4af37] mb-8">$${p.precio} <span class="text-xs text-gray-400 font-sans">MXN</span></p>
-
-                    <div class="bg-gradient-to-r from-[#1a1a1a] to-black rounded-lg p-4 mb-8 flex items-center gap-4 shadow-lg border border-yellow-900/50">
-                        <div class="text-[#d4af37] bg-yellow-900/30 p-3 rounded-full flex-shrink-0"><i class="fas fa-certificate text-xl"></i></div>
-                        <div>
-                            <h4 class="font-bold text-[#d4af37] text-[10px] tracking-widest uppercase">Garantía Artesanal</h4>
-                            <p class="text-[11px] text-gray-300 font-light mt-0.5">Confección exclusiva del Istmo. Identidad pura en cada hilo.</p>
-                        </div>
-                    </div>
-
-                    <div class="space-y-4 mb-10 border-t border-b border-gray-100 py-6 text-sm">
-                        <div class="flex justify-between items-end border-b border-gray-100 border-dashed pb-2">
-                            <span class="text-[10px] uppercase tracking-widest text-gray-400">Talla / Medida</span>
-                            <span class="font-medium text-gray-900 text-right">${p.talla || ''} ${p.medidas !== 'N/A' ? p.medidas : ''}</span>
-                        </div>
-                        <div class="flex justify-between items-end border-b border-gray-100 border-dashed pb-2">
-                            <span class="text-[10px] uppercase tracking-widest text-gray-400">Material</span>
-                            <span class="font-medium text-gray-900 text-right w-2/3 leading-tight">${p.material}</span>
-                        </div>
-                        <div class="flex justify-between items-end">
-                            <span class="text-[10px] uppercase tracking-widest text-gray-400">Cuidados</span>
-                            <span class="font-medium text-gray-900 text-right w-2/3 leading-tight">${p.cuidados}</span>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 gap-3 mt-auto">
-                        <button id="btn-add-${p.codigo_interno}" onclick="toggleCarrito('${p.codigo_interno}')" class="w-full ${colorBoton} text-white font-bold py-4 rounded-sm uppercase text-[11px] tracking-widest shadow-lg transition-all">
-                            ${textoBoton}
-                        </button>
-                    </div>
-                </div>
-            `;
-            const modal = document.getElementById('modal-producto');
-            modal.classList.remove('hidden');
-            setTimeout(() => modal.classList.remove('opacity-0'), 10);
-            document.body.style.overflow = 'hidden'; 
-        }
-
-        window.toggleZoom = function(imgElement) { imgElement.classList.toggle('zoom-activo'); }
-        window.copiarCodigo = function(codigo) { navigator.clipboard.writeText(codigo).then(() => alert('Código ' + codigo + ' copiado.')); }
-
-        window.cerrarDetalle = function() {
-            const modal = document.getElementById('modal-producto');
-            modal.classList.add('opacity-0');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                document.body.style.overflow = 'auto';
-            }, 300);
-        }
-
-        window.toggleCarrito = function(codigo) {
-            const p = todosLosProductos.find(x => x.codigo_interno === codigo);
-            const index = carrito.findIndex(item => item.codigo_interno === codigo);
-            const btn = document.getElementById(`btn-add-${codigo}`);
-
-            if(index === -1) {
-                carrito.push(p);
-                if(btn) {
-                    btn.innerHTML = `<i class="fas fa-check mr-2"></i> Añadido a tu Selección`;
-                    btn.classList.replace('bg-black', 'bg-green-700');
-                    btn.classList.replace('hover:bg-[#b91c1c]', 'hover:bg-green-800');
-                }
-            } else {
-                carrito.splice(index, 1);
-                if(btn) {
-                    btn.innerHTML = `<i class="fas fa-plus mr-2"></i> Añadir a mi Selección`;
-                    btn.classList.replace('bg-green-700', 'bg-black');
-                    btn.classList.replace('hover:bg-green-800', 'hover:bg-[#b91c1c]');
-                }
-            }
-            actualizarUI_Carrito();
-        }
-
-        function actualizarUI_Carrito() {
-            document.getElementById('contador-carrito').innerText = carrito.length;
-        }
-
-        window.abrirCarrito = function() {
-            const modal = document.getElementById('modal-carrito');
-            const lista = document.getElementById('lista-carrito');
-            const totalElement = document.getElementById('total-carrito');
-            let total = 0;
-            
-            if (carrito.length === 0) {
-                lista.innerHTML = `<div class="text-center text-gray-400 py-12 font-serif italic">Tu selección está vacía.<br><span class="text-xs font-sans not-italic block mt-2">Añade prendas exclusivas desde el catálogo.</span></div>`;
-                totalElement.innerHTML = `$0 <span class="text-xs text-gray-400 font-sans">MXN</span>`;
-            } else {
-                lista.innerHTML = carrito.map(p => {
-                    total += parseFloat(p.precio) || 0;
-                    return `
-                    <div class="flex items-center justify-between border-b border-gray-100 pb-3">
-                        <div>
-                            <p class="text-[10px] text-gray-500 font-mono">${p.codigo_interno}</p>
-                            <p class="font-bold text-sm font-serif">${p.nombre_comercial}</p>
-                            <p class="text-[#d4af37] text-xs font-bold">$${p.precio} MXN</p>
-                        </div>
-                        <button onclick="toggleCarrito('${p.codigo_interno}'); abrirCarrito();" class="text-red-500 hover:text-red-700 p-2"><i class="fas fa-trash"></i></button>
-                    </div>
-                `}).join('');
-                totalElement.innerHTML = `$${total.toLocaleString('es-MX')} <span class="text-xs text-gray-400 font-sans">MXN</span>`;
-            }
-
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            setTimeout(() => modal.classList.remove('opacity-0'), 10);
-            document.body.style.overflow = 'hidden'; 
-        }
-
-        window.cerrarCarrito = function() {
-            const modal = document.getElementById('modal-carrito');
-            modal.classList.add('opacity-0');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-                if(document.getElementById('modal-producto').classList.contains('hidden')) {
-                    document.body.style.overflow = 'auto';
-                }
-            }, 300);
-        }
-
-        window.enviarPedidoWhatsApp = function() {
-            if (carrito.length === 0) { alert("Tu selección está vacía."); return; }
-            let texto = "✨ Hola Laollaga Istmeña, quiero solicitar el apartado de las siguientes piezas:\n\n";
-            let total = 0;
-            carrito.forEach(p => {
-                texto += `▫️ *[${p.codigo_interno}]* ${p.nombre_comercial} - $${p.precio} MXN\n`;
-                total += parseFloat(p.precio) || 0;
-            });
-            texto += `\n💰 *Total:* $${total.toLocaleString('es-MX')} MXN\n\n¿Están disponibles?`;
-            window.open(`https://wa.me/529711140709?text=${encodeURIComponent(texto)}`, '_blank');
-        }
-
-        setTimeout(cargarCatalogo, 600);
-    </script>
+</script>
 </body>
 </html>
