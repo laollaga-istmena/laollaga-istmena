@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<meta name="laollaga-store-version" content="V6.3.1">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#111310">
@@ -412,13 +413,17 @@ function renderCart() {
 // Consulta directa: sin formulario ni creación automática de un pedido/folio.
 function v63Select(code,open=false){if(!state.selection.has(code))changeSelection(code);if(open&&state.selection.has(code))openCart();}
 function whatsappUrl(){
- let total=0;const lines=['Hola, Laollaga Istmeña. Me interesa comprar las siguientes piezas:',''];
- for(const[code,item]of state.selection){const p=state.byCode.get(code);if(!p||p.cents===null)continue;const qty=item.qty||1,subtotal=p.cents*qty;total+=subtotal;
-  lines.push('• '+String(p.displayCode||code).trim()+' — '+p.name,'  Talla / presentación: '+p.variantName,'  Cantidad: '+qty+' · Precio unitario: '+money(p.cents)+' MXN','  Subtotal: '+money(subtotal)+' MXN','');
+ let total=0,pieces=0,index=0;
+ const lines=['🌺 *LAOLLAGA ISTMEÑA*','_Tradición que se lleva._','','¡Hola! Me gustaría concretar la compra de estas piezas:','','🛍️ *MI SELECCIÓN*','━━━━━━━━━━━━━━',''];
+ for(const[code,item]of state.selection){
+  const p=state.byCode.get(code);if(!p||p.cents===null)continue;
+  const qty=item.qty||1,subtotal=p.cents*qty;total+=subtotal;pieces+=qty;index++;
+  lines.push('*'+String(index).padStart(2,'0')+' · '+String(p.displayCode||code).trim()+'*',p.name,'Presentación: '+p.variantName,qty+' '+(qty===1?'pieza':'piezas')+' × '+money(p.cents)+' = *'+money(subtotal)+' MXN*','');
  }
- lines.push('TOTAL ESTIMADO DE PRODUCTOS: '+money(total)+' MXN','El envío o la entrega, si tienen costo, se acuerdan por separado.','','¿Me ayudan a confirmar disponibilidad y concretar la compra?','Quisiera acordar:','1. El importe final y el anticipo, si corresponde.','2. Los medios de pago disponibles.','3. La cobertura, el costo y la fecha de entrega o envío.','','Quedo pendiente para proporcionar mis datos de entrega por este chat. Entiendo que las piezas quedan apartadas cuando la tienda lo confirme.');
+ lines.push('━━━━━━━━━━━━━━','*'+pieces+' '+(pieces===1?'pieza seleccionada':'piezas seleccionadas')+'*','*TOTAL ESTIMADO: '+money(total)+' MXN*','_Entrega o envío por cotizar, si corresponde._','','*DISPONIBILIDAD*','• Confirmar las piezas disponibles.','• Indicar el importe final.','','💳 *PAGO Y APARTADO*','• Métodos de pago disponibles.','• Importe del anticipo, si corresponde.','• Fecha para liquidar el saldo.','','📦 *ENTREGA O ENVÍO*','• Cobertura para mi ubicación.','• Costo y fecha estimada de entrega.','','Les comparto mis datos por esta conversación para completar la compra. ¡Gracias por su atención!','','_El apartado queda confirmado cuando la tienda lo indique._');
  return 'https://wa.me/'+CONFIG.phone+'?text='+encodeURIComponent(lines.join('\n'));
 }
+
 async function prepareRequest(){
  if(state.checkoutBusy)return;
  if(expireSelection()||!state.selection.size){renderCart();return;}
